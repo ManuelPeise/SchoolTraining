@@ -1,7 +1,8 @@
 using System.ComponentModel;
+using Core.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
 
-namespace Core.Web.ViewModels
+namespace Core.Web.Components.Pages.ViewModels
 {
     /// <summary>
     /// Generic base component that wires a ViewModel (CommunityToolkit ObservableObject) to Blazor rendering.

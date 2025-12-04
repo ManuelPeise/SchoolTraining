@@ -19,9 +19,12 @@ namespace Core.Web.StartUp
             app.UseAntiforgery();
 
             app.MapStaticAssets();
+
+            app.UseStaticFiles();
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
-
+            
             Database.Migrate(app);
         }
     }

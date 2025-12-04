@@ -122,10 +122,5 @@ namespace Logic.Database
         {
             _context.Set<TEntity>().Remove(entity);
         }
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
     }
 }

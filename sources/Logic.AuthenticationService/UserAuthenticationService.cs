@@ -24,61 +24,62 @@ namespace Logic.AuthenticationService
 
         public async Task<bool> SignInAsync(LoginModel loginModel)
         {
-            using (var unitOfWork = new UnitOfWork(_dbContextFactory, DbContextTypeEnum.MySql))
+            var unitOfWork = new UnitOfWork(_dbContextFactory, DbContextTypeEnum.MySql);
+
+            try
             {
-                try
+
+                var userEntity = await GetByUsernameAsync(unitOfWork.UserRepository, loginModel.UserName);
+
+                var credentialsEntity = userEntity?.Credentials;
+
+                if (userEntity == null || credentialsEntity == null)
                 {
-                    var userEntity = await GetByUsernameAsync(unitOfWork.UserRepository, loginModel.UserName);
-
-                    var credentialsEntity = userEntity?.Credentials;
-
-                    if (userEntity == null || credentialsEntity == null)
-                    {
-                        return await Task.FromResult(false);
-                    }
-
-                    var hashedSecret = SecretHelper.GetHashedSecret(credentialsEntity.PasswordHash, credentialsEntity.Salt);
-
-                    if (string.IsNullOrEmpty(hashedSecret) || hashedSecret != credentialsEntity.PasswordHash)
-                    {
-                        return await Task.FromResult(false);
-                    }
-
-                    var context = HttpContext;
-
-                    if (context == null)
-                    {
-                        return await Task.FromResult(false);
-                    }
-
-                    var claims = GetUserClaims(userEntity);
-
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
-                    {
-                        IsPersistent = false,
-                        AllowRefresh = false
-                    });
-
-                    return await Task.FromResult(true);
-                }
-                catch (Exception exception)
-                {
-                    await unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
-                    {
-                        Message = "Error in UserAuthenticationService.LoginAsync",
-                        ExeptionMessage = exception.Message,
-                        StackTrace = exception?.StackTrace ?? string.Empty,
-                        LogLevel = LogLevelEnum.Error
-                    });
-
-                    await unitOfWork.SaveChangesAsync("System");
-
                     return await Task.FromResult(false);
                 }
+
+                var hashedSecret = SecretHelper.GetHashedSecret(credentialsEntity.PasswordHash, credentialsEntity.Salt);
+
+                if (string.IsNullOrEmpty(hashedSecret) || hashedSecret != credentialsEntity.PasswordHash)
+                {
+                    return await Task.FromResult(false);
+                }
+
+                var context = HttpContext;
+
+                if (context == null)
+                {
+                    return await Task.FromResult(false);
+                }
+
+                var claims = GetUserClaims(userEntity);
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
+                {
+                    IsPersistent = false,
+                    AllowRefresh = false
+                });
+
+                return await Task.FromResult(true);
             }
+            catch (Exception exception)
+            {
+                await unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
+                {
+                    Message = "Error in UserAuthenticationService.LoginAsync",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception?.StackTrace ?? string.Empty,
+                    LogLevel = LogLevelEnum.Error
+                });
+
+                await unitOfWork.SaveChangesAsync("System");
+
+                return await Task.FromResult(false);
+            }
+
         }
 
         public async Task SignOutAsync()
@@ -120,31 +121,6 @@ namespace Logic.AuthenticationService
         }
 
         private Expression<Func<UserEntity, object>> IncludeSecretExpression = e => e.Credentials;
-        #region dispose
 
-        private bool disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-
-                }
-
-                disposedValue = true;
-            }
-        }
-
-
-        public void Dispose()
-        {
-            // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in der Methode "Dispose(bool disposing)" ein.
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
 }

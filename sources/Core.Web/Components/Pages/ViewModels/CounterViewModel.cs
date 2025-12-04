@@ -1,6 +1,7 @@
+using Core.Web.ViewModels;
 using System.Threading.Tasks;
 
-namespace Core.Web.ViewModels
+namespace Core.Web.Components.Pages.ViewModels
 {
     public class CounterViewModel : ViewModelBase
     {

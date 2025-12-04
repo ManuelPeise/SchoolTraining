@@ -1,7 +1,7 @@
 ﻿using Data.MySqlContext;
 using Logic.Database;
-using Microsoft.EntityFrameworkCore;
 using Logic.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Web.Bundles
 {
@@ -18,7 +18,7 @@ namespace Core.Web.Bundles
                     throw new InvalidOperationException(nameof(connectionString));
                 }
 
-                opt.UseMySQL(connectionString);
+                opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
 
             builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();

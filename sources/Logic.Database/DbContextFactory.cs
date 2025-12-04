@@ -31,16 +31,13 @@ namespace Logic.Database
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="contextType"/> is not a supported value.</exception>
         public ADbContext GetContext(DbContextTypeEnum? contextType = DbContextTypeEnum.SqLite)
         {
-            using var scope = _provider.CreateScope();
-
+            // Let DI container manage the DbContext lifetime - do not create a separate scope here
             switch (contextType)
             {
                 case DbContextTypeEnum.SqLite:
-                    var sqLiteDbContext = scope.ServiceProvider.GetRequiredService<SqLiteDbContext>();
-                    return sqLiteDbContext;
+                    return _provider.GetRequiredService<SqLiteDbContext>();
                 case DbContextTypeEnum.MySql:
-                    var mySqlDbContext = scope.ServiceProvider.GetRequiredService<MySqlDbContext>();
-                    return mySqlDbContext;
+                    return _provider.GetRequiredService<MySqlDbContext>();
                 default: throw new ArgumentOutOfRangeException(nameof(contextType), contextType, null);
             }
         }

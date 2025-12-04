@@ -8,9 +8,9 @@ namespace Logic.Shared
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private readonly CurrentUser _currentUser;
+        private readonly CurrentUser? _currentUser;
         public HttpContext HttpContext { get => _httpContextAccessor.HttpContext; }
-        public CurrentUser CurrentUser { get => _currentUser; }
+        public CurrentUser? CurrentUser { get => _currentUser; }
 
         protected LogicBase(IHttpContextAccessor httpContextAccessor)
         {
@@ -19,13 +19,13 @@ namespace Logic.Shared
             _currentUser = GetCurrentUserFromHttpContext();
         }
 
-        private CurrentUser GetCurrentUserFromHttpContext()
+        private CurrentUser? GetCurrentUserFromHttpContext()
         {
             var context = HttpContext;
             
             if (context == null || context.User == null || context.User.Identity == null || !context.User.Identity.IsAuthenticated)
             {
-                throw new UnauthorizedAccessException("User is not authenticated.");
+                return null;
             }
 
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "UserId");

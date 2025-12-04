@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Logic.Shared.Interfaces
 {
-    public interface IDatabaseRepositoryBase<TEntity> : IDisposable where TEntity : AEntityBase
+    public interface IDatabaseRepositoryBase<TEntity> where TEntity : AEntityBase
     {
         /// <summary>
         /// Return all entities.

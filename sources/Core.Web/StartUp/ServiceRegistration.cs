@@ -1,7 +1,7 @@
 ﻿using Core.Web.Bundles;
 using Logic.AuthenticationService;
 using Logic.Shared.Interfaces.Authentication;
-using Core.Web.ViewModels;
+using Core.Web.Components.Pages.ViewModels;
 
 namespace Core.Web.StartUp
 {
@@ -17,7 +17,9 @@ namespace Core.Web.StartUp
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 
             // ViewModels
-            builder.Services.AddTransient<CounterViewModel>();
+            // Register view models as scoped so the same instance is used for the component lifecycle
+            builder.Services.AddScoped<CounterViewModel>();
+            builder.Services.AddScoped<AuthenticationViewModel>();
         }
     }
 }

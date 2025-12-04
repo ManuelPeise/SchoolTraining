@@ -17,7 +17,7 @@
     <Project Path="Data.Shared/Data.Shared.csproj" Id="3924a35c-4bbf-4f47-b3a8-0e2b06a67c28" />
     <Project Path="Data.SqliteContext/Data.SqliteContext.csproj" Id="718a23bc-d58c-408e-9960-6dbebcca7475" />
   </Folder>
-  <Folder Name="/05 Schared/">
+  <Folder Name="/05 Shared/">
     <Project Path="Shared.Enums/Shared.Enums.csproj" Id="0d30ad72-93a9-4536-b229-cda61bedda34" />
     <Project Path="Shared.Models/Shared.Models.csproj" Id="18a7a325-c39e-4e52-a9f9-618063ebc665" />
   </Folder>

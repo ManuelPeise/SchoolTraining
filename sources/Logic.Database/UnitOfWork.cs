@@ -36,8 +36,6 @@ namespace Logic.Database
         public IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository =>
             _logMessageRepository ??= CreateRepository<LogMessageEntity>();
 
-        private readonly object _disposeLock = new();
-
         public UnitOfWork(IDbContextFactory dbContextFactory, DbContextTypeEnum? dbContextTypeEnum)
         {
             _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
@@ -80,47 +78,5 @@ namespace Logic.Database
 
             return await _context.SaveChangesAsync(cancellationToken);
         }
-
-        #region dispose
-
-        private bool disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposedValue) return;
-
-            lock (_disposeLock)
-            {
-                if (disposedValue) return;
-
-                if (disposing)
-                {
-                    try { _familyRepository?.Dispose(); } catch { }
-                    try { _userRepository?.Dispose(); } catch { }
-                    try { _userCredentialsRepository?.Dispose(); } catch { }
-                    try { _userSettingsRepository?.Dispose(); } catch { }
-                    try { _logMessageRepository?.Dispose(); } catch { }
-
-                    try { _context?.Dispose(); } catch { }
-
-                    _familyRepository = null;
-                    _userRepository = null;
-                    _userCredentialsRepository = null;
-                    _userSettingsRepository = null;
-                    _logMessageRepository = null;
-                    _context = null;
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Logic.Shared.Interfaces.Authentication
 {
-    public interface IUserAuthenticationService: IDisposable
+    public interface IUserAuthenticationService
     {
         Task<bool> SignInAsync(LoginModel loginModel);
         Task SignOutAsync();
