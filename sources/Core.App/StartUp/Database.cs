@@ -9,13 +9,11 @@ namespace Core.App.StartUp
     {
         internal static void RegisterDatabaseServices(MauiAppBuilder builder)
         {
-
-            builder.Services.AddDbContext<SqLiteDbContext>(options =>
+            builder.Services.AddDbContext<SqLiteDbContext>(opt =>
             {
                 var folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                var dbPath = Path.Combine(folderPath, "scoolAppDb.db");
-                
-                options.UseSqlite($"Data Source={dbPath}");
+                var dbPath = Path.Combine(folderPath, "applicationDb.db");
+                opt.UseSqlite($"Data Source={dbPath}");
             });
 
             builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();

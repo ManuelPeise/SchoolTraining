@@ -1,6 +1,5 @@
 ﻿using Core.App.StartUp;
 using Microsoft.Extensions.Logging;
-using SQLitePCL;
 
 namespace Core.App
 {

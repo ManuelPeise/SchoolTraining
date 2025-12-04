@@ -4,6 +4,7 @@
     {
         User = 0,
         Admin = 1,
-        SystemAdmin = 2
+        SystemAdmin = 2,
+        Guest = 3
     }
 }

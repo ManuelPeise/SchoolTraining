@@ -1,12 +1,13 @@
 <Solution>
   <Folder Name="/01 Core/">
-    <Project Path="Core.Api/Core.Api.csproj" Id="3c25bc77-9361-4693-aa7c-003a4ae3006a" />
     <Project Path="Core.App/Core.App.csproj" Id="e915ef5d-c732-4c8b-8e80-aea500fbfa9e">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="Core.Web/Core.Web.csproj" Id="1b9f07a5-b651-443e-805a-222a5355fabb" />
   </Folder>
   <Folder Name="/02 Services/" />
   <Folder Name="/03 Logic/">
+    <Project Path="Logic.AuthenticationService/Logic.AuthenticationService.csproj" Id="a48d4291-d021-4a1f-a5b0-9c3d1c2b4535" />
     <Project Path="Logic.Database/Logic.Database.csproj" Id="7ea198dd-3109-44d2-8f3c-a3459945a410" />
     <Project Path="Logic.Shared/Logic.Shared.csproj" Id="9d50a457-a5b9-4fbe-84e9-37b802da3069" />
   </Folder>
@@ -18,5 +19,6 @@
   </Folder>
   <Folder Name="/05 Schared/">
     <Project Path="Shared.Enums/Shared.Enums.csproj" Id="0d30ad72-93a9-4536-b229-cda61bedda34" />
+    <Project Path="Shared.Models/Shared.Models.csproj" Id="18a7a325-c39e-4e52-a9f9-618063ebc665" />
   </Folder>
 </Solution>
