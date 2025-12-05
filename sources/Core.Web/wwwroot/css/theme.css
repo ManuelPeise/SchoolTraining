@@ -1,13 +1,14 @@
 :root {
-  --background: #0B2545;        /* dunkles Blau */
-  --text: #F4F6F9;              /* leichtes Weiß (nicht absolut) */
-  --primary: #2B67A3;           /* leichter Button-Blau */
-  --primary-pressed: #234F86;   /* gedrückt */
-  --disabled: #D1D5DB;          /* hellgrau disabled */
-  --disabled-text: #9CA3AF;     /* disabled text */
-  --loading: #FFB86B;           /* helles Orange (loading) */
-  --error: #FF6B6B;             /* helles Rot (error) */
-  --content-max-width: 1100px;
+    --background: #0B2545; /* dunkles Blau */
+    --background-secondary: #003d99; /* etwas helleres Dunkelblau */
+    --text: #F4F6F9; /* leichtes Weiß (nicht absolut) */
+    --primary: #2B67A3; /* leichter Button-Blau */
+    --primary-pressed: #234F86; /* gedrückt */
+    --disabled: #D1D5DB; /* hellgrau disabled */
+    --disabled-text: #9CA3AF; /* disabled text */
+    --loading: #FFB86B; /* helles Orange (loading) */
+    --error: #FF6B6B; /* helles Rot (error) */
+    --content-max-width: 1100px;
 }
 
 /* Basis */

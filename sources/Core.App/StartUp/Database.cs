@@ -12,7 +12,7 @@ namespace Core.App.StartUp
             builder.Services.AddDbContext<SqLiteDbContext>(opt =>
             {
                 var folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                var dbPath = Path.Combine(folderPath, "applicationDb.db");
+                var dbPath = Path.Combine(folderPath, "SchoolAppDb.db");
                 opt.UseSqlite($"Data Source={dbPath}");
             });
 

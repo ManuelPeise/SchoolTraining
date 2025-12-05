@@ -2,31 +2,25 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <!-- ===================== -->
-    <!--      DARK COLORS      -->
+    <!--     COLORS      -->
     <!-- ===================== -->
 
     <!-- Hintergrund & Oberflächen -->
-    <Color x:Key="ColorBackground">#121212</Color>
-    <Color x:Key="ColorSurface">#232323</Color>
-    <Color x:Key="ColorSurfaceAlt">#1E1E1E</Color>
-    <Color x:Key="ColorBorder">#333333</Color>
+    <Color x:Key="BackgroundPrimary">#0B2545</Color>
+    <Color x:Key="BackgroundSecondary">#003d99</Color>
 
     <!-- Textfarben -->
-    <Color x:Key="ColorTextPrimary">#FFFFFF</Color>
-    <Color x:Key="ColorTextSecondary">#B5B5B5</Color>
-    <Color x:Key="ColorTextDisabled">#777777</Color>
+    <Color x:Key="Text">#F4F6F9</Color>
+    <Color x:Key="TextDisabled">#9CA3AF</Color>
 
-    <!-- Akzentfarben (Blau) -->
-    <Color x:Key="ColorAccent">#3D82F6</Color>
-    <Color x:Key="ColorAccentDark">#2C6CDD</Color>
-    <Color x:Key="ColorSelectedItem">#1A3B70</Color>
+    <!-- Loading -->
+    <Color x:Key="Loading">#FFB86B</Color>
 
-    <Color x:Key="OverLayBackground">#AA000000</Color>
-    <Color x:Key="ColorOrange">#ffcc00</Color>
-    <Color x:Key="ColorError">#ff0000</Color>
+    <Color x:Key="Disabled">#D1D5DB</Color>
+    <Color x:Key="Error">#FF6B6B</Color>
 
     <!-- =============================== -->
-    <!--       SHELL DARK THEME         -->
+    <!--       SHELL Colors        -->
     <!-- =============================== -->
 
     <!-- Flyout background -->

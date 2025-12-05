@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Shared.Enums;
 using Shared.Models.Authentication;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Logic.AuthenticationService
@@ -17,69 +16,66 @@ namespace Logic.AuthenticationService
     public class UserAuthenticationService : LogicBase, IUserAuthenticationService
     {
         private readonly IDbContextFactory _dbContextFactory;
-        public UserAuthenticationService(IDbContextFactory dbContextFactory, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        private readonly IJwtTokenService _jwtTokenService;
+
+        public UserAuthenticationService(
+            IDbContextFactory dbContextFactory,
+            IHttpContextAccessor httpContextAccessor,
+            IJwtTokenService jwtTokenService) : base(httpContextAccessor)
         {
             _dbContextFactory = dbContextFactory;
+            _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<bool> SignInAsync(LoginModel loginModel)
+        public async Task<JwtTokenResponse?> SignInAsync(LoginModel loginModel)
         {
-            var unitOfWork = new UnitOfWork(_dbContextFactory, DbContextTypeEnum.MySql);
-
-            try
+            using (var unitOfWork = new UnitOfWork(_dbContextFactory, DbContextTypeEnum.MySql))
             {
-
-                var userEntity = await GetByUsernameAsync(unitOfWork.UserRepository, loginModel.UserName);
-
-                var credentialsEntity = userEntity?.Credentials;
-
-                if (userEntity == null || credentialsEntity == null)
+                try
                 {
-                    return await Task.FromResult(false);
+                    var userEntity = await GetByUsernameAsync(unitOfWork.UserRepository, loginModel.UserName);
+
+                    var credentialsEntity = userEntity?.Credentials;
+
+                    if (userEntity == null || credentialsEntity == null)
+                    {
+                        return null;
+                    }
+
+                    var hashedSecret = SecretHelper.GetHashedSecret(loginModel.Secret, credentialsEntity.Salt);
+
+                    if (string.IsNullOrEmpty(hashedSecret) || hashedSecret != credentialsEntity.PasswordHash)
+                    {
+                        return null;
+                    }
+
+                    var tokenData = _jwtTokenService.GenerateTokens(userEntity);
+
+                    credentialsEntity.RefreshToken = tokenData.RefreshToken;
+                    credentialsEntity.ExpiresAt = DateTime.UtcNow.AddSeconds(3600);
+
+                    return await Task.FromResult(new JwtTokenResponse
+                    {
+                        Jwt = tokenData.Jwt,
+                        RefreshToken = tokenData.RefreshToken,
+                        ExpireSeconds = 3600
+                    });
                 }
-
-                var hashedSecret = SecretHelper.GetHashedSecret(credentialsEntity.PasswordHash, credentialsEntity.Salt);
-
-                if (string.IsNullOrEmpty(hashedSecret) || hashedSecret != credentialsEntity.PasswordHash)
+                catch (Exception exception)
                 {
-                    return await Task.FromResult(false);
+                    await unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
+                    {
+                        Message = "Error in UserAuthenticationService.LoginAsync",
+                        ExeptionMessage = exception.Message,
+                        StackTrace = exception?.StackTrace ?? string.Empty,
+                        LogLevel = LogLevelEnum.Error
+                    });
+
+                    await unitOfWork.SaveChangesAsync("System");
+
+                    return null;
                 }
-
-                var context = HttpContext;
-
-                if (context == null)
-                {
-                    return await Task.FromResult(false);
-                }
-
-                var claims = GetUserClaims(userEntity);
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
-                {
-                    IsPersistent = false,
-                    AllowRefresh = false
-                });
-
-                return await Task.FromResult(true);
             }
-            catch (Exception exception)
-            {
-                await unitOfWork.LogMessageRepository.AddAsync(new LogMessageEntity
-                {
-                    Message = "Error in UserAuthenticationService.LoginAsync",
-                    ExeptionMessage = exception.Message,
-                    StackTrace = exception?.StackTrace ?? string.Empty,
-                    LogLevel = LogLevelEnum.Error
-                });
-
-                await unitOfWork.SaveChangesAsync("System");
-
-                return await Task.FromResult(false);
-            }
-
         }
 
         public async Task SignOutAsync()
@@ -109,16 +105,7 @@ namespace Logic.AuthenticationService
             return repo.GetByAsync(predicate, asNoTracking, includes, cancellationToken);
         }
 
-        private List<Claim> GetUserClaims(UserEntity userEntity)
-        {
-            return new List<Claim>
-            {
-                new Claim(UserClaimConstants.UserNameKey, userEntity.Username),
-                new Claim(UserClaimConstants.UserIdKey, userEntity.Id.ToString()),
-                new Claim(UserClaimConstants.UserRoleKey, userEntity.UserRole.ToString()),
-                new Claim(UserClaimConstants.SessionExpireTime, DateTime.UtcNow.AddHours(1).ToString("o"))
-            };
-        }
+
 
         private Expression<Func<UserEntity, object>> IncludeSecretExpression = e => e.Credentials;
 

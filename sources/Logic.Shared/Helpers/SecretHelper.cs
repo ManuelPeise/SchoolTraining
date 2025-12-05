@@ -16,5 +16,13 @@ namespace Logic.Shared.Helpers
 
             return Convert.ToBase64String(passwordBytes.ToArray());
         }
+
+        public static string GetPasswordHash(string password, string salt)
+        {
+            var bytes = Encoding.UTF8.GetBytes(password).ToList();
+            bytes.AddRange(Encoding.UTF8.GetBytes(salt));
+
+            return Convert.ToBase64String(bytes.ToArray());
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace Core.Web.StartUp
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error", createScopeForErrors: true);
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
@@ -22,10 +21,17 @@ namespace Core.Web.StartUp
 
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            // Controller für API-Endpunkte (Login)
+            app.MapControllers();
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
             
             Database.Migrate(app);
+            Database.SeedDefaultSystemAdminUser(app);
         }
     }
 }

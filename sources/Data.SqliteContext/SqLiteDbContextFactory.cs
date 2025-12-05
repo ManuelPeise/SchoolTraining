@@ -10,7 +10,7 @@ namespace Data.SqliteContext
                 var optionsBuilder = new DbContextOptionsBuilder<SqLiteDbContext>();
 
                 // Pfad zur SQLite-Datei (Windows, PMC Design-Time)
-                var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "app.db");
+                var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "SchoolAppDb.db");
                 optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
                 return new SqLiteDbContext(optionsBuilder.Options);

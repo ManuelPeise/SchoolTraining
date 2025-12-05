@@ -2,7 +2,7 @@
 
 namespace Logic.Shared.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
         IDatabaseRepositoryBase<UserEntity> UserRepository { get; }
         IDatabaseRepositoryBase<UserCredentialsEntity> UserCredentialsRepository { get; }

@@ -33,6 +33,8 @@ namespace Logic.Database
 
 
         private IDatabaseRepositoryBase<LogMessageEntity>? _logMessageRepository;
+        private bool disposedValue;
+
         public IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository =>
             _logMessageRepository ??= CreateRepository<LogMessageEntity>();
 
@@ -78,5 +80,28 @@ namespace Logic.Database
 
             return await _context.SaveChangesAsync(cancellationToken);
         }
+
+        #region dispose
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _context?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in der Methode "Dispose(bool disposing)" ein.
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }

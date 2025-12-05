@@ -6,9 +6,9 @@ namespace Logic.Shared
 {
     public static class UserClaimConstants
     {
-        public const string UserIdKey = "userId";
-        public const string UserNameKey = "userName";
-        public const string UserRoleKey = "userRole";
+        public const string UserIdKey = "Id";
+        public const string UserNameKey = "Name";
+        public const string UserRoleKey = "UserRole";
         public const string SessionExpireTime = "expiretime";
     }
 }

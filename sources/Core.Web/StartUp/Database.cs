@@ -1,7 +1,10 @@
-﻿using Data.MySqlContext;
+﻿using Data.Entities;
+using Data.MySqlContext;
 using Logic.Database;
+using Logic.Shared.Helpers;
 using Logic.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Shared.Enums;
 
 namespace Core.Web.Bundles
 {
@@ -33,6 +36,42 @@ namespace Core.Web.Bundles
                 if (db.Database.GetPendingMigrations().Any())
                 {
                     db.Database.Migrate();
+                }
+            }
+        }
+
+        internal static void SeedDefaultSystemAdminUser(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<MySqlDbContext>();
+
+                if (!db.UserTable.Any(x => x.UserRole == UserRoleEnum.SystemAdmin))
+                {
+                    var timeStamp = DateTime.UtcNow;
+
+                    var salt = Guid.NewGuid().ToString();
+
+                    var defaultAdminUser = new UserEntity
+                    {
+                        FirstName = "System",
+                        LastName = "Admin",
+                        Username = "System.Admin",
+                        DateOfBirth = DateTime.Parse("1980-04-20"),
+                        UserRole = UserRoleEnum.SystemAdmin,
+                        Credentials = new UserCredentialsEntity
+                        {
+                            Salt = salt,
+                            PasswordHash = SecretHelper.GetPasswordHash("Pass@word", salt),
+                            CreatedAt = timeStamp,
+                            CreatedBy = "System",
+                        },
+                        CreatedAt = timeStamp,
+                        CreatedBy = "System"
+                    };
+
+                    db.UserTable.Add(defaultAdminUser);
+                    db.SaveChanges();
                 }
             }
         }
