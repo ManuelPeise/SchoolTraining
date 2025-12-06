@@ -1,0 +1,401 @@
+﻿:root {
+    /* Sidebar sizing variables applied globally */
+    --sidebar-collapsed-width: 56px;
+    --sidebar-expanded-width: 260px;
+    --sidebar-icon-size: 20px;
+    --sidebar-icon-padding: 8px;
+    --sidebar-label-size: 18px;
+    --sidebar-label-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    :root {
+        --sidebar-collapsed-width: 48px;
+        --sidebar-expanded-width: 220px;
+        --sidebar-icon-size: 18px;
+        --sidebar-icon-padding: 6px;
+        --sidebar-label-size: 16px;
+        --sidebar-label-weight: 600;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1024px) {
+    :root {
+        --sidebar-collapsed-width: 64px;
+        --sidebar-expanded-width: 280px;
+        --sidebar-icon-size: 22px;
+        --sidebar-icon-padding: 10px;
+        --sidebar-label-size: 20px;
+        --sidebar-label-weight: 600;
+    }
+}
+
+.default-layout-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.content-container {
+    width: 100%;
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: row;
+}
+
+/* Default content takes remaining space when sidebar is collapsed */
+.page-content-container {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 16px
+}
+
+/* Collapsed: content width is screen minus collapsed sidebar */
+.side-menu + .page-content-container {
+    width: calc(100vw - var(--sidebar-collapsed-width));
+}
+
+/* Expanded: content width is screen minus expanded sidebar */
+.side-menu.expanded + .page-content-container {
+    width: calc(100vw - var(--sidebar-expanded-width));
+}
+
+.page-content-container{
+
+}
+/**** NavBar *****************************/
+.default-nav-bar {
+    display: block;
+    width: 100%;
+    background-color: var(--nav-bg, #1f2937);
+    color: var(--nav-fg, #fff);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.default-nav-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+}
+
+.sidebar-toggle-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+    .sidebar-toggle-button:hover {
+        background-color: rgba(255,255,255,0.08);
+        cursor: pointer;
+        color: var(--disabled)
+    }
+
+.app-title {
+    font-size: 22px;
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .app-title:hover {
+        cursor: pointer;
+        color: var(--disabled)
+    }
+
+.nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* List and items */
+.nav-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* User info */
+.user-info {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 8px;
+    min-height: 44px;
+}
+
+.user-icon-svg {
+    width: 28px;
+    height: 28px;
+}
+
+.label-user-name {
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--text);
+    margin-right: 16px;
+}
+
+/* Logout button */
+.logout-button {
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+    .logout-button:hover {
+        background-color: rgba(255,255,255,0.08);
+    }
+
+/* Responsive: stack right-side when narrow */
+@media (max-width: 640px) {
+    .default-nav-bar-container {
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .app-title {
+        font-size: 18px;
+    }
+
+    .nav-list {
+        gap: 10px;
+    }
+
+    .user-icon-svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .label-user-name {
+        font-size: 14px;
+    }
+}
+
+/**** Side Menu *****************************/
+
+.side-menu {
+    padding: 0;
+    margin: 0;
+    background-color: var(--nav-bg, #1f2937);
+    height: 100%;
+    width: var(--sidebar-collapsed-width);
+    max-width: var(--sidebar-collapsed-width);
+    flex: 0 0 var(--sidebar-collapsed-width);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Collapsed explicit constraint */
+.side-menu:not(.expanded) {
+    max-width: var(--sidebar-collapsed-width);
+}
+
+.side-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.side-menu ul li {
+    padding: 0px 8px;
+    margin: 0;
+    width: 100%;
+}
+
+.side-menu .side-menu-header {
+    display: none;
+    padding: 8px 24px;
+}
+
+.side-menu.expanded {
+    width: var(--sidebar-expanded-width);
+    max-width: var(--sidebar-expanded-width);
+    flex: 0 0 var(--sidebar-expanded-width);
+}
+
+    .side-menu.expanded .side-menu-header {
+        width: 100%;
+        padding: 8px 24px;
+        display: flex;
+        flex-direction:column;
+        justify-content:center
+    }
+
+        .side-menu.expanded .side-menu-header .menu-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            padding:0;
+        }
+
+        .side-menu.expanded .side-menu-header .menu-sub-title {
+            font-size: 12px;
+            font-style:italic;
+            font-weight: 500;
+            color: var(--text);
+            padding: 0;
+        }
+
+.side-menu ul li .side-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 0;
+    opacity: .8;
+}
+
+/* Icons always visible, responsive size/padding */
+    .side-menu ul li .side-menu-item .menu-icon {
+        font-size: var(--sidebar-icon-size);
+        padding: var(--sidebar-icon-padding);
+        min-width:40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+.side-menu-item .menu-icon-placeholder {
+    min-width:35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Labels hidden when collapsed */
+.side-menu ul li .side-menu-item .menu-label {
+    display: none;
+}
+
+/* Expanded: show labels and align icon left */
+.side-menu.expanded ul li .side-menu-item .menu-label {
+    display: inline-block;
+    font-size: var(--sidebar-label-size);
+    font-weight: var(--sidebar-label-weight);
+}
+
+.side-menu.expanded ul li .side-menu-item .menu-icon {
+    width: auto;
+    justify-content: start;
+}
+
+/* Hover/active states */
+
+/* Collapsed: disable hover interactions entirely */
+.side-menu:not(.expanded) ul li .side-menu-item,
+.side-menu:not(.expanded) ul li .side-menu-item .menu-icon,
+.side-menu:not(.expanded) ul li .side-menu-item .menu-label {
+    pointer-events: none;
+}
+
+/* Expanded: enable hover with background and opacity, no underline */
+.side-menu.expanded ul li .side-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    opacity: 1;
+}
+
+    .side-menu.expanded ul li .side-menu-item,
+    .side-menu.expanded ul li .side-menu-item .menu-icon,
+    .side-menu.expanded ul li .side-menu-item .menu-label:hover {
+        cursor: pointer;
+        background-color: transparent;
+        text-decoration: none; /* ensure no underline */
+    }
+
+/* Responsive tweaks */
+
+/* Small screens: tighter collapsed, smaller icons/labels */
+@media (max-width: 640px) {
+    .side-menu {
+        width: 48px;
+        max-width: 48px;
+        flex: 0 0 48px;
+    }
+    .side-menu:not(.expanded) { max-width: 48px; }
+
+    .side-menu.expanded {
+        width: 220px;
+        max-width: 220px;
+        flex: 0 0 220px;
+    }
+
+    .side-menu ul li .side-menu-item .menu-icon { font-size: 18px; padding: 6px; }
+    .side-menu.expanded ul li .side-menu-item .menu-label { font-size: 16px; }
+}
+
+/* Medium screens: base values (handled above) */
+
+/* Large screens: roomier sidebar */
+@media (min-width: 1024px) {
+    .side-menu {
+        width: 64px;
+        max-width: 64px;
+        flex: 0 0 64px;
+    }
+    .side-menu:not(.expanded) { max-width: 64px; }
+
+    .side-menu.expanded {
+        width: 280px;
+        max-width: 280px;
+        flex: 0 0 280px;
+    }
+
+    .side-menu.expanded ul li .side-menu-item .menu-label { font-size: 20px; }
+    .side-menu ul li .side-menu-item .menu-icon { font-size: 22px; }
+}
+
+/* Blazor default error UI styling */
+#blazor-error-ui {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(220, 53, 69, 0.95); /* bootstrap-like danger */
+    color: white;
+    z-index: 1000;
+    padding: .6rem 1rem;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    display: none; /* hidden by default */
+}
+
+#blazor-error-ui .reload {
+    color: #fff;
+    text-decoration: underline;
+    margin-left: 1rem;
+}
+
+#blazor-error-ui .dismiss {
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    cursor: pointer;
+}
+
+/* When Blazor sets the error UI to display */
+#blazor-error-ui.show {
+    display: block;
+}

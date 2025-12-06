@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+
+<div class="default-layout-page">
+    <NavBar OnToggleSidebar="@ToggleSidebar" UserName="@CurrentUser.UserName" OnLogout="@OnLogout"/>
+    <div class="content-container">
+        <!--Sidemenu -->
+        <SideMenu IsExpanded="@IsSidebarExpanded" />
+        <!-- page content with with depending of side menu state (expanded or not)-->
+        <div class="page-content-container">
+                @Body
+        </div>
+        <div id="blazor-error-ui" data-nosnippet>
+            An unhandled error has occurred.
+            <a href="." class="reload">Reload</a>
+            <span class="dismiss">🗙</span>
+        </div>
+    </div>
+</div>
+
+
+

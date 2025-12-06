@@ -1,0 +1,31 @@
+﻿<nav class="default-nav-bar">
+    <div class="default-nav-bar-container">
+
+        <!-- SIDEBAR TOGGLE ICON -->
+        <button class="sidebar-toggle-button" @onclick="ToggleSidebar" aria-label="Toggle sidebar" title="Toggle sidebar">
+            ☰
+        </button>
+
+        <!-- BRAND -->
+        <a class="app-title" href="/">MyBlazorApp</a>
+
+        <!-- RIGHT SIDE CONTENT -->
+        <div class="nav-right">
+            <ul class="nav-list">
+                <li class="nav-item user-info">
+                    <span class="user-icon" aria-hidden="true" title="Account">
+                        <svg class="user-icon-svg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                        </svg>
+                    </span>
+                    <span class="label-user-name">@UserName</span>
+                </li>
+                <li class="nav-item">
+                    <button class="logout-button" @onclick="OnLogout">Logout</button>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>

@@ -19,22 +19,19 @@ namespace Core.Web.StartUp
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-            builder.Services.AddCascadingAuthenticationState();
-
+            
             // Add controllers for API endpoints
             builder.Services.AddControllers();
 
             // Authentication and Authorization
             ConfigureJwt(builder);
 
+            // WICHTIG: CustomAuthenticationStateProvider als AuthenticationStateProvider registrieren
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddAuthorizationCore();
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication();
-
-            // WICHTIG: CustomAuthenticationStateProvider als AuthenticationStateProvider registrieren
-            builder.Services.AddScoped<CustomAuthenticationStateProvider>();
-            builder.Services.AddScoped<AuthenticationStateProvider>(provider => 
-                provider.GetRequiredService<CustomAuthenticationStateProvider>());
-            builder.Services.AddCascadingAuthenticationState();
 
             // Authentication Service
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();

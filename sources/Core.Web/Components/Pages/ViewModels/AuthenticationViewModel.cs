@@ -20,7 +20,7 @@ namespace Core.Web.Components.Pages.ViewModels
         public AuthenticationViewModel(
             IUserAuthenticationService authenticationService,
             NavigationManager navigationManager,
-            CustomAuthenticationStateProvider authenticationStateProvider)
+            AuthenticationStateProvider authenticationStateProvider)
         {
             _authenticationService = authenticationService;
             _navigationManager = navigationManager;
@@ -38,7 +38,7 @@ namespace Core.Web.Components.Pages.ViewModels
 
             if (await ((CustomAuthenticationStateProvider)_authenticationStateProvider).AuthenticateAsync(tokenResponse))
             {
-                _navigationManager.NavigateTo("/", forceLoad: true);
+                _navigationManager.NavigateTo("/", true);
             }
             else
             {

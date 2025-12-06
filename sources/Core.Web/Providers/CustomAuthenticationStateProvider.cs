@@ -1,10 +1,10 @@
 ﻿using Logic.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
+using Shared.Enums;
 using Shared.Models.Authentication;
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
+
 using System.Security.Claims;
 
 namespace Core.Web.Providers
@@ -14,6 +14,9 @@ namespace Core.Web.Providers
         
         private readonly IJSRuntime _jsRuntime;
         private const string TokenKey = "authToken";
+        private AuthenticationState _anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        
+        public CurrentUser _currentUser { get; set; } = new();
 
         public CustomAuthenticationStateProvider(IJSRuntime jsRuntime)
         {
@@ -26,7 +29,8 @@ namespace Core.Web.Providers
 
             if (string.IsNullOrEmpty(token))
             {
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                ResetCurrentUser();
+                return _anonymous;
             }
 
             try
@@ -42,19 +46,23 @@ namespace Core.Web.Providers
                     if (expirationTime < DateTimeOffset.UtcNow)
                     {
                         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", TokenKey);
-                        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                        ResetCurrentUser();
+                        return _anonymous;
                     }
                 }
 
-               
+                // Map claims to CurrentUser
+                SetCurrentUserFromClaims(identity);
+                
                 var user = new ClaimsPrincipal(identity);
-
+                
                 return new AuthenticationState(user);
             }
             catch
             {
                 await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", TokenKey);
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                ResetCurrentUser();
+                return _anonymous;
             }
         }
 
@@ -68,6 +76,9 @@ namespace Core.Web.Providers
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, response.Jwt);
 
             var identity = GetClaimsIdentity(response.Jwt);
+            // Map claims to CurrentUser
+            SetCurrentUserFromClaims(identity);
+
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
             
@@ -79,8 +90,15 @@ namespace Core.Web.Providers
         public async Task LogoutAsync()
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", TokenKey);
-            var anonymous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-            NotifyAuthenticationStateChanged(Task.FromResult(anonymous));
+            ResetCurrentUser();
+           
+            
+            NotifyAuthenticationStateChanged(Task.FromResult(_anonymous));
+        }
+
+        public CurrentUser GetCurrentUser()
+        {
+            return _currentUser;
         }
 
         private ClaimsIdentity GetClaimsIdentity(string token)
@@ -91,6 +109,38 @@ namespace Core.Web.Providers
             var claims = jwtToken.Claims;
 
             return new ClaimsIdentity(claims, "jwt");
+        }
+
+        private void SetCurrentUserFromClaims(ClaimsIdentity identity)
+        {
+            var claims = identity.Claims.ToDictionary(c => c.Type, c => c.Value);
+
+            if (claims.TryGetValue(UserClaimConstants.UserIdKey, out var idStr) && int.TryParse(idStr, out var id))
+            {
+                _currentUser.UserId = id;
+            }
+            else
+            {
+                _currentUser.UserId = 0;
+            }
+
+            _currentUser.UserName = claims.TryGetValue(UserClaimConstants.UserNameKey, out var name) ? name ?? string.Empty : string.Empty;
+
+            if (claims.TryGetValue(UserClaimConstants.UserRoleKey, out var roleStr) && Enum.TryParse<UserRoleEnum>(roleStr, true, out var role))
+            {
+                _currentUser.UserRole = role;
+            }
+            else
+            {
+                _currentUser.UserRole = default;
+            }
+        }
+
+        private void ResetCurrentUser()
+        {
+            _currentUser.UserId = 0;
+            _currentUser.UserName = string.Empty;
+            _currentUser.UserRole = default;
         }
     }
 }
