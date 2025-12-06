@@ -1,13 +1,14 @@
 ﻿using Core.Web.Bundles;
 using Core.Web.Components.Pages.ViewModels;
 using Core.Web.Providers;
+using Logic.Administration.FileImport;
+using Logic.Administration.Interfaces;
 using Logic.AuthenticationService;
 using Logic.Shared.Interfaces.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Models.Authentication;
-using System.Globalization;
 using System.Text;
 
 namespace Core.Web.StartUp
@@ -37,9 +38,10 @@ namespace Core.Web.StartUp
             // Authentication Service
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
+            // File Import Factory
+            builder.Services.AddScoped<IFileImportFactory, FileImportFactory>();
+            
             // ViewModels
-            // Register view models as scoped so the same instance is used for the component lifecycle
             builder.Services.AddScoped<CounterViewModel>();
             builder.Services.AddScoped<AuthenticationViewModel>();
         }

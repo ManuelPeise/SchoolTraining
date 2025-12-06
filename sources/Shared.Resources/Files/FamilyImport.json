@@ -1,0 +1,20 @@
+{
+    "name": "",
+    "contactMailAddress": "",
+    "isActive": true,
+    "familyMembers": [
+        {
+            "firstName": "",
+            "lastName": "",
+            "username": "",
+            "email": "",
+            "dateOfBirth": "",
+            "userRole": "",
+            "credentials": {
+                "password": ""
+            },
+            "settings": {
+            }
+        }
+    ]
+}

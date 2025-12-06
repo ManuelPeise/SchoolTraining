@@ -33,10 +33,12 @@ namespace Logic.Database
 
 
         private IDatabaseRepositoryBase<LogMessageEntity>? _logMessageRepository;
-        private bool disposedValue;
-
         public IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository =>
             _logMessageRepository ??= CreateRepository<LogMessageEntity>();
+
+        private IDatabaseRepositoryBase<ImportFileEntity>? _importFileRepository;
+        public IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository =>
+            _importFileRepository ??= CreateRepository<ImportFileEntity>();
 
         public UnitOfWork(IDbContextFactory dbContextFactory, DbContextTypeEnum? dbContextTypeEnum)
         {
@@ -81,7 +83,19 @@ namespace Logic.Database
             return await _context.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task<int> LogMessage(LogMessageEntity entity, bool save = false, string userName = "System", CancellationToken cancellationToken = default)
+        {
+            await LogMessageRepository.AddAsync(entity, cancellationToken);
+
+            if (save)
+            {
+                return await SaveChangesAsync(userName, cancellationToken);
+            }
+
+            return 0;
+        }
         #region dispose
+        private bool disposedValue;
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

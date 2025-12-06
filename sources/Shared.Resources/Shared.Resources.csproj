@@ -12,12 +12,22 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Core.resx</DependentUpon>
     </Compile>
+    <Compile Update="Files.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Files.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Core.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Core.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Resx</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Files.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Files.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Resx</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>

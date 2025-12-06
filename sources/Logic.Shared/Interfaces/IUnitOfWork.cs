@@ -14,5 +14,6 @@ namespace Logic.Shared.Interfaces
         /// Save all changes made in this unit of work to the database.
         /// </summary>
         Task<int> SaveChangesAsync(string userName, CancellationToken cancellationToken = default);
+        public Task<int> LogMessage(LogMessageEntity entity, bool save = false, string userName = "System", CancellationToken cancellationToken = default);
     }
 }

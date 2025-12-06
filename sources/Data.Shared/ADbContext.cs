@@ -13,6 +13,7 @@ namespace Data.Shared
         public DbSet<UserCredentialsEntity> CredentialsTable { get; set; }
         public DbSet<UserSettingsEntity> SettingsTable { get; set; }
         public DbSet<LogMessageEntity> LogMessageTable { get; set; }
+        public DbSet<ImportFileEntity> ImportFileTable { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
