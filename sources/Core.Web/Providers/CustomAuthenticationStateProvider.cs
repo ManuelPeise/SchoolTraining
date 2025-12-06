@@ -76,7 +76,7 @@ namespace Core.Web.Providers
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", TokenKey, response.Jwt);
 
             var identity = GetClaimsIdentity(response.Jwt);
-            // Map claims to CurrentUser
+           
             SetCurrentUserFromClaims(identity);
 
             var user = new ClaimsPrincipal(identity);
@@ -92,7 +92,6 @@ namespace Core.Web.Providers
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", TokenKey);
             ResetCurrentUser();
            
-            
             NotifyAuthenticationStateChanged(Task.FromResult(_anonymous));
         }
 
