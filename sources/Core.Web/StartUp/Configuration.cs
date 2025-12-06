@@ -1,5 +1,6 @@
 ﻿using Core.Web.Bundles;
 using Core.Web.Components;
+using Microsoft.Extensions.Options;
 
 namespace Core.Web.StartUp
 {
@@ -18,18 +19,15 @@ namespace Core.Web.StartUp
             app.UseAntiforgery();
 
             app.MapStaticAssets();
-
             app.UseStaticFiles();
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Controller für API-Endpunkte (Login)
             app.MapControllers();
-
             app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
-            
+               .AddInteractiveServerRenderMode();
+
             Database.Migrate(app);
             Database.SeedDefaultSystemAdminUser(app);
         }

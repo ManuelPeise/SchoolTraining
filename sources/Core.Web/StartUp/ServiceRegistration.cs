@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Models.Authentication;
+using System.Globalization;
 using System.Text;
 
 namespace Core.Web.StartUp
@@ -19,10 +20,10 @@ namespace Core.Web.StartUp
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-            
-            // Add controllers for API endpoints
-            builder.Services.AddControllers();
 
+            builder.Services.AddLocalization();
+
+            builder.Services.AddControllers();
             // Authentication and Authorization
             ConfigureJwt(builder);
 
