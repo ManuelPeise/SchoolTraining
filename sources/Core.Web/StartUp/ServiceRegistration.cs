@@ -36,7 +36,7 @@ namespace Core.Web.StartUp
             // Authentication and Authorization
             ConfigureJwt(builder);
 
-            // WICHTIG: CustomAuthenticationStateProvider als AuthenticationStateProvider registrieren
+            builder.Services.AddScoped<ILogService, LogService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddAuthorizationCore();

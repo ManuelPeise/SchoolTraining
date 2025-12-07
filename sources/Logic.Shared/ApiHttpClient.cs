@@ -1,4 +1,6 @@
-﻿using Logic.Shared.Interfaces;
+﻿using Data.Entities;
+using Logic.Shared.Interfaces;
+using Shared.Enums;
 using Shared.Models;
 using System.Diagnostics;
 using System.Text;
@@ -9,12 +11,13 @@ namespace Logic.Shared
     public class ApiHttpClient : IApiHttpClient
     {
         private HttpClient _httpClient;
+        private readonly ILogService _logService;
         private Uri _baseAddress { get; set; } = new Uri("http://localhost:5015/",UriKind.Absolute);
 
-        public ApiHttpClient()
+        public ApiHttpClient(ILogService logService)
         {
             _httpClient = new HttpClient();
-            
+            _logService = logService;
         }
 
         public async Task<ResponseBase<TModel>> GetAsync<TModel>(string requestUri)
@@ -51,6 +54,14 @@ namespace Logic.Shared
             catch (Exception exception)
             {
                 Debug.WriteLine($"Api request [{requestUri}] failed, {exception.Message}");
+
+                await _logService.LogMessage(new LogMessageEntity
+                {
+                    Message = $"Api request [{requestUri}] failed.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                });
 
                 return new ResponseBase<TModel>
                 {
@@ -94,6 +105,14 @@ namespace Logic.Shared
             {
                 Debug.WriteLine($"Api request [{requestUri}] failed, {exception.Message}");
 
+                await _logService.LogMessage(new LogMessageEntity
+                {
+                    Message = $"Api request [{requestUri}] failed.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                });
+
                 return new ResponseBase<TModel>
                 {
                     IsSuccess = false,
@@ -130,6 +149,14 @@ namespace Logic.Shared
             catch (Exception exception)
             {
                 Debug.WriteLine($"Api request [{requestUri}] failed, {exception.Message}");
+
+                await _logService.LogMessage(new LogMessageEntity
+                {
+                    Message = $"Api request [{requestUri}] failed.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                });
 
                 return new ResponseBase
                 {

@@ -25,17 +25,52 @@
                 </div>
             </div>
         </div>
-        @ViewModel
+        <!-- container -->
+        <div class="w-100 p-3 border rounded">
+            <!-- Filter & Auswahl -->
+            <div class="w-100 p-3 border rounded mt-2">
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                    <div class="flex-grow-1 min-w-0">
+                        <input class="form-control" placeholder="Familie suchen …"
+                               @bind="ViewModel.FilterText"
+                               @bind:event="oninput"
+                               aria-label="Familie suchen" />
+                    </div>
+                    <div class="w-100 w-sm-50">
+                        <select class="form-select"
+                                @bind="ViewModel.SelectedFamilyId"
+                                aria-label="Familie auswählen">
+                            <option value="">-- Familie auswählen --</option>
+                            @foreach (var fam in ViewModel.FilteredFamilies)
+                            {
+                                <option value="@fam.Id">@fam.DisplayName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="w-100 p-3 border rounded">
+                    <!-- vertival tabs -->
+                    <div>
+                        <!-- Summary -->
+                    </div>
+                    <div>
+                        <!-- user details -->
+                    </div>
+                </div>
+                <div class="w-100 p-3 border rounded">
+                    <!-- detail area -->
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<script src="/js/FileImport.js"></script>
-@code{
+    <script src="/js/FileImport.js"></script>
+@code {
 
     private async Task DownloadFile()
     {
         var fileResult = await ViewModel.GetFileFromServer();
 
-        if(fileResult == null || fileResult?.FileName == null)
+        if (fileResult == null || fileResult?.FileName == null)
         {
             return;
         }
