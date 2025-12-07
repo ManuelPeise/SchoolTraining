@@ -7,18 +7,24 @@ namespace Core.Web.Components.Layout
 {
     public partial class DefaultLayout
     {
-        private readonly CurrentUser? _currentUser = new();
+        private CurrentUser? _currentUser = new();
         private readonly NavigationManager _navigationManager;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
-        public CurrentUser CurrentUser => _currentUser;
+        public CurrentUser? CurrentUser => _currentUser;
         public bool IsSidebarExpanded { get; set; } = false;
-
+        private string UserRole { get; set; } = string.Empty;
+        
         public DefaultLayout(AuthenticationStateProvider authenticationStateProvider, NavigationManager navigationManager)
         {
             _authenticationStateProvider = authenticationStateProvider;
             _navigationManager = navigationManager;
 
-            _currentUser = GetCurrentUser();
+           
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            _currentUser = await GetCurrentUser();
         }
 
         protected void ToggleSidebar()
@@ -33,12 +39,13 @@ namespace Core.Web.Components.Layout
             _navigationManager.NavigateTo("/auth", true);
         }
 
-        private CurrentUser? GetCurrentUser()
+        private async Task<CurrentUser?> GetCurrentUser()
         {
-            var currentUser = ((CustomAuthenticationStateProvider)_authenticationStateProvider).GetCurrentUser();
+            var currentUser = await ((CustomAuthenticationStateProvider)_authenticationStateProvider).GetCurrentUser();
 
             if(currentUser != null)
             {
+                UserRole = currentUser.UserRole.ToString() ?? string.Empty;
                 return currentUser;
             }
 

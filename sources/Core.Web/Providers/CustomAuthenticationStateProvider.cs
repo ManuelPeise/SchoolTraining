@@ -95,9 +95,38 @@ namespace Core.Web.Providers
             NotifyAuthenticationStateChanged(Task.FromResult(_anonymous));
         }
 
-        public CurrentUser GetCurrentUser()
+        public string? GetRoleOfCurrentUser()
         {
+            return _currentUser.UserRole.ToString();
+        }
+
+        public async Task<CurrentUser?> GetCurrentUser()
+        {
+            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", TokenKey);
+
+            if (string.IsNullOrEmpty(token))
+            {
+                ResetCurrentUser();
+                return null;
+            }
+
+            var identity = GetClaimsIdentity(token);
+            
+            SetCurrentUserFromClaims(identity);
+
             return _currentUser;
+        }
+
+        public async Task<string?> GetJwtTokenHeader()
+        {
+            var token =  await _jsRuntime.InvokeAsync<string>("localStorage.getItem", TokenKey) ?? string.Empty;
+
+            if(string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+
+            return token;
         }
 
         private ClaimsIdentity GetClaimsIdentity(string token)

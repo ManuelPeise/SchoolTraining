@@ -104,10 +104,5 @@ namespace Logic.AuthenticationService
 
             return repo.GetByAsync(predicate, asNoTracking, includes, cancellationToken);
         }
-
-
-
-        private Expression<Func<UserEntity, object>> IncludeSecretExpression = e => e.Credentials;
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Core.Web.Bundles;
 using Core.Web.Components;
-using Microsoft.Extensions.Options;
 
 namespace Core.Web.StartUp
 {
@@ -13,6 +12,10 @@ namespace Core.Web.StartUp
                 app.UseExceptionHandler("/Error", createScopeForErrors: true);
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
             app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
             app.UseHttpsRedirection();
 
@@ -25,6 +28,7 @@ namespace Core.Web.StartUp
             app.UseAuthorization();
 
             app.MapControllers();
+
             app.MapRazorComponents<App>()
                .AddInteractiveServerRenderMode();
 

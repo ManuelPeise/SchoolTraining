@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.MySqlContext.Migrations
 {
     [DbContext(typeof(MySqlDbContext))]
-    [Migration("20251206130226_AddImportFileTable")]
-    partial class AddImportFileTable
+    [Migration("20251206153729_InitializeDatabase")]
+    partial class InitializeDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

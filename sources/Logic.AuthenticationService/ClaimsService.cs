@@ -13,6 +13,7 @@ namespace Logic.AuthenticationService
             {
                 new Claim(UserClaimConstants.UserNameKey, userEntity.Username),
                 new Claim(UserClaimConstants.UserIdKey, userEntity.Id.ToString()),
+                new Claim(UserClaimConstants.FamilyIdKey, userEntity.FamilyId?.ToString() ?? ""),
                 new Claim(UserClaimConstants.UserRoleKey, userEntity.UserRole.ToString()),
                 new Claim(UserClaimConstants.SessionExpireTime, DateTime.UtcNow.AddHours(1).ToString("o"))
             };

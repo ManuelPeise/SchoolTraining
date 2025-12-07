@@ -1,4 +1,6 @@
 ﻿using Data.Entities;
+using Shared.Models.Administration;
+using Shared.Models.Administration.Interfaces;
 using Shared.Models.Import;
 using System.Text;
 
@@ -54,6 +56,74 @@ namespace Logic.Administration.Extensions
                 }); 
             }
             return users;
+        }
+
+        internal static List<FamilyModel> ToFamilyList(this List<FamilyEntity> entities)
+        {
+            var families = new List<FamilyModel>();
+            entities.ForEach(entity =>
+            {
+                var family = entity.ToFamily();
+                if (family != null)
+                {
+                    families.Add(family);
+                }
+            });
+            return families;
+        }
+
+        internal static FamilyModel? ToFamily(this FamilyEntity entity)
+        {
+            if(entity == null)
+            {
+                return null;
+            }
+
+            return new FamilyModel
+            {
+                FamilyId = entity.Id,
+                Name = entity.Name,
+                ContactMailAddress = entity.ContactMailAddress,
+                IsActive = entity.IsActive,
+                Members = entity.Users.ToFamilyMemberList()
+            };
+        }
+
+        internal static FamilyMemberModel? ToFamilyMember(this UserEntity entity)
+        {
+            if(entity == null)
+            {
+                return null;
+            }
+
+            return new FamilyMemberModel
+            {
+                UserId = entity.Id,
+                FirstName = entity.FirstName,
+                LastName = entity.LastName,
+                UserName = entity.Username,
+                Email = entity.Email,
+                DateOfBirth = entity.DateOfBirth,
+                UserRole = entity.UserRole,
+                IsActive = entity.IsActive
+            };
+        }
+
+        internal static List<FamilyMemberModel> ToFamilyMemberList(this List<UserEntity> entities)
+        {
+            var members = new List<FamilyMemberModel>();
+
+            entities.ForEach(entity =>
+            {
+                var member = entity.ToFamilyMember();
+
+                if (member != null)
+                {
+                    members.Add(member);
+                }
+            });
+
+            return members;
         }
 
         private static string GetHashedSecret(string? password, string salt)

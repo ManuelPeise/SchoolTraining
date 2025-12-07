@@ -4,52 +4,50 @@ using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
+using Shared.Models.Administration;
 using System.Text;
 
 namespace Logic.Administration.FileImport
 {
-    public abstract class AFileImport: LogicBase
+    public abstract class AFileImport : LogicBase
     {
         protected IDbContextFactory DbContextFactory;
-        
-        protected AFileImport(IHttpContextAccessor httpContextAccessor, IDbContextFactory dbContextFactory):base(httpContextAccessor)
+
+        protected AFileImport(IHttpContextAccessor httpContextAccessor, IDbContextFactory dbContextFactory) : base(httpContextAccessor)
         {
-          DbContextFactory = dbContextFactory;
+            DbContextFactory = dbContextFactory;
         }
 
-        protected abstract Task<int> Import(FileStream fileStream);
+        public abstract Task<int> Import(string fileContent, string fileName);
 
-        protected abstract Task<Stream?> GetFile(FileImportTypeEnum fileType);
-        
-        protected Stream? GetFileTemplate(FileImportTypeEnum fileType)
+        public abstract Task<FileDownloadModel> GetFile(FileImportTypeEnum fileType);
+
+        protected (string? fileName, string? base64String) GetFileTemplate(FileImportTypeEnum fileType)
         {
             byte[] file;
 
-            switch(fileType)
+            switch (fileType)
             {
                 case FileImportTypeEnum.Family:
-                   file = Resx.Files.FamilyImport;
+                    file = Resx.Files.FamilyImport;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(fileType));
             }
 
-            if(file == null || file.Length == 0)
+            if (file == null || file.Length == 0)
             {
-                return null;
+                return (null, null);
             }
 
-            using(var memoryStream = new MemoryStream(file))
-            {
-                return memoryStream;
-            } 
+            return ("FamilyImportTemplate.json", Convert.ToBase64String(file));
         }
 
-        protected async Task SaveImportFile(UnitOfWork unitOfWork, FileImportTypeEnum fileType, string fileContent, ImportStatusEnum status)
+        protected async Task SaveImportFile(UnitOfWork unitOfWork, FileImportTypeEnum fileType, string fileName, string fileContent, ImportStatusEnum status)
         {
             await unitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
             {
-                FileName = Path.GetRandomFileName(),
+                FileName = fileName,
                 FileType = fileType,
                 FileContent = Encoding.UTF8.GetBytes(fileContent),
                 Status = status

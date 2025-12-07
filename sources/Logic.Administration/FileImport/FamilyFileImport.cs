@@ -4,6 +4,7 @@ using Logic.Database;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
+using Shared.Models.Administration;
 using Shared.Models.Import;
 using System.Text.Json;
 
@@ -13,26 +14,24 @@ namespace Logic.Administration.FileImport
     {
         public FamilyFileImport(IHttpContextAccessor httpContextAccessor, IDbContextFactory dbContextFactory) : base(httpContextAccessor, dbContextFactory) { }
 
-        protected override async Task<int> Import(FileStream fileStream)
+        public override async Task<int> Import(string fileContent, string fileName)
         {
             using (var unitOfWork = new UnitOfWork(DbContextFactory, DbContextTypeEnum.MySql))
             {
-                string fileContent;
-
                 try
                 {
-                    using (var reader = new StreamReader(fileStream))
+                  
+                    var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent, new JsonSerializerOptions
                     {
-                        fileContent = await reader.ReadToEndAsync();
-                    }
-
-                    var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent);
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
+                    });
 
                     var familyEntity = familyImportModel?.ToImportEntity();
 
                     if (familyImportModel == null || familyEntity == null)
                     {
-                        await SaveImportFile(unitOfWork, FileImportTypeEnum.Family, fileContent, ImportStatusEnum.Failed);
+                        await SaveImportFile(unitOfWork, FileImportTypeEnum.Family, fileName, fileContent, ImportStatusEnum.Failed);
 
                         return await unitOfWork.LogMessage(new LogMessageEntity
                         {
@@ -45,7 +44,7 @@ namespace Logic.Administration.FileImport
 
                     await unitOfWork.FamilyRepository.AddAsync(familyEntity);
 
-                    await SaveImportFile(unitOfWork, FileImportTypeEnum.Family, fileContent, ImportStatusEnum.Success);
+                    await SaveImportFile(unitOfWork, FileImportTypeEnum.Family, fileName, fileContent, ImportStatusEnum.Success);
 
                     return await unitOfWork.LogMessage(new LogMessageEntity
                     {
@@ -68,9 +67,15 @@ namespace Logic.Administration.FileImport
             }
         }
 
-        protected override async Task<Stream?> GetFile(FileImportTypeEnum fileType)
+        public override async Task<FileDownloadModel> GetFile(FileImportTypeEnum fileType)
         {
-            return await Task.FromResult(GetFileTemplate(fileType));
+            var result = await Task.FromResult(GetFileTemplate(fileType));
+
+            return new FileDownloadModel
+            {
+                FileName = result.fileName,
+                FileContent = result.base64String
+            };
         }
     }
 }

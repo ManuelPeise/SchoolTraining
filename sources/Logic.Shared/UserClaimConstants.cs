@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Logic.Shared
+﻿namespace Logic.Shared
 {
     public static class UserClaimConstants
     {
@@ -10,5 +6,6 @@ namespace Logic.Shared
         public const string UserNameKey = "Name";
         public const string UserRoleKey = "UserRole";
         public const string SessionExpireTime = "expiretime";
+        public const string FamilyIdKey = "FamilyId";
     }
 }

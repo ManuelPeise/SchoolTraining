@@ -28,15 +28,17 @@ namespace Logic.Shared
                 return null;
             }
 
-            var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-            var userNameClaim = context.User.Claims.FirstOrDefault(c => c.Type == "UserName");
-            var userRoleClaim = context.User.Claims.FirstOrDefault(c => c.Type == "UserRole");
-            
+            var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == UserClaimConstants.UserIdKey);
+            var userNameClaim = context.User.Claims.FirstOrDefault(c => c.Type == UserClaimConstants.UserNameKey);
+            var userRoleClaim = context.User.Claims.FirstOrDefault(c => c.Type == UserClaimConstants.UserRoleKey);
+            var familyIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == UserClaimConstants.FamilyIdKey);
+
             return new CurrentUser
             {
-                UserId = userIdClaim != null ? int.Parse(userIdClaim.Value) : 0,
-                UserName = userNameClaim?.Value ?? string.Empty,
-                UserRole = userRoleClaim != null ? Enum.Parse<UserRoleEnum>(userRoleClaim.Value) : UserRoleEnum.Guest
+                UserId = !string.IsNullOrEmpty(userIdClaim?.Value) ? int.Parse(userIdClaim.Value) : 0,
+                FamilyId = !string.IsNullOrEmpty(familyIdClaim?.Value) ? int.Parse (familyIdClaim.Value) : null,
+                UserName = !string.IsNullOrEmpty(userNameClaim?.Value) ? userNameClaim.Value : string.Empty,
+                UserRole = !string.IsNullOrEmpty(userRoleClaim?.Value) ? Enum.Parse<UserRoleEnum>(userRoleClaim.Value) : UserRoleEnum.Guest
             };
         }
     }

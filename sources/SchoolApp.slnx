@@ -5,7 +5,9 @@
     </Project>
     <Project Path="Core.Web/Core.Web.csproj" Id="1b9f07a5-b651-443e-805a-222a5355fabb" />
   </Folder>
-  <Folder Name="/02 Services/" />
+  <Folder Name="/02 Services/">
+    <Project Path="Service.Api/Service.Api.csproj" Id="b0b81b2d-871f-4db1-95a7-c72f838cfb79" />
+  </Folder>
   <Folder Name="/03 Logic/">
     <Project Path="Logic.Administration/Logic.Administration.csproj" Id="73b74bd9-d946-4cfe-bbe1-8f753aba2e46" />
     <Project Path="Logic.AuthenticationService/Logic.AuthenticationService.csproj" Id="a48d4291-d021-4a1f-a5b0-9c3d1c2b4535" />

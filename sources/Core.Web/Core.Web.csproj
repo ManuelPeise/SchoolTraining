@@ -21,6 +21,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,12 +32,9 @@
     <ProjectReference Include="..\Logic.AuthenticationService\Logic.AuthenticationService.csproj" />
     <ProjectReference Include="..\Logic.Database\Logic.Database.csproj" />
     <ProjectReference Include="..\Logic.Shared\Logic.Shared.csproj" />
+    <ProjectReference Include="..\Service.Api\Service.Api.csproj" />
     <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
     <ProjectReference Include="..\Shared.Resources\Shared.Resources.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

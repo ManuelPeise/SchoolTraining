@@ -1,0 +1,45 @@
+﻿@page "/administration/family-and-user-administration"
+@using Core.Web.Components.Pages.ViewModels
+@inherits ViewModelComponentBase<FamilyAndUserViewModel>
+@inject IJSRuntime JS
+
+<div class="app-container">
+    <LoadingOverlay IsLoading="@ViewModel.IsLoading" />
+    <div class="w-100 p-3 border rounded">
+        <div class="d-flex flex-column flex-sm-row flex-wrap align-items-start align-items-sm-center gap-2">
+            <div class="flex-grow-1 min-w-0">
+                <h2 class="text-truncate" title="Family and User Administration" data-bs-toggle="tooltip">Family and User Administration</h2>
+                <p class="text-muted mb-2 text-truncate" title="Manage families and users by downloading the template or uploading your file." data-bs-toggle="tooltip">Manage families and users by downloading the template or uploading your file.</p>
+            </div>
+            <div class="ms-sm-auto w-100 w-sm-auto">
+                <div class="d-flex justify-content-end align-items-center mt-2 mt-sm-0">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" title="File download" aria-label="File download" @onclick="DownloadFile">
+                        <span id="family-template-download-link" class="bi bi-arrow-down-circle"></span>
+                        <span>Download</span>
+                    </button>
+                    <label class="btn btn-secondary ms-2" data-bs-toggle="tooltip" title="File upload" for="family-template-file-selector" aria-label="File upload" role="button">
+                        <InputFile id="family-template-file-selector" OnChange="@ViewModel.HandleSelectFile" hidden />
+                        <span class="bi bi-arrow-up-circle"></span>
+                        <span>Upload</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        @ViewModel
+    </div>
+</div>
+<script src="/js/FileImport.js"></script>
+@code{
+
+    private async Task DownloadFile()
+    {
+        var fileResult = await ViewModel.GetFileFromServer();
+
+        if(fileResult == null || fileResult?.FileName == null)
+        {
+            return;
+        }
+
+        await JS.InvokeVoidAsync("downloadFamilyTemplateFile", fileResult.FileName, fileResult.FileContent);
+    }
+}

@@ -1,9 +1,10 @@
 ﻿using Core.Web.Bundles;
 using Core.Web.Components.Pages.ViewModels;
 using Core.Web.Providers;
-using Logic.Administration.FileImport;
-using Logic.Administration.Interfaces;
+using Logic.Administration.DI;
 using Logic.AuthenticationService;
+using Logic.Shared;
+using Logic.Shared.Interfaces;
 using Logic.Shared.Interfaces.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -17,6 +18,8 @@ namespace Core.Web.StartUp
     {
         public static void Register(WebApplicationBuilder builder)
         {
+            
+
             Database.RegisterDatabaseServices(builder);
 
             builder.Services.AddHttpContextAccessor();
@@ -25,6 +28,11 @@ namespace Core.Web.StartUp
             builder.Services.AddLocalization();
 
             builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IApiHttpClient, ApiHttpClient>();
+
             // Authentication and Authorization
             ConfigureJwt(builder);
 
@@ -38,12 +46,13 @@ namespace Core.Web.StartUp
             // Authentication Service
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            // File Import Factory
-            builder.Services.AddScoped<IFileImportFactory, FileImportFactory>();
+            // register administration services
+            AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
             
             // ViewModels
             builder.Services.AddScoped<CounterViewModel>();
             builder.Services.AddScoped<AuthenticationViewModel>();
+            builder.Services.AddScoped<FamilyAndUserViewModel>();
         }
 
         private static void ConfigureJwt(WebApplicationBuilder builder)

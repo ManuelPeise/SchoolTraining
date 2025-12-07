@@ -70,6 +70,24 @@ namespace Resx {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Administration ähnelt.
+        /// </summary>
+        public static string LabelAdministration {
+            get {
+                return ResourceManager.GetString("LabelAdministration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Family &amp; Users ähnelt.
+        /// </summary>
+        public static string LabelFamilyAndUserAdministration {
+            get {
+                return ResourceManager.GetString("LabelFamilyAndUserAdministration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Login ähnelt.
         /// </summary>
         public static string LabelLogin {

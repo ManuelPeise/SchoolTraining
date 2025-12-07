@@ -1,0 +1,12 @@
+﻿/* Ensure truncated text never overflows the container on this page */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+/* Allow flex children to shrink properly */
+.min-w-0 {
+    min-width: 0;
+}

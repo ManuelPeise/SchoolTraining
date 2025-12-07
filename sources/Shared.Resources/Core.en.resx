@@ -109,4 +109,10 @@
   <data name="LabelPassword" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="LabelFamilyAndUserAdministration" xml:space="preserve">
+    <value>Family &amp; Users</value>
+  </data>
+  <data name="LabelAdministration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
 </root>
