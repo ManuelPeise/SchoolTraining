@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Data.MySqlContext\Data.MySqlContext.csproj" />
     <ProjectReference Include="..\Data.Shared\Data.Shared.csproj" />
     <ProjectReference Include="..\Shared.Enums\Shared.Enums.csproj" />
     <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />

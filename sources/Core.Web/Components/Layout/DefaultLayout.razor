@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
 
 <div class="container-fluid p-0 m-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -11,6 +13,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
@@ -30,6 +33,26 @@
                         <NavLink class="nav-link" href="/contact">Contact</NavLink>
                     </li>
                 </ul>
+
+                <!-- Right side: user info + logout -->
+                <div class="d-flex ms-auto align-items-center gap-4">
+                    <AuthorizeView>
+                        <Authorized>
+                            <span class="bi bi-person-circle text-light fs-2 p-0 me-2" />
+                            <span class="text-light fs-4 p-0">
+                                @CurrentUser?.UserName
+                            </span>
+                            <button class="logout-button" @onclick="@OnLogout">
+                                <span>@Resx.Core.LabelLogout</span>
+                            </button>
+                        </Authorized>
+                        <NotAuthorized>
+                            <button class="login-button" @onclick="@OnLoginClicked">
+                                <span>@Resx.Core.LabelLogin</span>
+                            </button>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
             </div>
         </div>
     </nav>

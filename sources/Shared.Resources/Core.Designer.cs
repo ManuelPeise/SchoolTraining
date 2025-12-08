@@ -97,11 +97,29 @@ namespace Resx {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Logout ähnelt.
+        /// </summary>
+        public static string LabelLogout {
+            get {
+                return ResourceManager.GetString("LabelLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Password ähnelt.
         /// </summary>
         public static string LabelPassword {
             get {
                 return ResourceManager.GetString("LabelPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Search ähnelt.
+        /// </summary>
+        public static string LabelSearch {
+            get {
+                return ResourceManager.GetString("LabelSearch", resourceCulture);
             }
         }
         

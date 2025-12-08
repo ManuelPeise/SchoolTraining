@@ -10,6 +10,7 @@ using Shared.Enums;
 using Shared.Models.Authentication;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Authentication;
+using Shared.Models;
 
 namespace Logic.AuthenticationService
 {
@@ -54,12 +55,13 @@ namespace Logic.AuthenticationService
                     credentialsEntity.RefreshToken = tokenData.RefreshToken;
                     credentialsEntity.ExpiresAt = DateTime.UtcNow.AddSeconds(3600);
 
-                    return await Task.FromResult(new JwtTokenResponse
-                    {
-                        Jwt = tokenData.Jwt,
-                        RefreshToken = tokenData.RefreshToken,
-                        ExpireSeconds = 3600
-                    });
+                    return new JwtTokenResponse
+                        {
+                            Jwt = tokenData.Jwt,
+                            RefreshToken = tokenData.RefreshToken,
+                            ExpireSeconds = 3600
+                    };
+                    
                 }
                 catch (Exception exception)
                 {

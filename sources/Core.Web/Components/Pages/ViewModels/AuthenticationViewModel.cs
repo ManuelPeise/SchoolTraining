@@ -1,15 +1,17 @@
 ﻿using Core.Web.Providers;
 using Core.Web.ViewModels;
-using Logic.Shared.Interfaces.Authentication;
+using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Shared.Models.Authentication;
+using System.Text.Json;
 
 namespace Core.Web.Components.Pages.ViewModels
 {
     public class AuthenticationViewModel : ViewModelBase
     {
-        private readonly IUserAuthenticationService _authenticationService;
+        private readonly IApiHttpClient _apiHttpClient;
+
         private readonly NavigationManager _navigationManager;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
 
@@ -18,31 +20,40 @@ namespace Core.Web.Components.Pages.ViewModels
         public bool ShowError { get; set; }
 
         public AuthenticationViewModel(
-            IUserAuthenticationService authenticationService,
+            IApiHttpClient apiHttpClient,
             NavigationManager navigationManager,
             AuthenticationStateProvider authenticationStateProvider)
         {
-            _authenticationService = authenticationService;
+            _apiHttpClient = apiHttpClient;
             _navigationManager = navigationManager;
             _authenticationStateProvider = authenticationStateProvider;
         }
 
         public async Task SignInAsync()
         {
-            var tokenResponse = await _authenticationService.SignInAsync(LoginModel);
+            try
+            {
+                SetIsLoading(true);
 
-            if (tokenResponse == null)
-            {
-                return;
-            }
+                var tokenResponse = await _apiHttpClient.PostAsync<JwtTokenResponse>("api/login/authenticate", JsonSerializer.Serialize(LoginModel));
 
-            if (await ((CustomAuthenticationStateProvider)_authenticationStateProvider).AuthenticateAsync(tokenResponse))
-            {
-                _navigationManager.NavigateTo("/", true);
+                if (tokenResponse == null || !tokenResponse.IsSuccess)
+                {
+                    return;
+                }
+
+                if (await ((CustomAuthenticationStateProvider)_authenticationStateProvider).AuthenticateAsync(tokenResponse.Data))
+                {
+                    _navigationManager.NavigateTo("/", true);
+                }
+                else
+                {
+                    ShowError = true;
+                }
             }
-            else
+            finally
             {
-                ShowError = true;
+                SetIsLoading(false);
             }
         }
     }

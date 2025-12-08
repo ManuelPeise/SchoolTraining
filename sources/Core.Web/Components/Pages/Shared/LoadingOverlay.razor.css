@@ -1,13 +1,13 @@
-/* Overlay covers entire parent (parent must be position-relative) */
+/* Overlay covers entire viewport and does not affect layout */
 .loading-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0; /* top:0; right:0; bottom:0; left:0 */
   background-color: rgba(0, 0, 0, 0.08); /* nearly transparent */
-  z-index: 1050; /* above content, below modals */
+  z-index: 2000; /* above page content */
 }
 
 .loading-spinner {
-  color: var(--loading);
-  width: 3rem; /* larger than default 2rem */
-  height: 3rem; /* match width */
+  color: #FFB86B;
+  width: 3rem;
+  height: 3rem;
 }

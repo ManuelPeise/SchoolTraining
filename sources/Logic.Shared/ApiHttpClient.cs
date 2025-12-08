@@ -75,10 +75,12 @@ namespace Logic.Shared
         {
             try
             {
+                var absoluteRequestUri = new Uri($"{_baseAddress}{requestUri}", UriKind.Absolute);
+
                 var requestMessage = new HttpRequestMessage
                 {
                     Method = HttpMethod.Post,
-                    RequestUri = new Uri($"{_baseAddress}{requestUri}", UriKind.Absolute),
+                    RequestUri = absoluteRequestUri,
                     Version = new Version(1, 1),
                     Content = new StringContent(body, Encoding.UTF8, "application/json")
                 };

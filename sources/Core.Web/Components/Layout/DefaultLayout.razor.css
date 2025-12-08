@@ -1,4 +1,19 @@
-﻿/* Default Blazor error UI styles */
+﻿
+.login-button,
+.logout-button {
+    background-color: transparent;
+    border: none;
+    font-size:1.2rem;
+    color: var(--text-muted);
+}
+
+    .login-button,
+    .logout-button:hover {
+        cursor: pointer;
+        color: var(--primary-hover);
+    }
+
+/* Default Blazor error UI styles */
 #blazor-error-ui {
     position: fixed;
     bottom: 0;
@@ -12,17 +27,17 @@
     display: none;
 }
 
-#blazor-error-ui .dismiss {
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-    cursor: pointer;
-}
+    #blazor-error-ui .dismiss {
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+        cursor: pointer;
+    }
 
-#blazor-error-ui .reload {
-    text-decoration: none;
-}
+    #blazor-error-ui .reload {
+        text-decoration: none;
+    }
 
-#blazor-error-ui.show {
-    display: block;
-}
+    #blazor-error-ui.show {
+        display: block;
+    }

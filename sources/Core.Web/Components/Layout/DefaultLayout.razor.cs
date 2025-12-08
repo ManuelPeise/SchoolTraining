@@ -36,7 +36,14 @@ namespace Core.Web.Components.Layout
         {
             await ((CustomAuthenticationStateProvider)_authenticationStateProvider).LogoutAsync();
             
-            _navigationManager.NavigateTo("/auth", true);
+            _navigationManager.NavigateTo("/authentication", true);
+        }
+
+        protected async Task OnLoginClicked()
+        {
+            await ((CustomAuthenticationStateProvider)_authenticationStateProvider).LogoutAsync();
+
+            _navigationManager.NavigateTo("/authentication", true);
         }
 
         private async Task<CurrentUser?> GetCurrentUser()

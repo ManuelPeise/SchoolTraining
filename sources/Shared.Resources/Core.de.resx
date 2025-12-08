@@ -115,4 +115,10 @@
   <data name="LabelAdministration" xml:space="preserve">
     <value>Administration</value>
   </data>
+  <data name="LabelLogout" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="LabelSearch" xml:space="preserve">
+    <value>Suche</value>
+  </data>
 </root>

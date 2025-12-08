@@ -52,7 +52,7 @@ namespace Core.Web.StartUp
             // ViewModels
             builder.Services.AddScoped<CounterViewModel>();
             builder.Services.AddScoped<AuthenticationViewModel>();
-            builder.Services.AddScoped<FamilyAndUserViewModel>();
+            builder.Services.AddScoped<FamilyAndUserAdministrationViewModel>();
         }
 
         private static void ConfigureJwt(WebApplicationBuilder builder)
