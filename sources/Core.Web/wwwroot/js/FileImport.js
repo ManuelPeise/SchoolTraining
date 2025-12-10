@@ -6,3 +6,11 @@
     link.click();
     document.body.removeChild(link);
 };
+
+function uploadFamilyTemplateFile(id) {
+    var element = document.getElementById(id);
+
+    if (element) {
+        element.click();
+    }
+}

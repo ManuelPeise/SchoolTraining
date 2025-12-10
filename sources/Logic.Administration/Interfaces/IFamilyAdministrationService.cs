@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Shared.Models.Administration;
+﻿using Shared.Models.Administration;
 
 namespace Logic.Administration.Interfaces
 {
@@ -8,5 +7,6 @@ namespace Logic.Administration.Interfaces
         Task<FileDownloadModel?> DownloadFamilyImportTemplate();
         Task UploadFamilyTemplateFile(FileUploadModel model);
         Task<List<FamilyModel>> GetFamilies();
+        Task UpdateFamilies(List<FamilyModel> families);
     }
 }

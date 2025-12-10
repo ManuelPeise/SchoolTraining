@@ -1,0 +1,12 @@
+﻿<div class="save-cancel-container">
+    <div class="button-container">
+        <button class="btn cancel" disabled="@Disabled" @onclick="@CancelAction">@Resx.Core.LabelCancel</button>
+        <button class="btn save" disabled="@Disabled" @onclick="@SaveAction">@Resx.Core.LabelSave</button>
+    </div>
+</div>
+
+@code{
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback CancelAction { get; set; }
+    [Parameter] public EventCallback SaveAction { get; set; }
+}

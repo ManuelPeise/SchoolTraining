@@ -109,8 +109,8 @@
   <data name="LabelPassword" xml:space="preserve">
     <value>Passwort</value>
   </data>
-  <data name="LabelFamilyAndUserAdministration" xml:space="preserve">
-    <value>Familie &amp; Benutzer</value>
+  <data name="LabelFamilyAdministration" xml:space="preserve">
+    <value>Familienverwaltung</value>
   </data>
   <data name="LabelAdministration" xml:space="preserve">
     <value>Administration</value>
@@ -118,7 +118,31 @@
   <data name="LabelLogout" xml:space="preserve">
     <value>Abmelden</value>
   </data>
-  <data name="LabelSearch" xml:space="preserve">
-    <value>Suche</value>
+  <data name="LabelFilter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="PlaceholderFilter" xml:space="preserve">
+    <value>Filtertext eingeben...</value>
+  </data>
+  <data name="CaptionFamilyAdministration" xml:space="preserve">
+    <value>Familienverwaltung</value>
+  </data>
+  <data name="LabelSave" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="LabelCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="LabelFamilyManagement" xml:space="preserve">
+    <value>Familienverwaltung</value>
+  </data>
+  <data name="LabelFileDownload" xml:space="preserve">
+    <value>Musterdatei herunter laden</value>
+  </data>
+  <data name="LabelFileUpload" xml:space="preserve">
+    <value>Datei hochladen</value>
+  </data>
+  <data name="DescriptionFamilyManagment" xml:space="preserve">
+    <value>sssssssssssdd</value>
   </data>
 </root>

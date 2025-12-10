@@ -1,8 +1,6 @@
-﻿using Shared.Models.Import.Interfaces;
-
-namespace Shared.Models.Import
+﻿namespace Shared.Models.Import
 {
-    public class FamilyMemberSettings: IFamilyMemberSettings
+    public class FamilyMemberSettings
     {
     }
 }

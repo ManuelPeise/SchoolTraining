@@ -1,12 +1,14 @@
 ﻿using Data.Entities;
 using Logic.Administration.Extensions;
 using Logic.Database;
+using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
 using Shared.Models.Administration;
 using Shared.Models.Import;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Logic.Administration.FileImport
 {
@@ -20,47 +22,127 @@ namespace Logic.Administration.FileImport
             {
                 try
                 {
-                  
-                    var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent, new JsonSerializerOptions
+                    FamilyEntity? familyEntity;
+
+                    var options = new JsonSerializerOptions
                     {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-                    });
+                        PropertyNameCaseInsensitive = true,
+                        AllowTrailingCommas = true,
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    };
+                    options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 
-                    var familyEntity = familyImportModel?.ToImportEntity();
+                    var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent, options);
 
-                    if (familyImportModel == null || familyEntity == null)
+                    if (familyImportModel == null)
                     {
                         await SaveImportFile(unitOfWork, FileImportTypeEnum.Family, fileName, fileContent, ImportStatusEnum.Failed);
 
                         return await unitOfWork.LogMessage(new LogMessageEntity
                         {
-                            Message = "Could not import family, please check import file.",
+                            Message = "Exception occurred during family import.",
                             ExeptionMessage = string.Empty,
                             StackTrace = string.Empty,
+                            Module = nameof(FamilyFileImport),
                             LogLevel = LogLevelEnum.Error
                         }, true);
+
                     }
 
-                    await unitOfWork.FamilyRepository.AddAsync(familyEntity);
+                    familyEntity = familyImportModel.ToImportEntity();
+
+                    var existingFamilyEntity = await unitOfWork.FamilyRepository
+                        .GetByAsync(x => x.ContactMailAddress == familyEntity.ContactMailAddress &&
+                        x.Name == familyEntity.Name, true, IncludeExpressions.IncludeFamilyMembers);
+
+                    if (existingFamilyEntity == null)
+                    {
+                        await unitOfWork.FamilyRepository.AddAsync(familyEntity);
+
+                        await unitOfWork.LogMessage(new LogMessageEntity
+                        {
+                            Message = "New family added!",
+                            ExeptionMessage = string.Empty,
+                            StackTrace = string.Empty,
+                            Module = nameof(FamilyFileImport),
+                            LogLevel = LogLevelEnum.Info
+                        }, false);
+                    }
+                    else
+                    {
+                        existingFamilyEntity.Name = familyEntity.Name;
+                        existingFamilyEntity.ContactMailAddress = familyEntity.ContactMailAddress;
+                        existingFamilyEntity.IsActive = familyEntity.IsActive;
+
+                        foreach (var member in familyEntity.Users)
+                        {
+                            var existingMember = existingFamilyEntity.Users
+                                .FirstOrDefault(x => ToLowerCase(x.FirstName) == ToLowerCase(member.FirstName) &&
+                                ToLowerCase(x.LastName) == ToLowerCase(member.LastName) &&
+                                x.DateOfBirth == member.DateOfBirth);
+
+                            if (existingMember == null)
+                            {
+                                existingFamilyEntity.Users.Add(member);
+
+                                await unitOfWork.LogMessage(new LogMessageEntity
+                                {
+                                    Message = "New family member added.",
+                                    ExeptionMessage = string.Empty,
+                                    StackTrace = string.Empty,
+                                    Module = nameof(FamilyFileImport),
+                                    LogLevel = LogLevelEnum.Info
+                                }, false);
+                            }
+                            else
+                            {
+                                existingMember.FirstName = member.FirstName;
+                                existingMember.LastName = member.LastName;
+                                existingMember.Username = member.Username;
+                                existingMember.Email = member.Email;
+                                existingMember.UserRole = member.UserRole;
+                                existingMember.DateOfBirth = member.DateOfBirth;
+                                existingMember.IsActive = member.IsActive;
+
+                                await unitOfWork.LogMessage(new LogMessageEntity
+                                {
+                                    Message = "Family member updated.",
+                                    ExeptionMessage = string.Empty,
+                                    StackTrace = string.Empty,
+                                    Module = nameof(FamilyFileImport),
+                                    LogLevel = LogLevelEnum.Info
+                                }, false);
+                            }
+                        }
+
+                        unitOfWork.FamilyRepository.Update(existingFamilyEntity);
+
+                    }
 
                     await SaveImportFile(unitOfWork, FileImportTypeEnum.Family, fileName, fileContent, ImportStatusEnum.Success);
 
+                    await unitOfWork.SaveChangesAsync(CurrentUser.UserName);
+
                     return await unitOfWork.LogMessage(new LogMessageEntity
                     {
-                        Message = "Family file import success",
+                        Message = "Family file import success, import file saved!",
                         ExeptionMessage = string.Empty,
                         StackTrace = string.Empty,
+                        Module = nameof(FamilyFileImport),
                         LogLevel = LogLevelEnum.Info
                     }, true);
+
+
+
                 }
                 catch (Exception exception)
                 {
                     return await unitOfWork.LogMessage(new LogMessageEntity
                     {
-                        Message = "Exception occurred during family import.",
+                        Message = "One or more errors occurred during family import.",
                         ExeptionMessage = exception.Message,
                         StackTrace = exception?.StackTrace ?? string.Empty,
+                        Module = nameof(FamilyFileImport),
                         LogLevel = LogLevelEnum.Error
                     }, true);
                 }
@@ -76,6 +158,11 @@ namespace Logic.Administration.FileImport
                 FileName = result.fileName,
                 FileContent = result.base64String
             };
+        }
+
+        private string ToLowerCase(string input)
+        {
+            return input.ToLowerInvariant();
         }
     }
 }

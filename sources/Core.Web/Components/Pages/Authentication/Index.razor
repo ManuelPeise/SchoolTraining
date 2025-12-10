@@ -7,46 +7,41 @@
 
 @inherits ViewModelComponentBase<AuthenticationViewModel>
 
-<div class="min-vh-100 d-flex align-items-center justify-content-center w-50">
+<div class="page">
     <LoadingOverlay IsLoading="@ViewModel.IsLoading" />
-    <div class="d-flex justify-content-center w-100 mx-0">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <div class="form p-4 p-sm-5 rounded-3 shadow-sm mx-auto">
-                <EditForm Model="@ViewModel.LoginModel" OnValidSubmit="@ViewModel.SignInAsync" FormName="LoginForm">
-                    <DataAnnotationsValidator />
-
-                    <div class="my-3 text-center">
-                        <i class="bi bi-person-circle display-1 text-primary" role="img"></i>
-                    </div>
-                    <div class="mb-3 text-center">
-                        <h2 class="mb-0">@Resx.Core.CaptionLogin</h2>
-                    </div>
-
-                    <div class="mb-3 form-group">
-                        <label class="form-label ps-2 fs-6" for="username">@Resx.Core.LabelUsername</label>
-                        <InputText id="username" type="text" class="form-control" @bind-Value="ViewModel.LoginModel.UserName" />
-                    </div>
-
-                    <div class="mb-3 form-group">
-                        <label class="form-label ps-2 fs-6" for="password">@Resx.Core.LabelPassword</label>
-                        <InputText id="password" type="password" class="form-control" @bind-Value="ViewModel.LoginModel.Secret" />
-                    </div>
-
+    <div class="login-form-container">
+        <EditForm class="login-form" Model="@ViewModel.LoginModel" OnValidSubmit="@ViewModel.SignInAsync" FormName="LoginForm">
+            <DataAnnotationsValidator />
+            <div class="login-form-item">
+                <i class="bi bi-person-circle" role="img"></i>
+            </div>
+            <div class="login-form-item">
+                <h2>@Resx.Core.CaptionLogin</h2>
+            </div>
+            <div class="login-form-item">
+                <label class="form-label" for="username">@Resx.Core.LabelUsername</label>
+                <InputText id="username" type="text" class="input" @bind-Value="ViewModel.LoginModel.UserName" />
+            </div>
+            <div class="login-form-item">
+                <label class="form-label" for="password">@Resx.Core.LabelPassword</label>
+                <InputText id="password" type="password" class="input" @bind-Value="ViewModel.LoginModel.Secret" />
+            </div>
+            <div class="login-form-item">
+                <div class="error-container">
                     @if (ViewModel.ShowError)
                     {
-                        <div class="error-container">
-                            <p class="error">@ViewModel.Error</p>
-                        </div>
-                    }
 
-                    <div class="p-2 d-grid d-md-flex justify-content-md-end">
-                        <button type="submit" class="btn btn-primary text-capitalize text-center">
-                            @Resx.Core.LabelLogin
-                        </button>
-                    </div>
-                </EditForm>
+                        <p class="error">@ViewModel.Error</p>
+
+                    }
+                </div>
             </div>
-        </div>
+            <div class="login-form-item">
+                <div class="button-container">
+                    <button type="submit" class="btn">@Resx.Core.LabelLogin</button>
+                </div>
+            </div>
+        </EditForm>
     </div>
 </div>
 

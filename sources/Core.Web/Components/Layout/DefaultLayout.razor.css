@@ -1,9 +1,21 @@
-﻿
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+#page {
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+}
+
 .login-button,
 .logout-button {
     background-color: transparent;
     border: none;
-    font-size:1.2rem;
+    font-size: 1.2rem;
     color: var(--text-muted);
 }
 

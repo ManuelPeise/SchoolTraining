@@ -63,9 +63,9 @@ namespace Resx {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
         /// </summary>
-        public static byte[] FamilyImport {
+        public static byte[] FamilyImportTemplate {
             get {
-                object obj = ResourceManager.GetObject("FamilyImport", resourceCulture);
+                object obj = ResourceManager.GetObject("FamilyImportTemplate", resourceCulture);
                 return ((byte[])(obj));
             }
         }

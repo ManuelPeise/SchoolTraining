@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Logic.Shared.Interfaces;
+using MySqlX.XDevAPI.Common;
 using Shared.Enums;
 using Shared.Models;
 using System.Diagnostics;
@@ -71,7 +72,7 @@ namespace Logic.Shared
             }
         }
 
-        public async  Task<ResponseBase<TModel>> PostAsync<TModel>(string requestUri, string body)
+        public async Task<ResponseBase<TModel>> PostAsync<TModel>(string requestUri, string body, string? contentType = null)
         {
             try
             {
@@ -82,7 +83,7 @@ namespace Logic.Shared
                     Method = HttpMethod.Post,
                     RequestUri = absoluteRequestUri,
                     Version = new Version(1, 1),
-                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                    Content = new StringContent(body, Encoding.UTF8, contentType ?? "application/json")
                 };
 
                 var response = await _httpClient.SendAsync(requestMessage);
@@ -91,17 +92,27 @@ namespace Logic.Shared
 
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                var result = JsonSerializer.Deserialize<TModel>(responseContent, new JsonSerializerOptions
+                if (string.IsNullOrEmpty(responseContent))
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-                });
+                    return new ResponseBase<TModel>
+                    {
+                        IsSuccess = true,
+                    };
+                }
+                else
+                {
+                    var result = JsonSerializer.Deserialize<TModel>(responseContent, new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
+                    });
 
-                return new ResponseBase<TModel>
-                {
-                    IsSuccess = true,
-                    Data = result
-                };
+                    return new ResponseBase<TModel>
+                    {
+                        IsSuccess = true,
+                        Data = result
+                    };
+                }
             }
             catch (Exception exception)
             {

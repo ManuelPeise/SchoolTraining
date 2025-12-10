@@ -29,7 +29,7 @@ namespace Logic.Administration.FileImport
             switch (fileType)
             {
                 case FileImportTypeEnum.Family:
-                    file = Resx.Files.FamilyImport;
+                    file = Resx.Files.FamilyImportTemplate;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(fileType));

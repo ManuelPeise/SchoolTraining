@@ -61,11 +61,29 @@ namespace Resx {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Family Administration ähnelt.
+        /// </summary>
+        public static string CaptionFamilyAdministration {
+            get {
+                return ResourceManager.GetString("CaptionFamilyAdministration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Login ähnelt.
         /// </summary>
         public static string CaptionLogin {
             get {
                 return ResourceManager.GetString("CaptionLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die fnjswnkjenklfmasöl ähnelt.
+        /// </summary>
+        public static string DescriptionFamilyManagment {
+            get {
+                return ResourceManager.GetString("DescriptionFamilyManagment", resourceCulture);
             }
         }
         
@@ -79,11 +97,56 @@ namespace Resx {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Family &amp; Users ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
         /// </summary>
-        public static string LabelFamilyAndUserAdministration {
+        public static string LabelCancel {
             get {
-                return ResourceManager.GetString("LabelFamilyAndUserAdministration", resourceCulture);
+                return ResourceManager.GetString("LabelCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Family Administration ähnelt.
+        /// </summary>
+        public static string LabelFamilyAdministration {
+            get {
+                return ResourceManager.GetString("LabelFamilyAdministration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Family Management ähnelt.
+        /// </summary>
+        public static string LabelFamilyManagement {
+            get {
+                return ResourceManager.GetString("LabelFamilyManagement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Download  file ähnelt.
+        /// </summary>
+        public static string LabelFileDownload {
+            get {
+                return ResourceManager.GetString("LabelFileDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die File upload ähnelt.
+        /// </summary>
+        public static string LabelFileUpload {
+            get {
+                return ResourceManager.GetString("LabelFileUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Filter ähnelt.
+        /// </summary>
+        public static string LabelFilter {
+            get {
+                return ResourceManager.GetString("LabelFilter", resourceCulture);
             }
         }
         
@@ -115,11 +178,11 @@ namespace Resx {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Search ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save ähnelt.
         /// </summary>
-        public static string LabelSearch {
+        public static string LabelSave {
             get {
-                return ResourceManager.GetString("LabelSearch", resourceCulture);
+                return ResourceManager.GetString("LabelSave", resourceCulture);
             }
         }
         
@@ -129,6 +192,15 @@ namespace Resx {
         public static string LabelUsername {
             get {
                 return ResourceManager.GetString("LabelUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Enter filtertext... ähnelt.
+        /// </summary>
+        public static string PlaceholderFilter {
+            get {
+                return ResourceManager.GetString("PlaceholderFilter", resourceCulture);
             }
         }
     }

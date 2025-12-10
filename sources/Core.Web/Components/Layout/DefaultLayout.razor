@@ -2,62 +2,9 @@
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthStateProvider
 
-<div class="container-fluid p-0 m-0">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <div class="d-inline-flex align-items-baseline justify-content-end navbar-brand">
-                <!-- change span later to img and provide the image-->
-                <span class="bi bi-house p-2 fs-3 text-light"></span>
-                <a class="fs-4 text-decoration-none text-light" href="/">SchoolTraining</a>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @Resx.Core.LabelAdministration
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                            <li>
-                                <NavLink class="dropdown-item text-light" href="/administration/family-and-user-administration">@Resx.Core.LabelFamilyAndUserAdministration</NavLink>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="/about">About</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="/contact">Contact</NavLink>
-                    </li>
-                </ul>
-
-                <!-- Right side: user info + logout -->
-                <div class="d-flex ms-auto align-items-center gap-4">
-                    <AuthorizeView>
-                        <Authorized>
-                            <span class="bi bi-person-circle text-light fs-2 p-0 me-2" />
-                            <span class="text-light fs-4 p-0">
-                                @CurrentUser?.UserName
-                            </span>
-                            <button class="logout-button" @onclick="@OnLogout">
-                                <span>@Resx.Core.LabelLogout</span>
-                            </button>
-                        </Authorized>
-                        <NotAuthorized>
-                            <button class="login-button" @onclick="@OnLoginClicked">
-                                <span>@Resx.Core.LabelLogin</span>
-                            </button>
-                        </NotAuthorized>
-                    </AuthorizeView>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container-fluid">
+<div id="page">
+    <NavigationBar UserName="@CurrentUser?.UserName" LogOutAction="@OnLogout"/>
+    <div class="page-content-container">
         @Body
     </div>
     <div id="blazor-error-ui" data-nosnippet>

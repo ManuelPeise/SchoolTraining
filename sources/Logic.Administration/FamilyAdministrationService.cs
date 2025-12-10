@@ -3,12 +3,11 @@ using Logic.Administration.Interfaces;
 using Logic.Database;
 using Logic.Shared;
 using Logic.Shared.Interfaces;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
-using Shared.Models.Administration.Interfaces;
 using Logic.Administration.Extensions;
 using Shared.Models.Administration;
+using System.Diagnostics;
 
 namespace Logic.Administration
 {
@@ -34,22 +33,15 @@ namespace Logic.Administration
             {
                 try
                 {
-                    var file = model.File;
-
                     var importer = _fileImportFactory.GetFileImport(FileImportTypeEnum.Family, _httpContextAccessor, _dbContextFactory);
 
-                    if (importer == null || file == null)
+                    if (importer == null || string.IsNullOrEmpty(model.JsonContent))
                     {
                         return;
                     }
 
-                    using (var stream = file.OpenReadStream())
-                    using (var reader = new StreamReader(stream))
-                    {
-                        var content = await reader.ReadToEndAsync();
+                    await importer.Import(model.JsonContent, model.FileName);
 
-                        await importer.Import(content, file.Name);
-                    }
                 }
                 catch (Exception exception)
                 {
@@ -109,20 +101,8 @@ namespace Logic.Administration
 
                     var familyCollection = familyEntities.ToFamilyList();
 
-                    if (CurrentUser == null)
-                    {
-                        throw new Exception("");
-                    }
-
-                    if (CurrentUser.UserRole == UserRoleEnum.Admin)
-                    {
-
-                        return familyCollection
-                            .Where(family => family.FamilyId == CurrentUser.FamilyId)
-                            .ToList();
-                    }
-
                     return familyCollection;
+
                 }
                 catch (Exception exception)
                 {
@@ -135,6 +115,50 @@ namespace Logic.Administration
                     }, true);
 
                     return new();
+                }
+            }
+        }
+
+        public async Task UpdateFamilies(List<FamilyModel> families)
+        {
+            using (var unitOfWork = new UnitOfWork(_dbContextFactory, DbContextTypeEnum.MySql))
+            {
+                var databaseChanged = false;
+
+                try
+                {
+                    foreach (var family in families)
+                    {
+                        var familyEntity = await unitOfWork.FamilyRepository.GetByIdAsync(family.FamilyId, true);
+
+                        if (familyEntity == null)
+                        {
+                            Debug.WriteLine($"Family with ID {family.FamilyId} not found.");
+                            continue;
+                        }
+
+                        familyEntity.IsActive = family.IsActive;
+
+                        unitOfWork.FamilyRepository.Update(familyEntity);
+
+                        databaseChanged = true;
+                    }
+
+                    if (databaseChanged)
+                    {
+                        await unitOfWork.SaveChangesAsync(CurrentUser.UserName);
+                    }
+
+                }
+                catch (Exception exception)
+                {
+                    await unitOfWork.LogMessage(new LogMessageEntity
+                    {
+                        Message = "Could not update families in database.",
+                        ExeptionMessage = exception.Message,
+                        StackTrace = exception?.StackTrace ?? string.Empty,
+                        LogLevel = LogLevelEnum.Error
+                    }, true);
                 }
             }
         }

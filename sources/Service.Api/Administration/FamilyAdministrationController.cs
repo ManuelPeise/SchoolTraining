@@ -1,10 +1,11 @@
 ﻿using Logic.Administration.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Administration;
 
 namespace Service.Api.Administration
 {
-    [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
+    [JwtAuth(AllowSystemAdmin = true)]
     public class FamilyAdministrationController : ApiControllerBase
     {
         private readonly IFamilyAdministrationService _familyAdministrationService;
@@ -15,7 +16,18 @@ namespace Service.Api.Administration
         }
 
         [HttpGet(Name = "GetFamilies")]
-        public async Task<List<FamilyModel>> GetFamilies() => await _familyAdministrationService.GetFamilies();
+        public async Task<List<FamilyModel>> GetFamilies()
+        {
+            return await _familyAdministrationService.GetFamilies();
+        }
+
+        [HttpPost(Name = "UpdateFamilies")]
+        public async Task<List<FamilyModel>> UpdateFamilies([FromBody] List<FamilyModel> families)
+        {
+            await _familyAdministrationService.UpdateFamilies(families);
+
+            return await _familyAdministrationService.GetFamilies();
+        }
 
         [HttpGet(Name = "DownloadFamilyImportTemplate")]
         public async Task<FileDownloadModel?> DownloadFamilyImportTemplate()
@@ -23,10 +35,12 @@ namespace Service.Api.Administration
             return await _familyAdministrationService.DownloadFamilyImportTemplate();
         }
 
+
         [HttpPost(Name = "UploadFamilyTemplateFile")]
         public async Task UploadFamilyTemplateFile([FromBody] FileUploadModel model)
         {
             await _familyAdministrationService.UploadFamilyTemplateFile(model);
         }
+
     }
 }

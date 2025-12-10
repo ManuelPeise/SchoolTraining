@@ -109,8 +109,8 @@
   <data name="LabelPassword" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="LabelFamilyAndUserAdministration" xml:space="preserve">
-    <value>Family &amp; Users</value>
+  <data name="LabelFamilyAdministration" xml:space="preserve">
+    <value>Family Administration</value>
   </data>
   <data name="LabelAdministration" xml:space="preserve">
     <value>Administration</value>
@@ -118,7 +118,31 @@
   <data name="LabelLogout" xml:space="preserve">
     <value>Logout</value>
   </data>
-  <data name="LabelSearch" xml:space="preserve">
-    <value>Search</value>
+  <data name="LabelFilter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="PlaceholderFilter" xml:space="preserve">
+    <value>Enter filtertext...</value>
+  </data>
+  <data name="CaptionFamilyAdministration" xml:space="preserve">
+    <value>Family Administration</value>
+  </data>
+  <data name="LabelSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="LabelCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LabelFamilyManagement" xml:space="preserve">
+    <value>Family Management</value>
+  </data>
+  <data name="LabelFileDownload" xml:space="preserve">
+    <value>Download  file</value>
+  </data>
+  <data name="LabelFileUpload" xml:space="preserve">
+    <value>File upload</value>
+  </data>
+  <data name="DescriptionFamilyManagment" xml:space="preserve">
+    <value>fnjswnkjenklfmasöl</value>
   </data>
 </root>

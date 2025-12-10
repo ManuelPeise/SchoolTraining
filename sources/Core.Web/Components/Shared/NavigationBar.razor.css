@@ -1,0 +1,150 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.nav-bar {
+    width: 100%;
+    background-color: #00004d;
+}
+
+.nav-bar-container {
+    background-color: transparent;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* vertically align items */
+    gap: 4rem; /* let item-specific margins control spacing */
+}
+
+.nav-item {
+    padding: 8px;
+}
+
+    .nav-item .branding {
+        padding-left: 8px;
+        font-size: 1.5rem;
+        color: #ffffff;
+    }
+
+.brand-container label {
+    padding-left: 16px;
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+/* small space behind the first nav item (branding/home) */
+.nav-menu-container {
+    margin-left: 12px;
+}
+
+.user-nav-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto; /* align end */
+}
+
+.user-info {
+    text-decoration: none;
+    display: flex;
+    align-items: baseline; /* align icon and name on baseline */
+    gap: 8px; /* smaller space between icon and name */
+}
+
+.user-icon,
+.user-name {
+    color: #ffffff; /* optional: kann entfernt werden, um zu erben */
+}
+
+.user-info:hover {
+    cursor: pointer;
+}
+
+.user-info .user-name {
+    padding-left: 0;
+}
+
+.user-info:hover .user-icon,
+.user-info:hover .user-name {
+    color: #ccccff;
+}
+
+.user-icon {
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+.user-name {
+    text-decoration: none;
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.icon {
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+    .icon:hover {
+        color: #ccccff;
+        cursor: pointer;
+    }
+
+.nav-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-list-item {
+    position: relative;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    display: block;
+}
+
+    .nav-link:hover {
+        cursor: pointer;
+    }
+
+/* Dropdown must sit immediately under the parent to avoid hover gaps */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    /* remove margin-gap that breaks hover */
+    /* margin-top: 8px; */
+    background: #00004d;
+    border-radius: 6px;
+    min-width: 160px;
+    padding: 6px 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,.12);
+    display: none;
+    z-index: 100;
+}
+
+    .dropdown a {
+        color: #ffffff;
+        padding: 10px 14px;
+        opacity: 1;
+    }
+
+        .dropdown a:hover {
+            opacity: .7;
+        }
+
+    /* Keep menu open while hovering parent or the dropdown itself */
+    .nav-list-item:hover .dropdown,
+    .nav-list-item:focus-within .dropdown,
+    .dropdown:hover {
+        display: block;
+    }

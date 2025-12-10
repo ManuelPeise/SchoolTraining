@@ -1,8 +1,6 @@
-﻿using Shared.Models.Import.Interfaces;
-
-namespace Shared.Models.Import
+﻿namespace Shared.Models.Import
 {
-    public class FamilyMemberCredentials : IFamilyMemberCredentials
+    public class FamilyMemberCredentials
     {
         public string Password { get; set; } = string.Empty;
     }

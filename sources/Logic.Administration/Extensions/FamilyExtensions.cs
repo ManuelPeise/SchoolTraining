@@ -1,19 +1,15 @@
 ﻿using Data.Entities;
 using Shared.Models.Administration;
 using Shared.Models.Import;
+using System.Globalization;
 using System.Text;
 
 namespace Logic.Administration.Extensions
 {
     internal static class FamilyExtensions
     {
-        internal static FamilyEntity? ToImportEntity(this FamilyImportModel model)
+        internal static FamilyEntity ToImportEntity(this FamilyImportModel model)
         {
-            if (model == null)
-            {
-                return null;
-            }
-
             return new FamilyEntity
             {
                 Name = model.Name,
@@ -60,6 +56,7 @@ namespace Logic.Administration.Extensions
         internal static List<FamilyModel> ToFamilyList(this List<FamilyEntity> entities)
         {
             var families = new List<FamilyModel>();
+            
             entities.ForEach(entity =>
             {
                 var family = entity.ToFamily();
@@ -84,7 +81,8 @@ namespace Logic.Administration.Extensions
                 Name = entity.Name,
                 ContactMailAddress = entity.ContactMailAddress,
                 IsActive = entity.IsActive,
-                Members = entity.Users.ToFamilyMemberList()
+                CreatedAt = entity.CreatedAt.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+                CreatedBy = entity.CreatedBy
             };
         }
 
@@ -104,7 +102,9 @@ namespace Logic.Administration.Extensions
                 Email = entity.Email,
                 DateOfBirth = entity.DateOfBirth,
                 UserRole = entity.UserRole,
-                IsActive = entity.IsActive
+                IsActive = entity.IsActive,
+                CreatedAt = entity.CreatedAt.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+                CreatedBy = entity.CreatedBy
             };
         }
 

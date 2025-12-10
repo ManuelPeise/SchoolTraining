@@ -1,8 +1,6 @@
-﻿using Shared.Models.Import.Interfaces;
-
-namespace Shared.Models.Import
+﻿namespace Shared.Models.Import
 {
-    public class FamilyImportModel : IFamilyImportModel
+    public class FamilyImportModel
     {
         public string Name { get; set; } = string.Empty;
         public string ContactMailAddress { get; set; } = string.Empty;

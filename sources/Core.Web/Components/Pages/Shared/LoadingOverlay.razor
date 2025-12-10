@@ -2,14 +2,16 @@
 
 @if (IsLoading)
 {
-    <div class="loading-overlay d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary loading-spinner" role="status" aria-live="polite" aria-busy="true">
-            <span class="visually-hidden">Loading...</span>
+    <div class="loading-overlay">
+        <div class="loading-overlay-inner">
+            <div class="loading-spinner orange-spinner" role="status" aria-live="polite" aria-busy="true">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
     </div>
 }
 
-@code{
+@code {
     [Parameter]
     public bool IsLoading { get; set; }
 }
