@@ -8,7 +8,20 @@ import { parseJwtToken } from '../utils/jwtHelper';
 const defaultAccessRights: IAccessRights = {
   isAdmin: false,
   isSystemAdmin: false,
-  accessRights: [],
+  accessRights: {
+    familyAdministration: {
+      view: false,
+      edit: false,
+      create: false,
+      delete: false,
+    },
+    userAdministration: {
+      view: false,
+      edit: false,
+      create: false,
+      delete: false,
+    },
+  },
 };
 
 export const AccessRightsContext = React.createContext<IAccessRightsContext | null>(null);
@@ -21,7 +34,7 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
   const [accessRights, setAccessRights] = React.useState<IAccessRights>({
     isAdmin: false,
     isSystemAdmin: false,
-    accessRights: [],
+    accessRights: defaultAccessRights.accessRights,
   });
 
   const tryInitializeAccessRights = React.useCallback(() => {
@@ -34,12 +47,15 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
       return;
     }
 
-    const userRole = userFromToken.userRole;
+    const userRole =
+      typeof userFromToken.userRole === 'string'
+        ? UserRoleEnum[userFromToken.userRole as keyof typeof UserRoleEnum]
+        : userFromToken.userRole;
 
     setAccessRights({
-      isAdmin: userRole === UserRoleEnum.Admin || userRole === UserRoleEnum.SystemAdmin,
+      isAdmin: userRole === UserRoleEnum.Admin,
       isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
-      accessRights: [],
+      accessRights: defaultAccessRights.accessRights,
     });
 
     setUser({
@@ -52,23 +68,43 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
 
   const initialize = React.useCallback((jwt: string) => {
     const user = parseJwtToken(jwt);
+
     if (user == null) {
+      console.log('AccessRightContextProvider initialize - no user found in token');
       setAccessRights(defaultAccessRights);
       return;
     }
+
+    // Convert userRole from string to number if needed
+    const userRole =
+      typeof user.userRole === 'string'
+        ? UserRoleEnum[user.userRole as keyof typeof UserRoleEnum]
+        : user.userRole;
+
     setUser({
       id: user.id,
       familyId: user.familyId,
       userName: user.name,
-      userRole: user.userRole,
+      userRole: userRole,
     });
 
-    const userRole = user.userRole;
-
     setAccessRights({
-      isAdmin: userRole === UserRoleEnum.Admin || userRole === UserRoleEnum.SystemAdmin,
+      isAdmin: userRole === UserRoleEnum.Admin,
       isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
-      accessRights: [],
+      accessRights: {
+        familyAdministration: {
+          view: userRole === UserRoleEnum.SystemAdmin,
+          edit: userRole === UserRoleEnum.SystemAdmin,
+          create: false,
+          delete: false,
+        },
+        userAdministration: {
+          view: userRole === UserRoleEnum.Admin || userRole === UserRoleEnum.SystemAdmin,
+          edit: userRole === UserRoleEnum.Admin,
+          create: userRole === UserRoleEnum.Admin,
+          delete: userRole === UserRoleEnum.Admin,
+        },
+      },
     });
   }, []);
 

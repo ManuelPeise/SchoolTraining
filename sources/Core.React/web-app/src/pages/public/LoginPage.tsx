@@ -13,8 +13,8 @@ const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [loginModelState, setLoginModelState] = React.useState<LoginModel>({
-    userName: '',
-    secret: '',
+    userName: process.env.REACT_APP_USER_NAME || '',
+    secret: process.env.REACT_APP_USER_PASSWORD || '',
     rememberMe: false,
     error: null,
   });
@@ -31,10 +31,13 @@ const LoginPage: React.FC = () => {
     }));
   };
 
-  const handleLogin = React.useCallback(async (model: LoginModel) => {
-    await login(model);
-    navigate('/home');
-  }, []);
+  const handleLogin = React.useCallback(
+    async (model: LoginModel) => {
+      await login(model);
+      navigate('/home');
+    },
+    [navigate, login]
+  );
 
   return (
     <div className="loginPage">

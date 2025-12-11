@@ -10,7 +10,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Brand section aligned start */
+/* Left section container for hamburger and brand */
+.navbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Brand section aligned behind hamburger */
 .brand {
   display: flex;
   align-items: center;
@@ -38,55 +45,127 @@
 
 /* Hamburger menu button */
 .hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
   z-index: 1001;
+  color: white;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
 }
 
-.hamburgerLine {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  border-radius: 2px;
-  transition: all 0.3s ease;
+.hamburger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger i {
+  font-size: 1.5rem;
 }
 
 /* Nav item container */
 .navItems {
+  position: fixed;
+  top: 60px;
+  left: -240px;
+  width: 240px;
+  max-width: 240px;
+  height: calc(100vh - 60px);
+  background-color: #000033;
   display: flex;
-  align-items: center;
-  flex: 1;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0;
+  transition: left 0.3s ease;
+  z-index: 999;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar Header */
+.sidebarHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem 1.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.sidebarHeader p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: normal;
+  padding-top: 0.5rem;
+}
+
+.sidebarTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* Show nav items when menu is open */
+.navItemsOpen {
+  left: 0;
 }
 
 .navList {
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 0;
   list-style: none;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 .navItem {
   margin: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.navItem:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.navItem:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .navLink {
   color: white;
   text-decoration: none;
   font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  font-weight: 500;
+}
+
+.navLink i {
+  font-size: 1.2rem;
+  min-width: 1.2rem;
+}
+
+.navLinkText {
+  flex: 1;
+  color: #ffffff;
 }
 
 .navLink:hover {
-  color: var(--primary-color-hover);
+  background-color: rgba(255, 255, 255, 0.15);
+  padding-left: 2rem;
 }
 
 /* User section aligned end */
@@ -128,52 +207,6 @@
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem;
-    justify-content: flex-start;
-    gap: 1rem;
-  }
-
-  /* Show hamburger menu */
-  .hamburger {
-    display: flex;
-    order: -1;
-  }
-
-  /* Hide nav items by default on mobile */
-  .navItems {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 70%;
-    height: 100vh;
-    background-color: #000033;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding-top: 5rem;
-    transition: left 0.3s ease;
-    z-index: 1000;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Show nav items when menu is open */
-  .navItemsOpen {
-    left: 0;
-  }
-
-  .navList {
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-  }
-
-  .navItem {
-    width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .navLink {
-    display: block;
-    padding: 1rem 1.5rem;
-    width: 100%;
   }
 
   /* Adjust user section on mobile */
@@ -191,9 +224,5 @@
 
   .brandText {
     font-size: 1rem;
-  }
-
-  .navItems {
-    width: 80%;
   }
 }

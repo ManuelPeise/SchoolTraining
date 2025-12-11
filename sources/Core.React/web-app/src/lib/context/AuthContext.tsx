@@ -47,7 +47,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setTokenStore(null);
   }, []);
 
-  console.log('AuthProvider render, appUser:', appUser);
   const value: IAuthContext = {
     isAuthenticated: appUser != null,
     tokenStore,

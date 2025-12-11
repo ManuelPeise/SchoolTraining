@@ -21,3 +21,128 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+/* Settings Page Layout */
+.settingsPageMainContent {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--bg-secondary);
+}
+
+.settingsPageNavigation {
+  flex-shrink: 0;
+  width: 280px;
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsPageContent {
+  flex: 1;
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation List */
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0;
+}
+
+.navListItem {
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  background-color: #ffffff;
+  width: 100%;
+  border-radius: 0;
+}
+
+.navListItem:hover:not(.readonly) {
+  background-color: #d3d3d3;
+}
+
+.navListItem.selected {
+  background-color: var(--primary-color-light);
+}
+
+.navListItem.readonly {
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
+.navItemTitle {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.navItemSubtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settingsPageMainContent {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .settingsPageNavigation {
+    width: 100%;
+    position: static;
+  }
+
+  .settingsPageContent {
+    padding: var(--spacing-md);
+  }
+
+  .navListItem {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .navItemTitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .navItemSubtitle {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .settingsPageMainContent {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .settingsPageNavigation {
+    padding: var(--spacing-sm);
+  }
+
+  .settingsPageContent {
+    padding: var(--spacing-md);
+  }
+}
