@@ -29,8 +29,7 @@ namespace Core.Web.Components.Pages.ViewModels
 
         public FamilyAdministrationViewModel(
             IApiHttpClient httpClient,
-            AuthenticationStateProvider authenticationStateProvider,
-            IFamilyAdministrationService familyAdministrationService)
+            AuthenticationStateProvider authenticationStateProvider)
         {
             _httpClient = httpClient;
             _authenticationStateProvider = authenticationStateProvider;

@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/01 Core/">
+    <Project Path="Core.Api/Core.Api.csproj" Id="37888c72-cdc8-463a-9490-00fccc887ffa" />
     <Project Path="Core.App/Core.App.csproj" Id="e915ef5d-c732-4c8b-8e80-aea500fbfa9e">
       <Deploy Solution="Debug|*" />
     </Project>
+    <Project Path="Core.React/Core.React.csproj" Id="e57bd133-ea72-4668-afb2-e6fdacdc1200" />
     <Project Path="Core.Web/Core.Web.csproj" Id="1b9f07a5-b651-443e-805a-222a5355fabb" />
   </Folder>
   <Folder Name="/02 Services/">

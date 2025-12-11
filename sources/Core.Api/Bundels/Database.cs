@@ -6,7 +6,7 @@ using Logic.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Shared.Enums;
 
-namespace Core.Web.Bundles
+namespace Core.Api.Bundels
 {
     internal static class Database
     {
@@ -77,4 +77,3 @@ namespace Core.Web.Bundles
         }
     }
 }
-

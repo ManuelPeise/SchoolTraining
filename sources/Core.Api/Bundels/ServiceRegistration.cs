@@ -1,40 +1,48 @@
-﻿using Core.Web.Components.Pages.ViewModels;
-using Core.Web.Providers;
+﻿using Logic.Administration.DI;
+using Logic.AuthenticationService;
 using Logic.Shared;
 using Logic.Shared.Interfaces;
+using Logic.Shared.Interfaces.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Models.Authentication;
 using System.Text;
 
-namespace Core.Web.StartUp
+namespace Core.Api.Bundels
 {
-    public static class ServiceRegistration
+    internal static class ServiceRegistration
     {
-        public static void Register(WebApplicationBuilder builder)
+        internal static void RegisterServices(WebApplicationBuilder builder, string corsPolicy)
         {
-            builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+            Database.RegisterDatabaseServices(builder);
 
-            builder.Services.AddLocalization();
-
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(x =>
+            {
+                x.AddPolicy(corsPolicy, opt =>
+                {
+                    opt.AllowAnyHeader();
+                    opt.AllowAnyOrigin();
+                    opt.AllowAnyMethod();
+                });
+            });
+            
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication();
 
-            builder.Services.AddScoped<IApiHttpClient, ApiHttpClient>();
+            ConfigureJwt(builder);
+            builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
+            builder.Services.AddScoped<ILogService, LogService>();
 
             
 
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            builder.Services.AddCascadingAuthenticationState();
-            //  builder.Services.AddAuthorizationCore();
-            ConfigureJwt(builder);
-
-
-            // ViewModels
-            builder.Services.AddScoped<CounterViewModel>();
-            builder.Services.AddScoped<AuthenticationViewModel>();
-            builder.Services.AddScoped<FamilyAdministrationViewModel>();
+           
         }
 
         private static void ConfigureJwt(WebApplicationBuilder builder)
