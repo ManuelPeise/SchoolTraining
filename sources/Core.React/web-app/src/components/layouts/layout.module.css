@@ -1,0 +1,65 @@
+.navbar {
+  width: 100%;
+  background-color: #000033;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbarBrand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbarBrand a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.navbarUser:hover,
+.navbarBrand a:hover,
+.navbarBrand i:hover,
+.navbarBrand a span:hover {
+  color: var(--primary-color-hover);
+  cursor: pointer;
+}
+
+.navbar span {
+  color: inherit;
+  font-size: 1.5rem;
+  padding-left: 0.5rem;
+}
+
+/* Or hover effects */
+.navIcon:hover {
+  color: var(--primary-color-hover);
+  cursor: pointer;
+}
+
+.navbarUser {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.navbarUser i {
+  font-size: 1.5rem;
+}
+
+.navbarUser span {
+  font-size: 1.3rem;
+  padding-left: 0.3rem;
+}
