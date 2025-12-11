@@ -1,41 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IAppUser } from 'src/lib/interfaces/IAppUser';
-import styles from '../layout.module.css';
+import styles from './navbar.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'src/hooks/useAuth';
+import LoadingIndicator from '../loading/LoadingIndicator';
 
 interface IProps {
   user: IAppUser | null;
+  isLoading: boolean;
 }
 
 const NavBar: React.FC<IProps> = (props: IProps) => {
-  const { user } = props;
+  const { user, isLoading } = props;
+  const { logout } = useAuth();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (user == null) {
     navigate('/auth');
     return null;
   }
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <div className={styles.navbar}>
-      <div className={styles.navbarBrand}>
-        <a href="/home">
+    <nav className={styles.navbar}>
+      {/* brand aligned start */}
+      <div className={styles.brand}>
+        <a href="/home" className={styles.brandLink}>
           <i className="bi bi-house"></i>
-          <span>AppName</span>
+          <span className={styles.brandText}>AppName</span>
         </a>
       </div>
-      <div></div>
-      {/* Right side user info and logout TODO style*/}
-      <div>
-        <div className={styles.navbarUser}>
+
+      {/* Hamburger menu button for mobile */}
+      <button className={styles.hamburger} onClick={toggleMenu} aria-label="Toggle menu">
+        <span className={styles.hamburgerLine}></span>
+        <span className={styles.hamburgerLine}></span>
+        <span className={styles.hamburgerLine}></span>
+      </button>
+
+      {/* Nav item container */}
+      <div className={`${styles.navItems} ${isMenuOpen ? styles.navItemsOpen : ''}`}>
+        <ul className={styles.navList}>
+          <li className={styles.navItem}>
+            <a href="/home" className={styles.navLink}>
+              Item-1
+            </a>
+          </li>
+          <li className={styles.navItem}>
+            <a href="/home" className={styles.navLink}>
+              Item-2
+            </a>
+          </li>
+          <li className={styles.navItem}>
+            <a href="/home" className={styles.navLink}>
+              Item-3
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {/* user section aligned end*/}
+      <div className={styles.userSection}>
+        <div className={styles.userName}>
           <i className="bi bi-person-circle"></i>
           <span>{user.userName}</span>
         </div>
-        <div>
+        <div className={styles.logoutBtn} onClick={logout}>
           <i className="bi bi-box-arrow-right"></i>
         </div>
       </div>
-    </div>
+      <LoadingIndicator isLoading={isLoading} />
+    </nav>
   );
 };
 
