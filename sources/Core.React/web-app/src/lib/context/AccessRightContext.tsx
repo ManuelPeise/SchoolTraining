@@ -70,7 +70,6 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
     const user = parseJwtToken(jwt);
 
     if (user == null) {
-      console.log('AccessRightContextProvider initialize - no user found in token');
       setAccessRights(defaultAccessRights);
       return;
     }
@@ -109,7 +108,6 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
   }, []);
 
   React.useEffect(() => {
-    console.log('AccessRightContextProvider useEffect - tryInitializeAccessRights');
     tryInitializeAccessRights();
   }, [tryInitializeAccessRights]);
 

@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const [tokenStore, setTokenStore] = useState<ITokenStore | null>(null);
 
-  const authenticationApi = AppHooks.StatelessApi.create<JwtTokenResponse, LoginRequestModel>();
+  const authenticationApi = AppHooks.statelessApi.create<JwtTokenResponse, LoginRequestModel>();
 
   const login = useCallback(
     async (model: LoginRequestModel) => {

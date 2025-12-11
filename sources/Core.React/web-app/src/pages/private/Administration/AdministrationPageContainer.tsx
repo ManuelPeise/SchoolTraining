@@ -2,12 +2,13 @@ import React from 'react';
 import SettingsPageLayout, { INavigationListItem } from 'src/components/layouts/SettingsPageLayout';
 import { AppHooks } from 'src/hooks/AppHooks';
 import { useAccessRights } from 'src/hooks/useAccessRights';
+import FamilyAdministrationContainer from './FamilyAdministration/FamilyAdministrationContainer';
 
 const AdministrationPageContainer: React.FC = () => {
   const { accessRights } = useAccessRights();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const localizationProps = AppHooks.UseLocalisationProps(['common']);
+  const localizationProps = AppHooks.useLocalisationProps(['common']);
 
   const listItems: INavigationListItem[] = [
     {
@@ -15,14 +16,7 @@ const AdministrationPageContainer: React.FC = () => {
       title: 'Family Administration',
       subTitle: 'Manage family settings',
       isReadonly: !accessRights.accessRights.familyAdministration.view,
-      component: () => (
-        <div>
-          <div>Family Administration Component</div>
-          <div>
-            <button onClick={setIsLoading.bind(null, !isLoading)}>Click me</button>
-          </div>
-        </div>
-      ),
+      component: FamilyAdministrationContainer,
     },
     {
       key: '/user-administration',

@@ -1,7 +1,9 @@
 import { StatelessApi } from './StatelessApi';
+import { useAsyncComponentInitialization } from './useComponentMounting';
 import { useLocationProps } from './useLocationProps';
 
 export const AppHooks = {
-  StatelessApi: StatelessApi,
-  UseLocalisationProps: useLocationProps,
+  statelessApi: StatelessApi,
+  useLocalisationProps: useLocationProps,
+  useComponentMounting: useAsyncComponentInitialization,
 };
