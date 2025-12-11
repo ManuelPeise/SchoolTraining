@@ -1,0 +1,9 @@
+{
+  "app": {
+    "title": "AppName",
+    "menu": "Menü",
+    "subtitle": "Untertitel",
+    "familyAdministration": "Familienverwaltung",
+    "userAdministration": "Benutzerverwaltung"
+  }
+}

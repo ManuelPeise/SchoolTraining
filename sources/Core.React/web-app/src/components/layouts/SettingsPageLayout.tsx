@@ -2,17 +2,23 @@ import React from 'react';
 import { useAccessRights } from 'src/hooks/useAccessRights';
 import NavBar from './navigation/NavBar';
 import styles from './layout.module.css';
+import { ILocationProps } from 'src/lib/interfaces/ILocationProps';
 
+export interface ISettingsPageLayoutProps extends ILocationProps {
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+}
 export interface INavigationListItem {
   key: string;
   title: string;
   subTitle: string;
   isReadonly?: boolean;
-  component: React.FC<{}>;
+  component: React.FC<ISettingsPageLayoutProps>;
 }
 
-interface IProps {
+interface IProps extends ILocationProps {
   isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
   listItems: INavigationListItem[];
 }
 
@@ -54,7 +60,7 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
           </ul>
         </div>
         <div id="settings-page-content" className={styles.settingsPageContent}>
-          <Component />
+          <Component {...props} />
         </div>
         {/* end style this */}
       </div>
