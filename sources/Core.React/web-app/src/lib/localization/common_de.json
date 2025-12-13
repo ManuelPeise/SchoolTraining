@@ -1,9 +1,7 @@
 {
-  "app": {
-    "title": "AppName",
-    "menu": "Menü",
-    "subtitle": "Untertitel",
-    "familyAdministration": "Familienverwaltung",
-    "userAdministration": "Benutzerverwaltung"
-  }
+  "captionIsActive": "Aktiv",
+  "captionName": "Name",
+  "captionContactMailAddress": "Kontakt E-Mail-Adresse",
+  "captionCreatedBy": "Erstellt von",
+  "captionCreatedAt": "Erstellt am"
 }

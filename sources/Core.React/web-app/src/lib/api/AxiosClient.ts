@@ -10,7 +10,7 @@ const AxiosClient: AxiosInstance = axios.create({
 // Request interceptor
 AxiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwtToken');
+    const token = localStorage.getItem('jwt');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,7 +26,7 @@ AxiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('jwt');
       window.location.href = '/auth';
     }
     return Promise.reject(error);

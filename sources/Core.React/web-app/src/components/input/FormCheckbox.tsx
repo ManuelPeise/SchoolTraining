@@ -1,5 +1,7 @@
 import React from 'react';
-import styles from './Input.module.css';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from '@mui/material/Box';
 
 interface IProps {
   label: string;
@@ -8,20 +10,21 @@ interface IProps {
   onChange: (checked: boolean) => void;
 }
 
-const FormCheckbox: React.FC<IProps> = (props: IProps) => {
-  const { label, checked, disabled, onChange } = props;
-
+const FormCheckbox: React.FC<IProps> = ({ label, checked, disabled, onChange }) => {
   return (
-    <div className={styles.formCheckGroup}>
-      <input
-        className={styles.formCheckbox}
-        type="checkbox"
-        disabled={disabled}
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
+    <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checked}
+            disabled={disabled}
+            onChange={(e) => onChange(e.target.checked)}
+            color="primary"
+          />
+        }
+        label={label}
       />
-      <label className={styles.formCheckLabel}>{label}</label>
-    </div>
+    </Box>
   );
 };
 

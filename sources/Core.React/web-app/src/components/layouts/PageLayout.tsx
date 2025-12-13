@@ -1,7 +1,8 @@
 import React, { PropsWithChildren } from 'react';
 import { useAccessRights } from 'src/hooks/useAccessRights';
 import NavBar from './navigation/NavBar';
-import styles from './layout.module.css';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 interface IProps extends PropsWithChildren {
   isLoading: boolean;
@@ -12,14 +13,23 @@ const PageLayout: React.FC<IProps> = (props: IProps) => {
   const { appUser } = useAccessRights();
 
   return (
-    <div className={styles.pageLayout}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.default',
+      }}
+    >
       {/* Header */}
-      <div className={styles.header}>
+      <Box component="header" sx={{ width: '100%', boxShadow: 1, zIndex: 1100 }}>
         <NavBar user={appUser} isLoading={isLoading} />
-      </div>
+      </Box>
       {/* Main content */}
-      <div className={styles.mainContent}>{props.children}</div>
-    </div>
+      <Container maxWidth="lg" sx={{ flex: 1, py: 3 }}>
+        {props.children}
+      </Container>
+    </Box>
   );
 };
 

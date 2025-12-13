@@ -1,9 +1,14 @@
 {
-  "app": {
-    "title": "AppName",
-    "menu": "Menu",
-    "subtitle": "Subtitle",
-    "familyAdministration": "Family Administration",
-    "userAdministration": "User Administration"
-  }
+  "captionFamilies": "Families",
+  "captionIsActive": "Is Active",
+  "captionName": "Name",
+  "captionContactMailAddress": "Contact Mail Address",
+  "captionCreatedBy": "Created By",
+  "captionCreatedAt": "Created At",
+  "captionFamiliesInSystem": "Families in the system",
+  "captionDeleteFamily": "Delete Family",
+  "subTitleFamilies": "Manage families in the system",
+  "subTitleFamiliesInSystem": "List of all registered families",
+  "labelSave": "Save",
+  "labelCancel": "Cancel"
 }

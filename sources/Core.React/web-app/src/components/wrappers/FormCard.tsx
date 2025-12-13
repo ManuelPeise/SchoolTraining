@@ -1,5 +1,6 @@
 import React from 'react';
-import styles from './Card.module.css';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 interface IProps extends React.PropsWithChildren {
   minwidth?: string;
@@ -8,9 +9,11 @@ interface IProps extends React.PropsWithChildren {
 
 const FormCard: React.FC<IProps> = (props: IProps) => {
   return (
-    <div className={styles.formCard} style={{ minWidth: props.minwidth, padding: props.padding }}>
-      {props.children}
-    </div>
+    <Card sx={{ minWidth: props.minwidth, p: 0, boxShadow: 3 }}>
+      <CardContent sx={{ p: props.padding ? undefined : 2, padding: props.padding }}>
+        {props.children}
+      </CardContent>
+    </Card>
   );
 };
 

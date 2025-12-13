@@ -1,31 +1,38 @@
 import React from 'react';
-import styles from './Input.module.css';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
 interface IProps {
   label?: string;
   placeholder?: string;
   disabled?: boolean;
   type: string;
-
   value: string;
   onChange: (value: string) => void;
 }
 
-const FormTextInput: React.FC<IProps> = (props: IProps) => {
-  const { label, placeholder, disabled, type, value, onChange } = props;
-
+const FormTextInput: React.FC<IProps> = ({
+  label,
+  placeholder,
+  disabled,
+  type,
+  value,
+  onChange,
+}) => {
   return (
-    <div className={styles.formGroup}>
-      {label && <label className={styles.formLabel}>{label}</label>}
-      <input
-        className={styles.formInput}
-        type={type}
-        disabled={disabled}
+    <Box sx={{ my: 1 }}>
+      <TextField
+        fullWidth
+        label={label}
         placeholder={placeholder}
+        disabled={disabled}
+        type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        variant="outlined"
+        size="medium"
       />
-    </div>
+    </Box>
   );
 };
 

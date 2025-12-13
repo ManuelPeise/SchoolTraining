@@ -4,16 +4,16 @@ import common_en from './lib/localization/common_en.json';
 import common_de from './lib/localization/common_de.json';
 
 const resources = {
-  common: {
-    en: { common: common_en },
-    de: { common: common_de },
-  },
+  en: { common: common_en },
+  de: { common: common_de },
 };
 
 i18n.use(initReactI18next).init({
   resources,
   lng: 'en',
   fallbackLng: 'en',
+  ns: ['common'],
+  defaultNS: 'common',
   interpolation: {
     escapeValue: false,
   },

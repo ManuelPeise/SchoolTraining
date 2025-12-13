@@ -9,7 +9,19 @@ export const useLocationProps = (namespaces: string[] = []): ILocationProps => {
     i18n.loadNamespaces(namespaces);
   }, [i18n, namespaces]);
 
+  const getResource = React.useCallback(
+    (key: string): string => {
+      if (key.includes('.')) {
+        const [namespace, ...resourceParts] = key.split('.');
+        const resource = resourceParts.join('.');
+        return t(resource, { ns: namespace });
+      }
+      return t(key);
+    },
+    [t]
+  );
+
   return {
-    getResource: (key: string, options?: any) => String(t(key, options)),
+    getResource,
   };
 };

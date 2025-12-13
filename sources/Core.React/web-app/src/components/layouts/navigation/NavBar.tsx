@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
 import { IAppUser } from 'src/lib/interfaces/IAppUser';
-import styles from './navbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'src/hooks/useAuth';
 import LoadingIndicator from '../loading/LoadingIndicator';
 import { UserRoleEnum } from 'src/lib/enums/UserRoleEnum';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import Divider from '@mui/material/Divider';
 
 export interface ISideMenuItem {
   title: string;
@@ -43,16 +56,13 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
 
   const sideMenuItems: ISideMenuItem[] = React.useMemo(() => {
     const items: ISideMenuItem[] = [];
-
     if (user == null) {
       return items;
     }
-
     const userRoleValue =
       typeof user.userRole === 'string'
         ? UserRoleEnum[user.userRole as keyof typeof UserRoleEnum]
         : user.userRole;
-
     if (userRoleValue === UserRoleEnum.Admin || userRoleValue === UserRoleEnum.SystemAdmin) {
       items.push({
         title: 'Administration',
@@ -70,57 +80,83 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
   }
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.navbarLeft}>
-        {/* Hamburger menu button */}
-        <button className={styles.hamburger} onClick={toggleMenu} aria-label="Toggle menu">
-          <i className="bi bi-list"></i>
-        </button>
-
-        {/* brand aligned behind hamburger */}
-        <div className={styles.brand} onClick={navigateTo.bind(null, '/home')}>
-          <div className={styles.brandLink}>
-            <i className="bi bi-house"></i>
-            <span className={styles.brandText}>AppName</span>
-          </div>
-        </div>
-      </div>
-      {/* Nav item container */}
-      <div className={`${styles.navItems} ${isMenuOpen ? styles.navItemsOpen : ''}`}>
-        {/* Sidebar header */}
-        <div className={styles.sidebarHeader}>
-          <span className={styles.sidebarTitle}>Menu</span>
-          <p>Subtitle</p>
-        </div>
-
-        <ul className={styles.navList}>
-          {sideMenuItems.map((item) => (
-            <li
-              key={item.link}
-              className={styles.navItem}
-              onClick={navigateTo.bind(null, item.link)}
+    <>
+      <AppBar
+        position="static"
+        color="default"
+        enableColorOnDark
+        elevation={2}
+        sx={{ zIndex: 1201 }}
+      >
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', minHeight: 64 }}>
+          {/* Left: Hamburger and Brand */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleMenu}
+              sx={{ mr: 2 }}
             >
-              <div className={styles.navLink}>
-                <i className={item.iconClassName}></i>
-                <span className={styles.navLinkText}>{item.title}</span>
-              </div>
-            </li>
+              <i className="bi bi-list"></i>
+            </IconButton>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              onClick={() => navigateTo('/home')}
+            >
+              <i className="bi bi-house" style={{ fontSize: 22, marginRight: 8 }}></i>
+              <Typography variant="h6" noWrap sx={{ fontWeight: 700 }}>
+                AppName
+              </Typography>
+            </Box>
+          </Box>
+          {/* Right: User section */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Tooltip title={user.userName} arrow>
+              <Avatar sx={{ bgcolor: 'primary.main', width: 36, height: 36 }}>
+                <i className="bi bi-person-circle" style={{ fontSize: 22 }}></i>
+              </Avatar>
+            </Tooltip>
+            <IconButton color="inherit" onClick={handleLogout} aria-label="Logout">
+              <i className="bi bi-box-arrow-right" style={{ fontSize: 22 }}></i>
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {/* Drawer for menu */}
+      <Drawer
+        anchor="left"
+        open={isMenuOpen}
+        onClose={toggleMenu}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          '& .MuiDrawer-paper': { width: 260, boxSizing: 'border-box' },
+        }}
+      >
+        <Box sx={{ p: 2, pb: 0 }}>
+          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            Menu
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Subtitle
+          </Typography>
+        </Box>
+        <Divider sx={{ my: 1 }} />
+        <List>
+          {sideMenuItems.map((item) => (
+            <ListItem key={item.link} disablePadding>
+              <ListItemButton onClick={() => navigateTo(item.link)}>
+                <ListItemIcon>
+                  <i className={item.iconClassName} style={{ fontSize: 20 }}></i>
+                </ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItemButton>
+            </ListItem>
           ))}
-        </ul>
-      </div>
-
-      {/* user section aligned end*/}
-      <div className={styles.userSection}>
-        <div className={styles.userName}>
-          <i className="bi bi-person-circle"></i>
-          <span>{user.userName}</span>
-        </div>
-        <div className={styles.logoutBtn} onClick={handleLogout}>
-          <i className="bi bi-box-arrow-right"></i>
-        </div>
-      </div>
+        </List>
+      </Drawer>
       <LoadingIndicator isLoading={isLoading} />
-    </nav>
+    </>
   );
 };
 

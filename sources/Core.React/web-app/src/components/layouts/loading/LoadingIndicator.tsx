@@ -1,19 +1,17 @@
 import React from 'react';
-import styles from './loadingIndicator.module.css';
+import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
 
 interface IProps {
   isLoading: boolean;
 }
 
 const LoadingIndicator: React.FC<IProps> = ({ isLoading }) => {
-  if (!isLoading) {
-    return null;
-  }
-
+  if (!isLoading) return null;
   return (
-    <div className={styles.loadingContainer}>
-      <div className={styles.loadingBar}></div>
-    </div>
+    <Box sx={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 2000 }}>
+      <LinearProgress color="primary" />
+    </Box>
   );
 };
 

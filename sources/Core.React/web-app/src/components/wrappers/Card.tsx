@@ -1,10 +1,15 @@
 import React from 'react';
-import styles from './Card.module.css';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 interface IProps extends React.PropsWithChildren {}
 
-const Card: React.FC<IProps> = (props: IProps) => {
-  return <div className={styles.card}>{props.children}</div>;
+const CardWrapper: React.FC<IProps> = (props: IProps) => {
+  return (
+    <Card sx={{ boxShadow: 3 }}>
+      <CardContent>{props.children}</CardContent>
+    </Card>
+  );
 };
 
-export default Card;
+export default CardWrapper;
