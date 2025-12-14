@@ -19,7 +19,7 @@ const TableCheckbox: React.FC<IProps> = (props: IProps) => {
         onChange(props.rowIndex, { ...props.model, [propertyName]: e.target.checked });
       }
     },
-    [onChange, props.rowIndex, props.model, props.propertyName]
+    [onChange, props.rowIndex, props.model, propertyName]
   );
 
   return <Checkbox checked={checked} disabled={disabled} onChange={handleChange} />;

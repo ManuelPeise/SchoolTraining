@@ -68,16 +68,13 @@ const downloadFile = async (url: string, downloadFileName?: string): Promise<voi
       disposition =
         response.headers.get('content-disposition') || response.headers.get('Content-Disposition');
     }
-    // Debug: log headers to help diagnose
-    if (!disposition) {
-      console.log('downloadFile: Content-Disposition header not found. Headers:', response.headers);
-    }
+
     if (disposition) {
       // Prefer filename* (RFC 5987)
-      let filenameStarMatch = disposition.match(/filename\*=([^;]+)/i);
+      const filenameStarMatch = disposition.match(/filename\*=([^;]+)/i);
       if (filenameStarMatch && filenameStarMatch[1]) {
         // e.g. filename*=UTF-8''FamilyImport_FamilyName_YYYYMMDD.json
-        let value = filenameStarMatch[1].trim();
+        const value = filenameStarMatch[1].trim();
         // Remove encoding if present (e.g. UTF-8'')
         const parts = value.split("''");
         if (parts.length === 2) {
@@ -91,7 +88,7 @@ const downloadFile = async (url: string, downloadFileName?: string): Promise<voi
         }
       } else {
         // Fallback to filename=
-        let filenameMatch = disposition.match(/filename=([^;]+)/i);
+        const filenameMatch = disposition.match(/filename=([^;]+)/i);
         if (filenameMatch && filenameMatch[1]) {
           filename = filenameMatch[1].trim().replace(/['"]/g, '');
         }
@@ -102,14 +99,12 @@ const downloadFile = async (url: string, downloadFileName?: string): Promise<voi
     const urlBlob = window.URL.createObjectURL(response.data);
     const link = document.createElement('a');
     link.href = urlBlob;
-    console.log('downloadFile: Downloading file with name:', filename);
     link.setAttribute('download', filename ?? 'downloaded_file');
     document.body.appendChild(link);
     link.click();
     link.remove();
     window.URL.revokeObjectURL(urlBlob);
   } catch (error) {
-    console.error('StatelessApi downloadFile error:', error);
     throw error;
   }
 };
