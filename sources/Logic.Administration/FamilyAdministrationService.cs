@@ -56,7 +56,7 @@ namespace Logic.Administration
             }
         }
 
-        public async Task<bool> UploadFamilyTemplateFile(FormFile file)
+        public async Task<bool> UploadFamilyTemplateFile(IFormFile file)
         {
             try
             {

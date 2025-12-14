@@ -30,19 +30,19 @@ const HeaderListItem: React.FC<IHeaderListItemProps> = (props: IHeaderListItemPr
       disableGutters
       secondaryAction={
         iconButtonProps && (
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" sx={{ paddingRight: '2rem' }}>
             {iconButtonProps.map((iconButtonProp, index) => (
               <Box key={index}>
                 <IconButton
                   onClick={iconButtonProp.onClick}
-                  size="large"
+                  size="small"
                   sx={{ p: 1 }}
                   disabled={iconButtonProp.disabled}
                   title={iconButtonProp.tooltip}
                 >
                   <Icon
                     className={iconButtonProp.icon}
-                    sx={{ fontSize: iconButtonProp.size ?? 20 }}
+                    sx={{ fontSize: iconButtonProp.size ?? 16, color: iconButtonProp.color }}
                   />
                 </IconButton>
                 {iconButtonProp.inputRef && (

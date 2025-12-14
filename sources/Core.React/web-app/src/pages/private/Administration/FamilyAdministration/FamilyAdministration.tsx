@@ -202,6 +202,11 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
               tooltip: getResource('common.labelUploadFile'),
               disabled: isReadonly,
               size: 20,
+              onClick: () => {
+                if (fileInputRef.current) {
+                  fileInputRef.current.click();
+                }
+              },
               fileUploadCallback: handleFileUpload,
             },
           ]}

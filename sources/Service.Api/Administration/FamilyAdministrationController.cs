@@ -47,8 +47,9 @@ namespace Service.Api.Administration
             return file;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost(Name = "UploadFamilyTemplateFile")]
-        public async Task<NotificationResponse> UploadFamilyTemplateFile([FromForm] FormFile file)
+        public async Task<NotificationResponse> UploadFamilyTemplateFile([FromForm] IFormFile file)
         {
             if (file == null)
             {

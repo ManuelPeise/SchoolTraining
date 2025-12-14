@@ -3,6 +3,7 @@ using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
+using Shared.Models.Import;
 
 namespace Logic.Import.FileImport
 {
@@ -17,6 +18,38 @@ namespace Logic.Import.FileImport
         {
             _unitOfWork = unitOfWork;
             _fileImporterFactory = fileImporterFactory;
+        }
+
+        public async Task<List<ImportFileModel>> GetFiles()
+        {
+            try
+            {
+                var files = await _unitOfWork.ImportFileRepository.GetAllAsync(true);
+
+                return files.Select(x => new ImportFileModel
+                {
+                    FileId = x.Id,
+                    FileName = x.FileName,
+                    FileDate = x.FileDate,
+                    FileType = x.FileType,
+                    Status = x.Status,
+                    LastUpdate = GetLastUpdateAt(x.UpdatedAt, x.CreatedAt),
+                    LastUpdateBy = GetLastUpdateBy(x.UpdatedBy, x.CreatedBy),
+                }).ToList();
+            }
+            catch (Exception exception)
+            {
+                await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
+                {
+                    Message = "Exception occurred during loading import files from database.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                    Module = nameof(FileImporter),
+                }, true);
+            }
+
+            return new List<ImportFileModel>();
         }
 
         public async Task ImportFiles()
@@ -62,7 +95,7 @@ namespace Logic.Import.FileImport
 
                             await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
                             {
-                                Message = $"No importer found for file type: {importFile.FileType}.",
+                                Message = $"Import for file type: {importFile.FileType} failed.",
                                 ExeptionMessage = exception.Message,
                                 StackTrace = exception.StackTrace,
                                 LogLevel = LogLevelEnum.Error,
@@ -72,7 +105,76 @@ namespace Logic.Import.FileImport
                     }
                 }
 
-                if(databaseChanged)
+                if (databaseChanged)
+                {
+                    await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
+                }
+            }
+            catch (Exception exception)
+            {
+                await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
+                {
+                    Message = "Exception occurred during importing files.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                    Module = nameof(FileImporter),
+                }, true);
+
+            }
+        }
+
+        public async Task<List<ImportFileModel>> ImportFile(int fileId)
+        {
+            try
+            {
+                var databaseChanged = false;
+
+                var importFileToProcess = await _unitOfWork.ImportFileRepository.GetByIdAsync(fileId, true);
+
+                if (importFileToProcess != null)
+                {
+                    try
+                    {
+                        var importer = _fileImporterFactory.GetFileImporter(importFileToProcess.FileType, HttpContextAccessor, _unitOfWork);
+
+                        if (importer != null)
+                        {
+                            using (var stream = new MemoryStream(importFileToProcess.FileContent))
+                            using (var reader = new StreamReader(stream))
+                            {
+                                var fileContent = await reader.ReadToEndAsync();
+
+                                await importer.ImportFile(fileContent, importFileToProcess.FileName);
+
+                                importFileToProcess.Status = ImportStatusEnum.Success;
+
+                                _unitOfWork.ImportFileRepository.Update(importFileToProcess);
+
+                                databaseChanged = true;
+                            }
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        importFileToProcess.Status = ImportStatusEnum.Failed;
+
+                        _unitOfWork.ImportFileRepository.Update(importFileToProcess);
+
+                        databaseChanged = true;
+
+                        await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
+                        {
+                            Message = $"Import for file type: {importFileToProcess.FileType} failed.",
+                            ExeptionMessage = exception.Message,
+                            StackTrace = exception.StackTrace,
+                            LogLevel = LogLevelEnum.Error,
+                            Module = nameof(FileImporter),
+                        }, true);
+                    }
+                }
+
+                if (databaseChanged)
                 {
                     await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
@@ -89,6 +191,76 @@ namespace Logic.Import.FileImport
                 }, true);
 
             }
+
+            return await GetFiles();
+        }
+
+        public async Task<List<ImportFileModel>> DeleteFile(int fileId)
+        {
+            try
+            {
+                var importFileToDelete = await _unitOfWork.ImportFileRepository.GetByIdAsync(fileId, true);
+                if (importFileToDelete != null)
+                {
+                    _unitOfWork.ImportFileRepository.Remove(importFileToDelete);
+                    await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
+                }
+            }
+            catch (Exception exception)
+            {
+                await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
+                {
+                    Message = "Exception occurred during deleting import file.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                    Module = nameof(FileImporter),
+                }, true);
+            }
+
+            return await GetFiles();
+        }
+        
+        public async Task<List<ImportFileModel>> DeleteFiles()
+        {
+            try
+            {
+                var importFilesToDelete = await _unitOfWork.ImportFileRepository.GetAllByAsync(
+                    x => x.Status == ImportStatusEnum.Success || x.Status == ImportStatusEnum.Failed, true);
+                
+                if (importFilesToDelete.Any())
+                {
+                    foreach (var importFileToDelete in importFilesToDelete)
+                    {
+                        _unitOfWork.ImportFileRepository.Remove(importFileToDelete);
+                    }
+                    
+                    await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
+                }
+            }
+            catch (Exception exception)
+            {
+                await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
+                {
+                    Message = "Exception occurred during deleting import file.",
+                    ExeptionMessage = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    LogLevel = LogLevelEnum.Error,
+                    Module = nameof(FileImporter),
+                }, true);
+            }
+
+            return await GetFiles();
+        }
+
+        private DateTime GetLastUpdateAt(DateTime? updetedAt, DateTime createdAt)
+        {
+            return updetedAt == null || updetedAt == DateTime.MinValue ? createdAt : updetedAt.Value;
+        }
+
+        private string GetLastUpdateBy(string? updetedAt, string createdAt)
+        {
+            return string.IsNullOrEmpty(updetedAt) ? createdAt : updetedAt;
         }
     }
 }

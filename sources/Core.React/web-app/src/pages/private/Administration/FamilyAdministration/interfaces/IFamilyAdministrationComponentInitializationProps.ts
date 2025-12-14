@@ -4,7 +4,8 @@ import { IStatelessApi } from 'src/lib/interfaces/IStatelessApi';
 import { IFamilyModel } from './IFamilyModel';
 import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse';
 
-export interface IComponentInitializationProps extends ISettingsPageLayoutProps, ILocationProps {
+export interface IFamilyAdministrationComponentInitializationProps
+  extends ISettingsPageLayoutProps, ILocationProps {
   getResource: (key: string) => string;
   familyApi: IStatelessApi<any, any>;
   fileApi: IStatelessApi<INotificationResponse, any>;

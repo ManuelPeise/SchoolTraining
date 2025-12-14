@@ -3,6 +3,7 @@ import SettingsPageLayout, { INavigationListItem } from 'src/components/layouts/
 import { AppHooks } from 'src/hooks/AppHooks';
 import { useAccessRights } from 'src/hooks/useAccessRights';
 import FamilyAdministrationContainer from './FamilyAdministration/FamilyAdministrationContainer';
+import FileImportContainer from './FileImport/FileImportContainer';
 
 const AdministrationPageContainer: React.FC = () => {
   const { accessRights } = useAccessRights();
@@ -13,17 +14,17 @@ const AdministrationPageContainer: React.FC = () => {
   const listItems: INavigationListItem[] = [
     {
       key: 'family-administration',
-      title: 'Family Administration',
-      subTitle: 'Manage family settings',
+      title: localizationProps.getResource('common.captionFamilyAdministration'),
+      subTitle: localizationProps.getResource('common.labelManageFamilySettings'),
       isReadonly: !accessRights.accessRights.familyAdministration.view,
       component: FamilyAdministrationContainer,
     },
     {
-      key: '/user-administration',
-      title: 'User Administration',
-      subTitle: 'Manage user accounts',
+      key: 'file-import',
+      title: localizationProps.getResource('common.captionFileImport'),
+      subTitle: localizationProps.getResource('common.labelManageFileImports'),
       isReadonly: !accessRights.accessRights.userAdministration.view,
-      component: () => <div>User Administration Component</div>,
+      component: FileImportContainer,
     },
   ];
 

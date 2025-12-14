@@ -8,7 +8,7 @@ namespace Logic.Administration.Interfaces
     {
         Task<List<FamilyModel>> GetFamilies();
         Task<FileResponse?> DownloadFamilyImportTemplate();
-        Task<bool> UploadFamilyTemplateFile(FormFile file);
+        Task<bool> UploadFamilyTemplateFile(IFormFile file);
         Task<List<FamilyModel>> UpdateFamilies(List<FamilyModel> families);
     }
 }
