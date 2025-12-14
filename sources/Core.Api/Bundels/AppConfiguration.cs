@@ -1,10 +1,11 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using ZstdSharp.Unsafe;
 
 namespace Core.Api.Bundels
 {
     internal static  class AppConfiguration
     {
-        internal static void Configure(WebApplication app, string corsPolicy)
+        internal static async Task Configure(WebApplication app, string corsPolicy)
         {
             if (!app.Environment.IsDevelopment())
             {
@@ -19,13 +20,17 @@ namespace Core.Api.Bundels
 
             app.UseCors(corsPolicy);
 
+            app.UseMiddleware<SchedulerMiddleWare>();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
 
+           
+
             Database.Migrate(app);
             Database.SeedDefaultSystemAdminUser(app);
+            await Scheduler.StartScheduler(app.Services);
         }
     }
 }

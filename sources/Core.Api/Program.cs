@@ -10,6 +10,6 @@ ServiceRegistration.RegisterServices(builder, CorsPolicy);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-AppConfiguration.Configure(app, CorsPolicy);
+await AppConfiguration.Configure(app, CorsPolicy);
 
 app.Run();

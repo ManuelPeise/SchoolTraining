@@ -5,6 +5,7 @@
         User = 0,
         Admin = 1,
         SystemAdmin = 2,
-        Guest = 3
+        MaintanaceUser = 3,
+        Guest = 4
     }
 }

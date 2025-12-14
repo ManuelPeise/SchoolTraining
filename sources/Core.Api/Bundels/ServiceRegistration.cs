@@ -6,6 +6,8 @@ using Logic.Shared.Interfaces;
 using Logic.Shared.Interfaces.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
+using Quartz.Simpl;
 using Shared.Models.Authentication;
 using System.Text;
 
@@ -32,21 +34,25 @@ namespace Core.Api.Bundels
                     opt.WithExposedHeaders("Content-Disposition");
                 });
             });
-            
+
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication();
 
             ConfigureJwt(builder);
+           
+            builder.Services.AddScoped<ILogService, LogService>();
             builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
-            builder.Services.AddScoped<ILogService, LogService>();
 
-            
+            builder.Services.AddQuartz(q =>
+            {
+                q.UseJobFactory<MicrosoftDependencyInjectionJobFactory>();
+            });
+            builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
-           
         }
 
         private static void ConfigureJwt(WebApplicationBuilder builder)
