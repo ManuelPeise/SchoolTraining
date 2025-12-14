@@ -10,5 +10,9 @@
   "subTitleFamilies": "Manage families in the system",
   "subTitleFamiliesInSystem": "List of all registered families",
   "labelSave": "Save",
-  "labelCancel": "Cancel"
+  "labelCancel": "Cancel",
+  "labelDownloadFileTemplate": "Download File Template",
+  "labelUploadFile": "Upload File",
+  "notificationFamilyImportFailed": "Family file template import failed, please try again.",
+  "notificationFamilyImportSuccess": "Family file template import was successful, data will be processed shortly."
 }

@@ -20,6 +20,7 @@ export type TableProps<T> = {
   columns: Column<T>[];
   data: T[];
   maxHeight?: number | string;
+
   getRowKey?: (row: T, rowIndex: number) => React.Key;
 };
 

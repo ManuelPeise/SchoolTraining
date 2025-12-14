@@ -8,14 +8,12 @@ namespace Logic.Database
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IDbContextFactory _dbContextFactory;
-        private readonly DbContextTypeEnum? _dbContextType;
         private ADbContext? _context;
+        private readonly IDbContextFactory _dbContextFactory;
 
         private IDatabaseRepositoryBase<FamilyEntity>? _familyRepository;
         public IDatabaseRepositoryBase<FamilyEntity> FamilyRepository =>
             _familyRepository ??= CreateRepository<FamilyEntity>();
-
 
         private IDatabaseRepositoryBase<UserEntity>? _userRepository;
         public IDatabaseRepositoryBase<UserEntity> UserRepository =>
@@ -40,11 +38,27 @@ namespace Logic.Database
         public IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository =>
             _importFileRepository ??= CreateRepository<ImportFileEntity>();
 
-        public UnitOfWork(IDbContextFactory dbContextFactory, DbContextTypeEnum? dbContextTypeEnum)
+        public UnitOfWork(IDbContextFactory dbContextFactory) 
         {
-            _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
-            _dbContextType = dbContextTypeEnum;
-            _context = dbContextFactory.GetContext(dbContextTypeEnum);
+            _dbContextFactory = dbContextFactory;
+            Initialize(_dbContextFactory.GetContext());
+        }
+
+        public UnitOfWork(IDbContextFactory dbContextFactory, DbContextTypeEnum dbContextType)
+        {
+            _dbContextFactory = dbContextFactory;
+            Initialize(_dbContextFactory.GetContext(dbContextType));
+        }
+
+        private void Initialize(ADbContext context)
+        {
+            _context = context;
+            _familyRepository = CreateRepository<FamilyEntity>();
+            _userRepository = CreateRepository<UserEntity>();
+            _userCredentialsRepository = CreateRepository<UserCredentialsEntity>();
+            _userSettingsRepository = CreateRepository<UserSettingsEntity>();
+            _logMessageRepository = CreateRepository<LogMessageEntity>();
+            _importFileRepository = CreateRepository<ImportFileEntity>();
         }
 
         private IDatabaseRepositoryBase<T> CreateRepository<T>() where T : AEntityBase

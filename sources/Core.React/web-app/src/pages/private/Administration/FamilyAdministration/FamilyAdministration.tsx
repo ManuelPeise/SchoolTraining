@@ -13,14 +13,32 @@ import SaveCancelButtons, {
   ISaveCancelButtonsProps,
 } from 'src/components/groups/SaveCancelButtons';
 import { dummyFamilies } from './dummyFamilies';
+import { IStatelessApi } from 'src/lib/interfaces/IStatelessApi';
+import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse';
+import Notification from 'src/components/Notification';
 
+interface INotificationBadgeState {
+  show: boolean;
+  message: string;
+  color: 'success' | 'error' | 'info' | 'warning';
+  duration: number;
+}
 interface IProps extends ILocationProps {
+  isReadonly?: boolean;
   families: IFamilyModel[];
+  fileApi: IStatelessApi<INotificationResponse, any>;
   getResource: (key: string) => string;
 }
 
 const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
-  const { getResource } = props;
+  const { getResource, isReadonly, fileApi } = props;
+
+  const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
+    show: false,
+    message: '',
+    color: 'success',
+    duration: 5000,
+  });
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -40,6 +58,7 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
             propertyName="isActive"
             rowIndex={rowIndex}
             model={row}
+            disabled={isReadonly}
             checked={row.isActive}
             onChange={updateArrayItemIndex}
           />
@@ -76,36 +95,65 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
         align: 'center',
         minWidth: 150,
         render: () => (
-          <TableIconButton iconClassName="bi bi-trash" size={18} onClick={async () => {}} />
+          <TableIconButton
+            iconClassName="bi bi-trash"
+            size={18}
+            disabled={isReadonly}
+            onClick={async () => {}}
+          />
         ),
       },
     ];
-  }, [getResource]);
+  }, [getResource, updateArrayItemIndex, isReadonly]);
+
+  const handleSave = React.useCallback(async () => {
+    // Handle save logic here
+  }, []);
 
   const saveCancelButtonProps = React.useMemo((): ISaveCancelButtonsProps => {
     return {
       labelSave: getResource('common.labelSave'),
       saveDisabled: !isModified || !isValid,
       labelCancel: getResource('common.labelCancel'),
-      saveAction: async () => {
-        // Handle save action
-      },
+      saveAction: handleSave,
       cancelAction: resetForm,
     };
-  }, [isModified, isValid, resetForm, getResource]);
+  }, [isModified, isValid, handleSave, resetForm, getResource]);
 
-  const handleFileUpload = React.useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      // Handle file upload action
-      console.log('Uploaded file:', file.name);
-    }
-  }, []);
+  const handleFileUpload = React.useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0 && files[0]) {
+        const response = await fileApi.postFile(
+          '/familyadministration/uploadfamilytemplatefile',
+          files[0]
+        );
+
+        setNotificationBadge({
+          show: true,
+          message: getResource(response.resourceKey),
+          color: response.success ? 'success' : 'error',
+          duration: 5000,
+        });
+      }
+    },
+    [fileApi, getResource]
+  );
 
   const handleFileDownloadClicked = React.useCallback(async () => {
-    fileInputRef.current?.click();
+    await fileApi.downloadFile(
+      '/familyadministration/downloadfamilyimporttemplate'
+      // 'FamilyImport_FamilyName_YYYYMMDD.json'
+    );
+  }, [fileApi]);
+
+  const handleResetNotification = React.useCallback(() => {
+    setNotificationBadge((prev) => ({
+      ...prev,
+      show: false,
+    }));
   }, []);
+
   return (
     <div
       style={{
@@ -123,16 +171,26 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
             {
               icon: 'bi bi-download',
               size: 20,
-              inputRef: fileInputRef,
-              onClick: handleFileDownloadClicked,
-              fileUploadCallback: handleFileUpload,
+              tooltip: getResource('common.labelDownloadFileTemplate'),
+              disabled: isReadonly,
+              onClick: async () => {
+                await handleFileDownloadClicked().then(() => {
+                  setNotificationBadge({
+                    show: true,
+                    message: getResource('common.labelDownloadFileTemplate'),
+                    color: 'success',
+                    duration: 3000,
+                  });
+                });
+              },
             },
             {
               icon: 'bi bi-upload',
+              inputRef: fileInputRef,
+              tooltip: getResource('common.labelUploadFile'),
+              disabled: isReadonly,
               size: 20,
-              onClick: async () => {
-                // Handle upload action
-              },
+              fileUploadCallback: handleFileUpload,
             },
           ]}
         />
@@ -144,6 +202,7 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
         </TableListItem>
       </List>
       <SaveCancelButtons {...saveCancelButtonProps} />
+      <Notification {...notificationBadge} handleResetNotification={handleResetNotification} />
     </div>
   );
 };

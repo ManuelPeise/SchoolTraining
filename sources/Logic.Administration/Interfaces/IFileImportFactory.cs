@@ -7,6 +7,6 @@ namespace Logic.Administration.Interfaces
 {
     public interface IFileImportFactory
     {
-        AFileImport GetFileImport(FileImportTypeEnum fileImportType, IHttpContextAccessor httpContextAccessor, IDbContextFactory dbContextFactory);
+        AFileImport GetFileImport(FileImportTypeEnum fileImportType, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork);
     }
 }

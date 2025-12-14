@@ -1,5 +1,6 @@
 ﻿using Logic.Administration.DI;
 using Logic.AuthenticationService;
+using Logic.Database;
 using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Logic.Shared.Interfaces.Authentication;
@@ -28,6 +29,7 @@ namespace Core.Api.Bundels
                     opt.AllowAnyHeader();
                     opt.AllowAnyOrigin();
                     opt.AllowAnyMethod();
+                    opt.WithExposedHeaders("Content-Disposition");
                 });
             });
             
@@ -35,8 +37,10 @@ namespace Core.Api.Bundels
             builder.Services.AddAuthentication();
 
             ConfigureJwt(builder);
+            builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
             builder.Services.AddScoped<ILogService, LogService>();
 

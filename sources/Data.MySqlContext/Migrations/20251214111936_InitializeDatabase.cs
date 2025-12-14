@@ -75,6 +75,7 @@ namespace Data.MySqlContext.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     FileName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    FileDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FileContent = table.Column<byte[]>(type: "longblob", nullable: false),
                     FileType = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),

@@ -29,7 +29,7 @@ namespace Logic.Database
         /// <param name="contextType">The type of database context to create. Defaults to <see cref="DbContextTypeEnum.SqLite"/> if not specified.</param>
         /// <returns>An instance of <see cref="ADbContext"/> corresponding to the specified <paramref name="contextType"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="contextType"/> is not a supported value.</exception>
-        public ADbContext GetContext(DbContextTypeEnum? contextType = DbContextTypeEnum.SqLite)
+        public ADbContext GetContext(DbContextTypeEnum? contextType = DbContextTypeEnum.MySql)
         {
             // Let DI container manage the DbContext lifetime - do not create a separate scope here
             switch (contextType)

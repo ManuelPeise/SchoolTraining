@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Shared.Enums;
 
 namespace Logic.Shared.Interfaces
 {
@@ -8,11 +9,8 @@ namespace Logic.Shared.Interfaces
         IDatabaseRepositoryBase<UserCredentialsEntity> UserCredentialsRepository { get; }
         IDatabaseRepositoryBase<UserSettingsEntity> UserSettingsRepository { get; }
         IDatabaseRepositoryBase<FamilyEntity> FamilyRepository { get; }
+        IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository { get; }
         IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository { get; }
-
-        /// <summary>
-        /// Save all changes made in this unit of work to the database.
-        /// </summary>
         Task<int> SaveChangesAsync(string userName, CancellationToken cancellationToken = default);
         public Task<int> LogMessage(LogMessageEntity entity, bool save = false, string userName = "System", CancellationToken cancellationToken = default);
     }

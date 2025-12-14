@@ -145,6 +145,7 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
         <List>
           {sideMenuItems.map((item) => (
             <ListItem key={item.link} disablePadding>
+              {/* colloapsible? */}
               <ListItemButton onClick={() => navigateTo(item.link)}>
                 <ListItemIcon>
                   <i className={item.iconClassName} style={{ fontSize: 20 }}></i>

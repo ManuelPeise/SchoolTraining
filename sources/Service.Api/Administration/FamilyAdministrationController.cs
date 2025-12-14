@@ -1,6 +1,10 @@
 ﻿using Logic.Administration.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Utilities;
+using Shared.Models;
 using Shared.Models.Administration;
+using System.Diagnostics;
 
 namespace Service.Api.Administration
 {
@@ -23,23 +27,46 @@ namespace Service.Api.Administration
         [HttpPost(Name = "UpdateFamilies")]
         public async Task<List<FamilyModel>> UpdateFamilies([FromBody] List<FamilyModel> families)
         {
-            await _familyAdministrationService.UpdateFamilies(families);
-
-            return await _familyAdministrationService.GetFamilies();
+           return await _familyAdministrationService.UpdateFamilies(families);
         }
 
         [HttpGet(Name = "DownloadFamilyImportTemplate")]
-        public async Task<FileDownloadModel?> DownloadFamilyImportTemplate()
+        public async Task<IActionResult> DownloadFamilyImportTemplate()
         {
-            return await _familyAdministrationService.DownloadFamilyImportTemplate();
-        }
+            var result = await _familyAdministrationService.DownloadFamilyImportTemplate();
 
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            Debug.WriteLine($"DownloadFamilyImportTemplate: FileName={result.FileName}, ContentType={result.ContentType}, Bytes={result.Bytes.Count}");
+
+            var file = File(result.Bytes.ToArray(), result.ContentType, result.FileName);
+            
+
+            return file;
+        }
 
         [HttpPost(Name = "UploadFamilyTemplateFile")]
-        public async Task UploadFamilyTemplateFile([FromBody] FileUploadModel model)
+        public async Task<NotificationResponse> UploadFamilyTemplateFile([FromForm] FormFile file)
         {
-            await _familyAdministrationService.UploadFamilyTemplateFile(model);
-        }
+            if (file == null)
+            {
+                return new NotificationResponse
+                {
+                    Success = false,
+                    ResourceKey = "common.notificationFamilyImportFailed",
+                };
+            }
 
+            var importResult = await _familyAdministrationService.ImportFile(file);
+
+            return new NotificationResponse
+            {
+                Success = importResult,
+                ResourceKey = "common.notificationFamilyImportSuccess",
+            };
+        }
     }
 }

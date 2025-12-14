@@ -5,12 +5,13 @@ interface IProps {
   propertyName: string;
   rowIndex: number;
   checked: boolean;
+  disabled?: boolean;
   model: any;
   onChange?: (index: number, newItem: any) => void;
 }
 
 const TableCheckbox: React.FC<IProps> = (props: IProps) => {
-  const { checked, propertyName, onChange } = props;
+  const { checked, propertyName, disabled, onChange } = props;
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +22,7 @@ const TableCheckbox: React.FC<IProps> = (props: IProps) => {
     [onChange, props.rowIndex, props.model, props.propertyName]
   );
 
-  return <Checkbox checked={checked} onChange={handleChange} />;
+  return <Checkbox checked={checked} disabled={disabled} onChange={handleChange} />;
 };
 
 export default React.memo(TableCheckbox);

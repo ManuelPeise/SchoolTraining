@@ -1,12 +1,15 @@
-﻿using Shared.Models.Administration;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.Models;
+using Shared.Models.Administration;
 
 namespace Logic.Administration.Interfaces
 {
     public interface IFamilyAdministrationService
     {
-        Task<FileDownloadModel?> DownloadFamilyImportTemplate();
-        Task UploadFamilyTemplateFile(FileUploadModel model);
+        Task<bool> ImportFile(FormFile file);
+        Task<FileResponse?> DownloadFamilyImportTemplate();
+        Task<bool> UploadFamilyTemplateFile(FormFile file);
         Task<List<FamilyModel>> GetFamilies();
-        Task UpdateFamilies(List<FamilyModel> families);
+        Task<List<FamilyModel>> UpdateFamilies(List<FamilyModel> families);
     }
 }

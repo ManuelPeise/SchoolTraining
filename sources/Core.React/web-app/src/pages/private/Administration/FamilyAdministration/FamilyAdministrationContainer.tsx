@@ -5,17 +5,24 @@ import { ILocationProps } from 'src/lib/interfaces/ILocationProps';
 import { IComponentInitializationProps } from './interfaces/IComponentInitializationProps';
 import FamilyAdministration from './FamilyAdministration';
 import { IFamilyModel } from './interfaces/IFamilyModel';
+import { useAccessRights } from 'src/hooks/useAccessRights';
+import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse';
 
 interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
 const FamilyAdministrationContainer: React.FC<IProps> = (props: IProps) => {
+  const { accessRights } = useAccessRights();
   const initializeAsync = React.useCallback(async (): Promise<IComponentInitializationProps> => {
-    const api = AppHooks.statelessApi.create<IFamilyModel[], IFamilyModel[]>();
-    // make some api calls here
+    const familyApi = AppHooks.statelessApi.create<IFamilyModel[], IFamilyModel[]>();
 
-    const [families] = await Promise.all([await api.get('/familyadministration/getfamilies')]);
+    const fileApi = AppHooks.statelessApi.create<INotificationResponse, any>();
+    const [families] = await Promise.all([
+      await familyApi.get('/familyadministration/getfamilies'),
+    ]);
+
     return {
-      api,
+      familyApi,
+      fileApi,
       isLoading: props.isLoading,
       setIsLoading: props.setIsLoading,
       getResource: props.getResource,
@@ -30,7 +37,7 @@ const FamilyAdministrationContainer: React.FC<IProps> = (props: IProps) => {
     return null;
   }
 
-  return <FamilyAdministration {...initializationProps} />;
+  return <FamilyAdministration {...initializationProps} isReadonly={accessRights.isAdmin} />;
 };
 
 export default FamilyAdministrationContainer;

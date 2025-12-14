@@ -2,9 +2,11 @@ import { ISettingsPageLayoutProps } from 'src/components/layouts/SettingsPageLay
 import { ILocationProps } from 'src/lib/interfaces/ILocationProps';
 import { IStatelessApi } from 'src/lib/interfaces/IStatelessApi';
 import { IFamilyModel } from './IFamilyModel';
+import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse';
 
 export interface IComponentInitializationProps extends ISettingsPageLayoutProps, ILocationProps {
   getResource: (key: string) => string;
-  api: IStatelessApi<any, any>;
+  familyApi: IStatelessApi<any, any>;
+  fileApi: IStatelessApi<INotificationResponse, any>;
   families: IFamilyModel[];
 }

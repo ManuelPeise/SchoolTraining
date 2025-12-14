@@ -5,6 +5,6 @@ namespace Logic.Shared.Interfaces
 {
     public interface IDbContextFactory
     {
-        ADbContext GetContext(DbContextTypeEnum? contextType = DbContextTypeEnum.SqLite);
+        ADbContext GetContext(DbContextTypeEnum? contextType = DbContextTypeEnum.MySql);
     }
 }

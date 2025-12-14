@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.MySqlContext.Migrations
 {
     [DbContext(typeof(MySqlDbContext))]
-    [Migration("20251210114103_InitializeDatabase")]
+    [Migration("20251214111936_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -84,6 +84,9 @@ namespace Data.MySqlContext.Migrations
                     b.Property<byte[]>("FileContent")
                         .IsRequired()
                         .HasColumnType("longblob");
+
+                    b.Property<DateTime>("FileDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("FileName")
                         .IsRequired()

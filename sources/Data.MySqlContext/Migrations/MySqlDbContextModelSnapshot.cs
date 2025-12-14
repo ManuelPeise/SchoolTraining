@@ -82,6 +82,9 @@ namespace Data.MySqlContext.Migrations
                         .IsRequired()
                         .HasColumnType("longblob");
 
+                    b.Property<DateTime>("FileDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("longtext");
