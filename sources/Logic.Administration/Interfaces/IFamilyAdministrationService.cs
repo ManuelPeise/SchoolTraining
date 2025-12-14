@@ -6,10 +6,9 @@ namespace Logic.Administration.Interfaces
 {
     public interface IFamilyAdministrationService
     {
-        Task<bool> ImportFile(FormFile file);
+        Task<List<FamilyModel>> GetFamilies();
         Task<FileResponse?> DownloadFamilyImportTemplate();
         Task<bool> UploadFamilyTemplateFile(FormFile file);
-        Task<List<FamilyModel>> GetFamilies();
         Task<List<FamilyModel>> UpdateFamilies(List<FamilyModel> families);
     }
 }

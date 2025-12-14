@@ -14,6 +14,18 @@ namespace Logic.Shared.Interfaces
             CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Asynchronously retrieves all entities that satisfy the specified filter expression. 
+        /// </summary>
+        /// <remarks>Use the asNoTracking parameter to improve performance when entities do not need to be
+        /// updated. Including related entities with the includes parameter can help avoid additional database
+        /// queries.</remarks>
+        Task<List<TEntity>> GetAllByAsync(
+            Expression<Func<TEntity, bool>> expression,
+            bool asNoTracking = true,
+            IEnumerable<Expression<Func<TEntity, object>>>? includes = null,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Return an entity by its primary key or null if not found.
         /// </summary>
         Task<TEntity?> GetByIdAsync(

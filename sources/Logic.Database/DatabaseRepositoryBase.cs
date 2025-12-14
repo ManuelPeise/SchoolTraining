@@ -16,7 +16,10 @@ namespace Logic.Database
             _context = context;
         }
 
-        public async Task<List<TEntity>> GetAllAsync(bool asNoTracking = true, IEnumerable<Expression<Func<TEntity, object>>>? includes = null, CancellationToken cancellationToken = default)
+        public async Task<List<TEntity>> GetAllAsync(
+            bool asNoTracking = true, 
+            IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
+            CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
 
@@ -34,7 +37,37 @@ namespace Logic.Database
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<TEntity?> GetByIdAsync(int id, bool asNoTracking = true, IEnumerable<Expression<Func<TEntity, object>>>? includes = null, CancellationToken cancellationToken = default)
+        public async Task<List<TEntity>> GetAllByAsync(
+            Expression<Func<TEntity, bool>> expression,  
+            bool asNoTracking = true, 
+            IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
+            CancellationToken cancellationToken = default)
+        {
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+
+            query = query.Where(expression);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (asNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+        public async Task<TEntity?> GetByIdAsync(
+            int id, 
+            bool asNoTracking = true, 
+            IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
+            CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
 
@@ -52,7 +85,11 @@ namespace Logic.Database
             return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
 
-        public async Task<TEntity?> GetByAsync(Expression<Func<TEntity, bool>> expression, bool asNoTracking = true, IEnumerable<Expression<Func<TEntity, object>>>? includes = null, CancellationToken cancellationToken = default)
+        public async Task<TEntity?> GetByAsync(
+            Expression<Func<TEntity, bool>> expression, 
+            bool asNoTracking = true, 
+            IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
+            CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>().Where(expression);
 
@@ -70,12 +107,17 @@ namespace Logic.Database
             return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public async Task AddAsync(
+            TEntity entity, 
+            CancellationToken cancellationToken = default)
         {
             await _context.Set<TEntity>().AddAsync(entity, cancellationToken);
         }
 
-        public async Task AddIfNotExistAsync(TEntity entity, Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default)
+        public async Task AddIfNotExistAsync(
+            TEntity entity, 
+            Expression<Func<TEntity, bool>> expression, 
+            CancellationToken cancellationToken = default)
         {
             var exists = await _context.Set<TEntity>().AnyAsync(expression, cancellationToken);
             if (!exists)
@@ -84,7 +126,9 @@ namespace Logic.Database
             }
         }
 
-        public async Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public async Task AddOrUpdateAsync(
+            TEntity entity, 
+            CancellationToken cancellationToken = default)
         {
             if (entity.Id == 0)
             {
@@ -103,7 +147,9 @@ namespace Logic.Database
             }
         }
 
-        public async Task AddRangeAsync(List<TEntity> entities, CancellationToken cancellationToken = default)
+        public async Task AddRangeAsync(
+            List<TEntity> entities, 
+            CancellationToken cancellationToken = default)
         {
             await _context.Set<TEntity>().AddRangeAsync(entities, cancellationToken);
         }

@@ -1,7 +1,6 @@
 ﻿using Logic.Administration.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Utilities;
 using Shared.Models;
 using Shared.Models.Administration;
 using System.Diagnostics;
@@ -60,7 +59,7 @@ namespace Service.Api.Administration
                 };
             }
 
-            var importResult = await _familyAdministrationService.ImportFile(file);
+            var importResult = await _familyAdministrationService.UploadFamilyTemplateFile(file);
 
             return new NotificationResponse
             {

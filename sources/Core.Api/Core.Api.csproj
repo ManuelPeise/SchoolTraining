@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
     <ProjectReference Include="..\Logic.AuthenticationService\Logic.AuthenticationService.csproj" />
+    <ProjectReference Include="..\Logic.Import\Logic.Import.csproj" />
     <ProjectReference Include="..\Logic.Shared\Logic.Shared.csproj" />
     <ProjectReference Include="..\Service.Api\Service.Api.csproj" />
   </ItemGroup>

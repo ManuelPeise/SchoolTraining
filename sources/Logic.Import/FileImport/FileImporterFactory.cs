@@ -1,18 +1,18 @@
-﻿using Logic.Administration.Interfaces;
+﻿using Logic.Import.FileImport.Interfaces;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
 
-namespace Logic.Administration.FileImport
+namespace Logic.Import.FileImport
 {
-    public class FileImportFactory : IFileImportFactory
+    public class FileImporterFactory : IFileImporterFactory
     {
-        public AFileImport GetFileImport(FileImportTypeEnum fileImportType, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        public AFileImport GetFileImporter(FileImportTypeEnum fileImportType, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
             switch (fileImportType)
             {
                 case FileImportTypeEnum.Family:
-                    return new FamilyFileImport(httpContextAccessor, unitOfWork);
+                    return new FamilyFileImporter(httpContextAccessor, unitOfWork);
                 default:
                     throw new NotImplementedException($"File import type '{fileImportType}' is not implemented.");
             }

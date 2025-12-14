@@ -1,6 +1,8 @@
 ﻿using Logic.Administration.DI;
 using Logic.AuthenticationService;
 using Logic.Database;
+using Logic.Import.FileImport;
+using Logic.Import.FileImport.Interfaces;
 using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Logic.Shared.Interfaces.Authentication;
@@ -45,6 +47,8 @@ namespace Core.Api.Bundels
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IFileImporterFactory, IFileImporterFactory>();
+            builder.Services.AddScoped<IFileImporter, FileImporter>();
             AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
 
             builder.Services.AddQuartz(q =>

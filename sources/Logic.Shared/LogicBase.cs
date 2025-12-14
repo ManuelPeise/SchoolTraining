@@ -9,6 +9,7 @@ namespace Logic.Shared
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly CurrentUser _currentUser = new();
+        public IHttpContextAccessor HttpContextAccessor { get => _httpContextAccessor; }
         public HttpContext HttpContext { get => _httpContextAccessor.HttpContext; }
         public CurrentUser CurrentUser { get => _currentUser; }
 
@@ -29,7 +30,7 @@ namespace Logic.Shared
                 {
                     UserId = 0,
                     UserName = string.Empty,
-                    UserRole = UserRoleEnum.Guest
+                    UserRole = UserRoleEnum.None
                 };
             }
 
@@ -43,7 +44,7 @@ namespace Logic.Shared
                 UserId = !string.IsNullOrEmpty(userIdClaim?.Value) ? int.Parse(userIdClaim.Value) : 0,
                 FamilyId = !string.IsNullOrEmpty(familyIdClaim?.Value) ? int.Parse (familyIdClaim.Value) : null,
                 UserName = !string.IsNullOrEmpty(userNameClaim?.Value) ? userNameClaim.Value : string.Empty,
-                UserRole = !string.IsNullOrEmpty(userRoleClaim?.Value) ? Enum.Parse<UserRoleEnum>(userRoleClaim.Value) : UserRoleEnum.Guest
+                UserRole = !string.IsNullOrEmpty(userRoleClaim?.Value) ? Enum.Parse<UserRoleEnum>(userRoleClaim.Value) : UserRoleEnum.None
             };
         }
     }

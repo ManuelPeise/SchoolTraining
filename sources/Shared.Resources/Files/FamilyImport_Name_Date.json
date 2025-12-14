@@ -1,20 +1,20 @@
 {
-    "name": "Peise",
-    "contactMailAddress": "manuel.p80@gmx.de",
+    "name": "",
+    "contactMailAddress": "",
     "isActive": true,
     "familyMembers": [
-        {
-            "firstName": "Manuel",
-            "lastName": "Peise",
-            "username": "Manuel.Peise",
-            "email": "manuel.p80@gmx.de",
-            "dateOfBirth": "1980-04-20",
-            "userRole": "Admin",
-            "credentials": {
-                "password": "Pass@word"
-            },
-            "settings": {
-            }
+      {
+        "firstName": "",
+        "lastName": "",
+        "username": "",
+        "email": "",
+        "dateOfBirth": "", // User, Admin
+        "userRole": "",
+        "credentials": {
+          "password": ""
+        },
+        "settings": {
         }
+      }
     ]
 }
