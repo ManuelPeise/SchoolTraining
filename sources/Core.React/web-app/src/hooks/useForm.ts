@@ -3,7 +3,7 @@
  * @param initialValues Initial values for the form model
  */
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 // Deep equality check for objects/arrays
 function deepEqual(a: any, b: any): boolean {
@@ -21,7 +21,7 @@ function deepEqual(a: any, b: any): boolean {
     const keysA = Object.keys(a);
     const keysB = Object.keys(b);
     if (keysA.length !== keysB.length) return false;
-    for (let key of keysA) {
+    for (const key of keysA) {
       if (!deepEqual(a[key], b[key])) return false;
     }
     return true;
@@ -35,42 +35,47 @@ export const useForm = <TModel extends Record<string, any>>(initialValues: TMode
   const [isValid, setIsValid] = useState(true);
   const initialRef = useRef(initialValues);
 
-  const isNumber = (val: any) =>
-    typeof val === 'number' || (!isNaN(val) && val !== '' && /^-?\d+$/.test(val));
+  const isNumber = React.useCallback(
+    (val: any) => typeof val === 'number' || (!isNaN(val) && val !== '' && /^-?\d+$/.test(val)),
+    []
+  );
 
   // Enhanced validation: numbers, required, arrays, and objects
-  const validate = (vals: any, refVals: any = initialRef.current): boolean => {
-    for (const key in vals) {
-      const value = vals[key];
-      const refValue = refVals ? refVals[key] : undefined;
-      if (typeof refValue === 'number') {
-        if (!isNumber(value)) return false;
-      }
-      if (value === undefined || value === null) return false;
-      if (typeof value === 'string' && value.trim() === '') return false;
-      if (Array.isArray(value)) {
-        if (value.length === 0) return false;
-        for (let i = 0; i < value.length; i++) {
-          const item = value[i];
-          const refItem = Array.isArray(refValue) ? refValue[i] : undefined;
-          if (typeof item === 'object' && item !== null) {
-            if (!validate(item, refItem)) return false;
-          } else if (item === undefined || item === null || item === '') {
-            return false;
+  const validate = React.useCallback(
+    (vals: any, refVals: any = initialRef.current): boolean => {
+      for (const key in vals) {
+        const value = vals[key];
+        const refValue = refVals ? refVals[key] : undefined;
+        if (typeof refValue === 'number') {
+          if (!isNumber(value)) return false;
+        }
+        if (value === undefined || value === null) return false;
+        if (typeof value === 'string' && value.trim() === '') return false;
+        if (Array.isArray(value)) {
+          if (value.length === 0) return false;
+          for (let i = 0; i < value.length; i++) {
+            const item = value[i];
+            const refItem = Array.isArray(refValue) ? refValue[i] : undefined;
+            if (typeof item === 'object' && item !== null) {
+              if (!validate(item, refItem)) return false;
+            } else if (item === undefined || item === null || item === '') {
+              return false;
+            }
           }
         }
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+          if (!validate(value, refValue)) return false;
+        }
       }
-      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        if (!validate(value, refValue)) return false;
-      }
-    }
-    return true;
-  };
+      return true;
+    },
+    [isNumber]
+  );
 
   useEffect(() => {
     setIsModified(!deepEqual(values, initialRef.current));
     setIsValid(validate(values));
-  }, [values]);
+  }, [values, validate]);
 
   // Array helpers
   const addToArray = <K extends keyof TModel>(key: K, item: any) => {
@@ -139,6 +144,40 @@ export const useForm = <TModel extends Record<string, any>>(initialValues: TMode
     setValues(initialRef.current);
   };
 
+  /**
+   * Returns modified items in an array field of the form model, comparing by specified keys.
+   * @param arrayFieldKey The key of the array field in the form model (e.g., 'families')
+   * @param keys The keys of the model to compare for changes (e.g., ['isActive', 'name'])
+   */
+  const getModifiedArrayItems = <T>(keys: Array<keyof T>, propertyName?: keyof T): T[] => {
+    const modifiedItems: T[] = [];
+    const originalArray = propertyName
+      ? ((initialRef.current as any)[propertyName] as T[])
+      : (initialRef.current as any as T[]);
+    const currentArray = propertyName
+      ? ((values as any)[propertyName] as T[])
+      : (values as any as T[]);
+
+    if (!Array.isArray(originalArray) || !Array.isArray(currentArray)) {
+      return modifiedItems;
+    }
+
+    currentArray.forEach((currentItem, index) => {
+      const originalItem = originalArray[index];
+      let isModified = false;
+      keys.forEach((key) => {
+        if (!deepEqual(currentItem[key], originalItem ? originalItem[key] : undefined)) {
+          isModified = true;
+        }
+      });
+
+      if (isModified) {
+        modifiedItems.push(currentItem);
+      }
+    });
+    return modifiedItems;
+  };
+
   return {
     values,
     isModified,
@@ -151,5 +190,6 @@ export const useForm = <TModel extends Record<string, any>>(initialValues: TMode
     removeFromArray,
     updateArrayItem,
     updateArrayItemIndex,
+    getModifiedArrayItems,
   };
 };

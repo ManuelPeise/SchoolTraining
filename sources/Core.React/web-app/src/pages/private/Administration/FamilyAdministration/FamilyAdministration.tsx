@@ -12,27 +12,25 @@ import TableLabel from 'src/components/table/components/TableLabel';
 import SaveCancelButtons, {
   ISaveCancelButtonsProps,
 } from 'src/components/groups/SaveCancelButtons';
-import { dummyFamilies } from './dummyFamilies';
 import { IStatelessApi } from 'src/lib/interfaces/IStatelessApi';
 import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse';
 import Notification from 'src/components/Notification';
+import { INotificationBadgeState } from 'src/lib/interfaces/INotificationBadgeState';
 
-interface INotificationBadgeState {
-  show: boolean;
-  message: string;
-  color: 'success' | 'error' | 'info' | 'warning';
-  duration: number;
-}
 interface IProps extends ILocationProps {
   isReadonly?: boolean;
   families: IFamilyModel[];
   fileApi: IStatelessApi<INotificationResponse, any>;
+  familyApi: IStatelessApi<IFamilyModel[], IFamilyModel[]>;
   getResource: (key: string) => string;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
-  const { getResource, isReadonly, fileApi } = props;
+  const { isReadonly, fileApi, familyApi, families, getResource, setIsLoading } = props;
 
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [familiesState, setFamiliesState] = React.useState<IFamilyModel[]>(families);
   const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
     show: false,
     message: '',
@@ -40,10 +38,8 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
     duration: 5000,
   });
 
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-  const { isModified, isValid, values, updateArrayItemIndex, resetForm } =
-    useForm<IFamilyModel[]>(dummyFamilies);
+  const { isModified, isValid, values, updateArrayItemIndex, resetForm, getModifiedArrayItems } =
+    useForm<IFamilyModel[]>(familiesState);
 
   const columns = React.useMemo((): Column<IFamilyModel>[] => {
     return [
@@ -107,8 +103,27 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
   }, [getResource, updateArrayItemIndex, isReadonly]);
 
   const handleSave = React.useCallback(async () => {
-    // Handle save logic here
-  }, []);
+    const modifiedFamilies = getModifiedArrayItems<IFamilyModel>(['isActive']);
+
+    setIsLoading(true);
+
+    if (modifiedFamilies.length > 0) {
+      const response = await familyApi.post(
+        '/familyadministration/updatefamilies',
+        modifiedFamilies
+      );
+
+      setFamiliesState(response);
+
+      setNotificationBadge({
+        show: true,
+        message: getResource('common.labelFamiliesSavedSuccessfully'),
+        color: 'success',
+        duration: 3000,
+      });
+      setIsLoading(false);
+    }
+  }, [familyApi, getModifiedArrayItems, getResource, setIsLoading]);
 
   const saveCancelButtonProps = React.useMemo((): ISaveCancelButtonsProps => {
     return {
@@ -141,10 +156,7 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
   );
 
   const handleFileDownloadClicked = React.useCallback(async () => {
-    await fileApi.downloadFile(
-      '/familyadministration/downloadfamilyimporttemplate'
-      // 'FamilyImport_FamilyName_YYYYMMDD.json'
-    );
+    await fileApi.downloadFile('/familyadministration/downloadfamilyimporttemplate');
   }, [fileApi]);
 
   const handleResetNotification = React.useCallback(() => {

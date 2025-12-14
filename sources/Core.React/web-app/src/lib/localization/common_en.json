@@ -14,5 +14,6 @@
   "labelDownloadFileTemplate": "Download File Template",
   "labelUploadFile": "Upload File",
   "notificationFamilyImportFailed": "Family file template import failed, please try again.",
-  "notificationFamilyImportSuccess": "Family file template import was successful, data will be processed shortly."
+  "notificationFamilyImportSuccess": "Family file template import was successful, data will be processed shortly.",
+  "labelFamiliesSavedSuccessfully": "Families saved successfully."
 }
