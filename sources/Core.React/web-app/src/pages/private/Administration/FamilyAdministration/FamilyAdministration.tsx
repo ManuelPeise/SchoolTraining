@@ -35,7 +35,7 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
     show: false,
     message: '',
     color: 'success',
-    duration: 5000,
+    duration: 3000,
   });
 
   const { isModified, isValid, values, updateArrayItemIndex, resetForm, getModifiedArrayItems } =

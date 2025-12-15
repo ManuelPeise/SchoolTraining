@@ -14,6 +14,6 @@ namespace Logic.Import.FileImport
             _unitOfWork = unitOfWork;
         }
 
-        public abstract Task ImportFile(string fileContent, string fileName);
+        public abstract Task<bool> ImportFile(string fileContent, string fileName);
     }
 }

@@ -34,5 +34,7 @@
   "labelUnknown": "Unknown",
   "labelStatusSuccess": "Import success",
   "labelStatusPending": "Import pending",
-  "labelStatusFailed": "Import failed"
+  "labelStatusFailed": "Import failed",
+  "notificationFileImportSuccess": "File import was successful.",
+  "notificationFileImportFailed": "File import failed, check file struckture or try again."
 }

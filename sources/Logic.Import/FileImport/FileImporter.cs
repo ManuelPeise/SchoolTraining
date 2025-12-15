@@ -1,8 +1,10 @@
-﻿using Logic.Import.FileImport.Interfaces;
+﻿using Data.Entities;
+using Logic.Import.FileImport.Interfaces;
 using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
+using Shared.Models;
 using Shared.Models.Import;
 
 namespace Logic.Import.FileImport
@@ -75,13 +77,33 @@ namespace Logic.Import.FileImport
                                 {
                                     var fileContent = await reader.ReadToEndAsync();
 
-                                    await importer.ImportFile(fileContent, importFile.FileName);
+                                    var result = await importer.ImportFile(fileContent, importFile.FileName);
+
+                                    if (!result)
+                                    {
+                                        await _unitOfWork.LogMessage(new LogMessageEntity
+                                        {
+                                            Message = $"Import for file type: {importFile.FileType} did not complete successfully.",
+                                            LogLevel = LogLevelEnum.Error,
+                                            Module = nameof(FileImporter),
+                                        });
+
+                                        continue;
+                                    }
 
                                     importFile.Status = ImportStatusEnum.Success;
 
                                     _unitOfWork.ImportFileRepository.Update(importFile);
 
+                                    await _unitOfWork.LogMessage(new LogMessageEntity
+                                    {
+                                        Message = $"Import for file type: {importFile.FileType} completed successfully.",
+                                        LogLevel = LogLevelEnum.Info,
+                                        Module = nameof(FileImporter),
+                                    });
+
                                     databaseChanged = true;
+
                                 }
                             }
                         }
@@ -93,7 +115,7 @@ namespace Logic.Import.FileImport
 
                             databaseChanged = true;
 
-                            await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
+                            await _unitOfWork.LogMessage(new LogMessageEntity
                             {
                                 Message = $"Import for file type: {importFile.FileType} failed.",
                                 ExeptionMessage = exception.Message,
@@ -124,7 +146,7 @@ namespace Logic.Import.FileImport
             }
         }
 
-        public async Task<List<ImportFileModel>> ImportFile(int fileId)
+        public async Task<NotificationDataResponse<List<ImportFileModel>>> ImportFile(int fileId)
         {
             try
             {
@@ -178,21 +200,32 @@ namespace Logic.Import.FileImport
                 {
                     await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
+
+                return new NotificationDataResponse<List<ImportFileModel>>
+                {
+                    Success = true,
+                    ResourceKey = "notificationFileImportSuccess",
+                    Data = await GetFiles(), 
+                };
             }
             catch (Exception exception)
             {
                 await _unitOfWork.LogMessage(new Data.Entities.LogMessageEntity
                 {
-                    Message = "Exception occurred during file import.",
+                    Message = "fileImportFailed",
                     ExeptionMessage = exception.Message,
                     StackTrace = exception.StackTrace,
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FileImporter),
                 }, true);
 
+                return new NotificationDataResponse<List<ImportFileModel>>
+                {
+                    Success = false,
+                    ResourceKey = "notificationFileImportFailed",
+                    Data = await GetFiles(),
+                };
             }
-
-            return await GetFiles();
         }
 
         public async Task<List<ImportFileModel>> DeleteFile(int fileId)
@@ -220,21 +253,21 @@ namespace Logic.Import.FileImport
 
             return await GetFiles();
         }
-        
+
         public async Task<List<ImportFileModel>> DeleteFiles()
         {
             try
             {
                 var importFilesToDelete = await _unitOfWork.ImportFileRepository.GetAllByAsync(
                     x => x.Status == ImportStatusEnum.Success || x.Status == ImportStatusEnum.Failed, true);
-                
+
                 if (importFilesToDelete.Any())
                 {
                     foreach (var importFileToDelete in importFilesToDelete)
                     {
                         _unitOfWork.ImportFileRepository.Remove(importFileToDelete);
                     }
-                    
+
                     await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
             }

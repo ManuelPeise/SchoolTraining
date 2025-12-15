@@ -1,6 +1,8 @@
 ﻿using Logic.Import.FileImport.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Service.Api.Service.Api.Scheduler;
+using Shared.Enums;
+using Shared.Models;
 using Shared.Models.Import;
 
 namespace Service.Api.Administration
@@ -23,7 +25,7 @@ namespace Service.Api.Administration
 
         [HttpPost(Name = "ImportFile")]
         [JwtAuth(AllowSystemAdmin = true)]
-        public async Task<List<ImportFileModel>> ImportFile([FromQuery]int id)
+        public async Task<NotificationDataResponse<List<ImportFileModel>>> ImportFile([FromQuery]int id)
         {
             return await _fileImporter.ImportFile(id);
         }

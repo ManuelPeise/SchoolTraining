@@ -17,7 +17,7 @@ namespace Logic.Import.FileImport
             IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork) { }
 
-        public override async Task ImportFile(string fileContent, string fileName)
+        public override async Task<bool> ImportFile(string fileContent, string fileName)
         {
             try
             {
@@ -28,12 +28,13 @@ namespace Logic.Import.FileImport
                     ReadCommentHandling = JsonCommentHandling.Skip
                 };
                 options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                options.Converters.Add(new FlexibleDateTimeConverter());
 
                 var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent, options);
                 if (familyImportModel == null)
                 {
                     await LogError("Deserialization of FamilyImportModel failed.");
-                    return;
+                    return false;
                 }
 
                 var familyEntity = familyImportModel.ToImportEntity();
@@ -55,10 +56,14 @@ namespace Logic.Import.FileImport
 
                 await UnitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 await LogInfo("Family file import success, import file saved!");
+
+                return true;
             }
             catch (Exception exception)
             {
                 await LogError($"One or more errors occurred during family import: {exception.Message}", exception);
+
+                return false;
             }
         }
 

@@ -6,6 +6,7 @@ import { IFileImportComponentInitializationProps } from './interfaces/IFileImpor
 import { AppHooks } from 'src/hooks/AppHooks';
 import FileImport from './FileImport';
 import { IFileImportModel } from './interfaces/IFileImportModel';
+import { INotificationDataResponse } from 'src/lib/interfaces/INotificationDataResponse';
 interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
 const FileImportContainer: React.FC<IProps> = (props: IProps) => {
@@ -14,11 +15,16 @@ const FileImportContainer: React.FC<IProps> = (props: IProps) => {
   const initializeAsync =
     React.useCallback(async (): Promise<IFileImportComponentInitializationProps> => {
       const fileImportApi = AppHooks.statelessApi.create<IFileImportModel[], void>();
+      const executeFileImportApi = AppHooks.statelessApi.create<
+        INotificationDataResponse<IFileImportModel[]>,
+        void
+      >();
 
       const [fileModels] = await Promise.all([await fileImportApi.get('/fileimport/getfiles')]);
 
       return {
         fileImportApi,
+        executeFileImportApi,
         fileModels,
         isReadonly: !accessRights.isSystemAdmin,
         getResource: props.getResource,

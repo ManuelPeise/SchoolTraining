@@ -10,15 +10,22 @@ import TableStatusIcon from 'src/components/table/components/TableStatusIcon';
 import { FileImportStatusEnum } from 'src/lib/enums/FileImportStatusEnum';
 import TableIconGroup from 'src/components/table/components/TableIconGroup';
 import { FileImportTypeEnum } from 'src/lib/enums/FileImportTypeEnum';
+import { INotificationBadgeState } from 'src/lib/interfaces/INotificationBadgeState';
 
 interface IFileImportProps extends IFileImportComponentInitializationProps {
   isReadonly: boolean;
 }
 
 const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
-  const { fileModels, isReadonly, fileImportApi, getResource } = props;
+  const { fileModels, isReadonly, fileImportApi, executeFileImportApi, getResource } = props;
 
   const [files, setFiles] = React.useState<IFileImportModel[]>(fileModels);
+  const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
+    show: false,
+    message: '',
+    color: 'success',
+    duration: 3000,
+  });
 
   const getStatus = React.useCallback(
     (status: FileImportStatusEnum): 'success' | 'pending' | 'error' => {
@@ -72,11 +79,17 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
 
   const handleImportFile = React.useCallback(
     async (fileId: number): Promise<void> => {
-      await fileImportApi
-        .post(`/fileimport/importfile?id=${fileId}`, undefined)
-        .then((response) => {
-          setFiles(response);
-        });
+      const response = await executeFileImportApi.post(
+        `/fileimport/importfile?id=${fileId}`,
+        undefined
+      );
+      setFiles(response.Data);
+      setNotificationBadge({
+        show: true,
+        message: getResource(response.ResourceKey),
+        color: response.success ? 'success' : 'error',
+        duration: 5000,
+      });
     },
     [fileImportApi]
   );
