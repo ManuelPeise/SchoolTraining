@@ -105,7 +105,15 @@ const LogMessageFilterListItem: React.FC<IProps> = (props: IProps) => {
           </Typography>
         )}
       </Box>
-      <Box display="flex" width="100%" justifyContent="space-between" mt={2}>
+      <Box
+        display="flex"
+        width="100%"
+        justifyContent="space-between"
+        mt={2}
+        sx={{
+          flexDirection: { md: 'column', xl: 'row' },
+        }}
+      >
         <Box display="flex" gap={2} alignItems="baseline">
           <FilterInput
             {...filterTextProps}
@@ -122,7 +130,12 @@ const LogMessageFilterListItem: React.FC<IProps> = (props: IProps) => {
             onClearSelection={onClearFilterDropdown}
           />
         </Box>
-        <Box display="flex" justifyContent="flex-end" alignItems="baseline" gap={2}>
+        <Box
+          display="flex"
+          alignItems="baseline"
+          gap={2}
+          sx={{ justifyContent: { md: 'flex-start', xl: 'flex-end' }, mt: { md: 2, xl: 2 } }}
+        >
           <FormCheckbox
             disabled={isReadonly}
             label={getResource('common.labelInfo')}
