@@ -74,9 +74,9 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
         <Box
           id="settings-page-navigation"
           sx={{
-            width: { xs: '100%', md: 260 },
-            maxWidth: { xs: '100%', md: 320 },
-            minWidth: { md: 200 },
+            width: { xs: '100%', md: 300 },
+            maxWidth: { xs: '100%', md: 300 },
+            minWidth: { md: 250 },
             flexShrink: 0,
             display: 'flex',
             flexDirection: 'column',

@@ -122,7 +122,7 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
         align: 'left',
         hidden: true,
         minWidth: 0,
-        render: (row: IFileImportModel) => <TableLabel value={row.fileName} />,
+        render: (row: IFileImportModel) => <TableLabel value={row.fileId.toString()} />,
       },
       {
         key: 'fileName',

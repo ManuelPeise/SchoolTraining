@@ -6,6 +6,7 @@ export interface ITableIconProps {
   size: number;
   iconClassName: string;
   disabled: boolean;
+  tooltip?: string;
   color?: string;
   onClick: (id: number) => void | Promise<void>;
 }
@@ -22,6 +23,7 @@ const TableIconGroup: React.FC<IProps> = (props: IProps) => {
       {icons.map((iconProps, index) => (
         <IconButton
           key={index}
+          title={iconProps.tooltip}
           onClick={iconProps.onClick.bind(null, iconProps.id)}
           disabled={iconProps.disabled}
         >

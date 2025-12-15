@@ -14,12 +14,13 @@ const LogMessagePageContainer: React.FC<IProps> = (props: IProps) => {
 
   const initializeAsync = React.useCallback(async (): Promise<ILogComponentInitializationProps> => {
     return {
-      isReadonly: !accessRights.isAdmin || !accessRights.isSystemAdmin,
+      logMessages: [],
+      isReadonly: !accessRights.isSystemAdmin,
       isLoading,
       setIsLoading,
       getResource,
     };
-  }, []);
+  }, [accessRights, getResource, isLoading, setIsLoading]);
 
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<ILogComponentInitializationProps>(initializeAsync);
