@@ -68,8 +68,9 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
     setIsLoading(true);
 
     await messageLogDeleteApi
-      .post(`/api/messagelog/cleanuplogmessages?logLevel=${LogLevelEnum.Info}`, undefined)
+      .post(`/messagelog/cleanuplogmessages?logLevel=${LogLevelEnum.Info}`, undefined)
       .then((response) => {
+        console.log('Log messages cleaned up successfully.', response.data);
         setLogMessageEntries(response.data ?? []);
         setNotificationBadge({
           show: true,
@@ -80,6 +81,7 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
       });
 
     setIsLoading(false);
+    setLogFilterState({ selectedItemId: null, filterText: '', selectedLogLevels: [] });
   }, [messageLogDeleteApi, setIsLoading, getResource]);
 
   const handleResetNotification = React.useCallback(() => {

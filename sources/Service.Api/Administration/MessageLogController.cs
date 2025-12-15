@@ -1,7 +1,9 @@
 ﻿using Logic.Administration.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Service.Api.Service.Api.Scheduler;
 using Shared.Enums;
+using Shared.Models;
 using Shared.Models.Administration;
 
 namespace Service.Api.Administration
@@ -23,14 +25,15 @@ namespace Service.Api.Administration
 
         [HttpPost(Name = "DeleteMessage")]
         [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
-        public async Task<List<LogMessage>> DeleteMessage([FromQuery]int messageId)
+        public async Task<NotificationDataResponse<List<LogMessage>>> DeleteMessage([FromQuery]int messageId)
         {
             return await _messageLogService.DeleteLogMessage(messageId);
+
         }
 
         [HttpPost(Name = "CleanupLogMessages")]
         [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
-        public async Task<List<LogMessage>> CleanupLogMessages([FromQuery] LogLevelEnum? logLevel)
+        public async Task<NotificationDataResponse<List<LogMessage>>> CleanupLogMessages([FromQuery] LogLevelEnum? logLevel)
         {
             return await _messageLogService.DeleteLogMessages(logLevel);
         }

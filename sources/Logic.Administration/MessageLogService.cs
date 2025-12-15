@@ -5,6 +5,7 @@ using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
+using Shared.Models;
 using Shared.Models.Administration;
 
 namespace Logic.Administration
@@ -47,7 +48,7 @@ namespace Logic.Administration
             }
         }
 
-        public async Task<List<LogMessage>> DeleteLogMessage(int id)
+        public async Task<NotificationDataResponse<List<LogMessage>>> DeleteLogMessage(int id)
         {
             try
             {
@@ -65,14 +66,24 @@ namespace Logic.Administration
                         TimeStamp = DateTime.UtcNow,
                     }, true);
 
-                    return GetMessages(new List<LogMessageEntity>());
+                    return new NotificationDataResponse<List<LogMessage>>
+                    {
+                        Success = false,
+                        ResourceKey = "common.notificationNoLogMessagesFound",
+                        Data = GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync()),
+                    };
                 }
 
                 _unitOfWork.LogMessageRepository.Remove(logMessageEntity);
 
                 await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
 
-                return GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync());
+                return new NotificationDataResponse<List<LogMessage>>
+                {
+                    Success = true,
+                    ResourceKey = "common.noticationLogCleanupSuccess",
+                    Data = GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync()),
+                };
             }
             catch (Exception exception)
             {
@@ -86,11 +97,16 @@ namespace Logic.Administration
                     TimeStamp = DateTime.UtcNow,
                 }, true);
 
-                return GetMessages(new List<LogMessageEntity>());
+                return new NotificationDataResponse<List<LogMessage>>
+                {
+                    Success = false,
+                    ResourceKey = "common.noticationLogCleanupFailed",
+                    Data = GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync()),
+                };
             }
         }
 
-        public async Task<List<LogMessage>> DeleteLogMessages(LogLevelEnum? logLevel)
+        public async Task<NotificationDataResponse<List<LogMessage>>> DeleteLogMessages(LogLevelEnum? logLevel)
         {
             try
             {
@@ -105,7 +121,12 @@ namespace Logic.Administration
 
                 if (logMessageEntities == null || !logMessageEntities.Any())
                 {
-                    return GetMessages(new List<LogMessageEntity>());
+                    return new NotificationDataResponse<List<LogMessage>>
+                    {
+                        Success = false,
+                        ResourceKey = "common.notificationNoLogMessagesFound",
+                        Data = GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync()),
+                    };
                 }
 
                 foreach (var logMessageEntity in logMessageEntities)
@@ -119,7 +140,12 @@ namespace Logic.Administration
                     await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
 
-                return GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync());
+                return new NotificationDataResponse<List<LogMessage>>
+                {
+                    Success = true,
+                    ResourceKey = "common.noticationLogCleanupSuccess",
+                    Data = GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync()),
+                };
             }
             catch (Exception exception)
             {
@@ -133,7 +159,12 @@ namespace Logic.Administration
                     TimeStamp = DateTime.UtcNow,
                 }, true);
 
-                return GetMessages(new List<LogMessageEntity>());
+                return new NotificationDataResponse<List<LogMessage>>
+                {
+                    Success = false,
+                    ResourceKey = "common.noticationLogCleanupFailed",
+                    Data = GetMessages(await _unitOfWork.LogMessageRepository.GetAllAsync()),
+                };
             }
         }
 

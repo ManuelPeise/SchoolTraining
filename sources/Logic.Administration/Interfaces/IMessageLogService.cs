@@ -1,4 +1,5 @@
 ﻿using Shared.Enums;
+using Shared.Models;
 using Shared.Models.Administration;
 
 namespace Logic.Administration.Interfaces
@@ -6,7 +7,7 @@ namespace Logic.Administration.Interfaces
     public interface IMessageLogService
     {
         Task<List<LogMessage>> GetMessageLogs();
-        Task<List<LogMessage>> DeleteLogMessage(int id);
-        Task<List<LogMessage>> DeleteLogMessages(LogLevelEnum? logLevel);
+        Task<NotificationDataResponse<List<LogMessage>>> DeleteLogMessage(int id);
+        Task<NotificationDataResponse<List<LogMessage>>> DeleteLogMessages(LogLevelEnum? logLevel);
     }
 }
