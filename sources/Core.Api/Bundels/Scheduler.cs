@@ -147,6 +147,9 @@ namespace Core.Api.Bundels
                     StackTrace = exception.StackTrace,
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(WebJob),
+                    TimeStamp = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = "Scheduler"
                 });
             }
         }

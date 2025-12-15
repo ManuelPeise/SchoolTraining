@@ -1,4 +1,6 @@
-﻿using Logic.Administration.DI;
+﻿using Logic.Administration;
+using Logic.Administration.DI;
+using Logic.Administration.Interfaces;
 using Logic.AuthenticationService;
 using Logic.Database;
 using Logic.Import.FileImport;
@@ -49,7 +51,7 @@ namespace Core.Api.Bundels
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IFileImporterFactory, FileImporterFactory>();
             builder.Services.AddScoped<IFileImporter, FileImporter>();
-            
+            builder.Services.AddScoped<IMessageLogService, MessageLogService>();
             AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
 
             builder.Services.AddQuartz(q =>

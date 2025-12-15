@@ -49,7 +49,9 @@ namespace Logic.Administration
                     Message = "Could not load families from database.",
                     ExeptionMessage = exception.Message,
                     StackTrace = exception?.StackTrace ?? string.Empty,
-                    LogLevel = LogLevelEnum.Error
+                    TimeStamp = DateTime.UtcNow,
+                    LogLevel = LogLevelEnum.Error,
+                    Module = nameof(FamilyAdministrationService),
                 }, true);
 
                 return new();
@@ -96,7 +98,9 @@ namespace Logic.Administration
                     Message = "Import family import template file failed.",
                     ExeptionMessage = exception.Message,
                     StackTrace = exception?.StackTrace ?? string.Empty,
-                    LogLevel = LogLevelEnum.Error
+                    Module = nameof(FamilyAdministrationService),
+                    LogLevel = LogLevelEnum.Error,
+                    TimeStamp = DateTime.UtcNow,
                 }, true);
 
                 return false;
@@ -117,7 +121,8 @@ namespace Logic.Administration
                     Message = "Downloading family import template file failed.",
                     ExeptionMessage = exception.Message,
                     StackTrace = exception?.StackTrace ?? string.Empty,
-                    LogLevel = LogLevelEnum.Error
+                    LogLevel = LogLevelEnum.Error,
+                    TimeStamp = DateTime.UtcNow,
                 }, true);
 
                 return null;
@@ -159,7 +164,9 @@ namespace Logic.Administration
                     Message = "Could not update families in database.",
                     ExeptionMessage = exception.Message,
                     StackTrace = exception?.StackTrace ?? string.Empty,
-                    LogLevel = LogLevelEnum.Error
+                    Module = nameof(FamilyAdministrationService),
+                    LogLevel = LogLevelEnum.Error,
+                    TimeStamp = DateTime.UtcNow,
                 }, true);
             }
 

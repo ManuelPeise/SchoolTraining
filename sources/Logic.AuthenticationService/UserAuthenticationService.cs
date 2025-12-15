@@ -70,7 +70,8 @@ namespace Logic.AuthenticationService
                         Message = "Error in UserAuthenticationService.LoginAsync",
                         ExeptionMessage = exception.Message,
                         StackTrace = exception?.StackTrace ?? string.Empty,
-                        LogLevel = LogLevelEnum.Error
+                        LogLevel = LogLevelEnum.Error,
+                        TimeStamp = DateTime.UtcNow,
                     });
 
                     await unitOfWork.SaveChangesAsync("System");

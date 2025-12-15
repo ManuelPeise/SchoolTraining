@@ -108,7 +108,8 @@ namespace Logic.Import.FileImport
                 ExeptionMessage = string.Empty,
                 StackTrace = string.Empty,
                 Module = nameof(FamilyFileImporter),
-                LogLevel = LogLevelEnum.Info
+                LogLevel = LogLevelEnum.Info,
+                TimeStamp = DateTime.UtcNow,
             }, false);
         }
 
@@ -120,7 +121,8 @@ namespace Logic.Import.FileImport
                 ExeptionMessage = exception?.Message ?? string.Empty,
                 StackTrace = exception?.StackTrace ?? string.Empty,
                 Module = nameof(FamilyFileImporter),
-                LogLevel = LogLevelEnum.Error
+                LogLevel = LogLevelEnum.Error,
+                TimeStamp = DateTime.UtcNow,
             }, true);
         }
     }
