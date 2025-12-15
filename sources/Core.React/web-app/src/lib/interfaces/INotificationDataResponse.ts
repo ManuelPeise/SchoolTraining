@@ -1,5 +1,5 @@
 export interface INotificationDataResponse<TModel> {
   success: boolean;
-  ResourceKey: string;
-  Data: TModel;
+  resourceKey: string;
+  data: TModel;
 }

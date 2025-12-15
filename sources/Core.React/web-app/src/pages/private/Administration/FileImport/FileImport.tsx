@@ -18,7 +18,8 @@ interface IFileImportProps extends IFileImportComponentInitializationProps {
 }
 
 const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
-  const { fileModels, isReadonly, fileImportApi, executeFileImportApi, getResource } = props;
+  const { fileModels, isReadonly, fileImportApi, executeFileImportApi, getResource, setIsLoading } =
+    props;
 
   const [files, setFiles] = React.useState<IFileImportModel[]>(fileModels);
   const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
@@ -80,31 +81,36 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
 
   const handleImportFile = React.useCallback(
     async (fileId: number): Promise<void> => {
+      setIsLoading(true);
       const response = await executeFileImportApi.post(
         `/fileimport/importfile?id=${fileId}`,
         undefined
       );
-      setFiles(response.Data);
+      setFiles(response.data);
 
       setNotificationBadge({
         show: true,
-        message: getResource(response.ResourceKey),
+        message: getResource(response.resourceKey),
         color: response.success ? 'success' : 'error',
-        duration: 5000,
+        duration: 3000,
       });
+      setIsLoading(false);
     },
-    [executeFileImportApi, getResource]
+    [executeFileImportApi, getResource, setIsLoading]
   );
 
   const handleDeleteFile = React.useCallback(
     async (fileId: number): Promise<void> => {
+      setIsLoading(true);
       await fileImportApi
         .post(`/fileimport/deletefile/?id=${fileId}`, undefined)
         .then((response) => {
           setFiles(response);
         });
+
+      setIsLoading(false);
     },
-    [fileImportApi]
+    [fileImportApi, setIsLoading]
   );
 
   const handleResetNotification = React.useCallback(() => {
@@ -244,7 +250,6 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
           <Table<IFileImportModel> columns={columns} data={files} maxHeight="600px" />
         </TableListItem>
       </List>
-
       <Notification {...notificationBadge} handleResetNotification={handleResetNotification} />
     </div>
   );

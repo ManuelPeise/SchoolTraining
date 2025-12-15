@@ -10,6 +10,8 @@ import TableLabel from 'src/components/table/components/TableLabel';
 import { LogLevelEnum } from 'src/lib/enums/LogLevelEnum';
 import TableIconGroup from 'src/components/table/components/TableIconGroup';
 import { FilterDropdownItem } from 'src/components/input/FilterDropdown';
+import { INotificationBadgeState } from 'src/lib/interfaces/INotificationBadgeState';
+import Notification from 'src/components/Notification';
 
 type LogFilterState = {
   filterText: string;
@@ -20,12 +22,21 @@ type LogFilterState = {
 const LogPage: React.FC<ILogComponentInitializationProps> = (
   props: ILogComponentInitializationProps
 ) => {
-  const { logMessages, isReadonly, getResource } = props;
+  const { messageLogDeleteApi, setIsLoading, logMessages, isReadonly, getResource } = props;
+
+  const [logMessageEntries, setLogMessageEntries] = React.useState<ILogMessage[]>(logMessages);
 
   const [logFilterState, setLogFilterState] = React.useState<LogFilterState>({
     filterText: '',
     selectedItemId: null,
     selectedLogLevels: [],
+  });
+
+  const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
+    show: false,
+    message: '',
+    color: 'success',
+    duration: 3000,
   });
 
   const handleLogFilterStateChanged = React.useCallback((newState: Partial<LogFilterState>) => {
@@ -36,7 +47,7 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
   }, []);
 
   const getLogLevelLabel = React.useCallback(
-    (logLevel: number): string => {
+    (logLevel: LogLevelEnum): string => {
       switch (logLevel) {
         case LogLevelEnum.Info:
           return getResource('common.labelLogLevelInfo');
@@ -53,22 +64,49 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
     [getResource]
   );
 
+  const handleCleanupLogMessages = React.useCallback(async () => {
+    setIsLoading(true);
+
+    await messageLogDeleteApi
+      .post(`/api/messagelog/cleanuplogmessages?logLevel=${LogLevelEnum.Info}`, undefined)
+      .then((response) => {
+        setLogMessageEntries(response.data ?? []);
+        setNotificationBadge({
+          show: true,
+          message: getResource(response.resourceKey),
+          color: response.success ? 'success' : 'error',
+          duration: 3000,
+        });
+      });
+
+    setIsLoading(false);
+  }, [messageLogDeleteApi, setIsLoading, getResource]);
+
+  const handleResetNotification = React.useCallback(() => {
+    setNotificationBadge((prev) => ({
+      ...prev,
+      show: false,
+    }));
+  }, []);
+
   const modules = React.useMemo((): FilterDropdownItem[] => {
-    const moduleSet: FilterDropdownItem[] = [];
-    logMessages.forEach((msg) => {
-      if (
-        msg.module !== undefined &&
-        msg.module !== null &&
-        !moduleSet.find((m) => m.label === msg.module)
-      ) {
-        moduleSet.push({ id: moduleSet.length, label: msg.module });
+    const moduleCollection: FilterDropdownItem[] = [];
+
+    const mesagesWithDefinedModule = logMessageEntries.filter(
+      (msg) => msg.module !== undefined && msg.module !== null
+    );
+
+    mesagesWithDefinedModule.forEach((msg) => {
+      if (!moduleCollection.find((m) => m.label === msg.module?.toString())) {
+        moduleCollection.push({ id: moduleCollection.length, label: msg.module?.toString() ?? '' });
       }
     });
-    return moduleSet;
-  }, [logMessages]);
+
+    return moduleCollection;
+  }, [logMessageEntries]);
 
   const filteredLogMessages = React.useMemo((): ILogMessage[] => {
-    let allMessages = [...logMessages];
+    let allMessages = [...logMessageEntries];
 
     if (logFilterState.filterText.length > 0) {
       allMessages = allMessages.filter((msg) =>
@@ -89,7 +127,7 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
     }
     return allMessages;
   }, [
-    logMessages,
+    logMessageEntries,
     logFilterState.selectedItemId,
     logFilterState.selectedLogLevels,
     logFilterState.filterText,
@@ -157,7 +195,10 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
                 color: '#2196f3',
                 iconClassName: 'bi bi-file-earmark-arrow-up',
                 tooltip: row.stackTrace,
-                disabled: false,
+                disabled:
+                  row.stackTrace === null ||
+                  row.stackTrace === undefined ||
+                  row.stackTrace.length === 0,
                 onClick: () => {},
               },
             ]}
@@ -186,22 +227,22 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
               size: 20,
               color: '#f44336',
               tooltip: getResource('common.labelCleanupLogmessages'),
-              disabled: isReadonly || logMessages.length === 0,
-              onClick: () => {},
+              disabled: isReadonly || filteredLogMessages.length === 0,
+              onClick: handleCleanupLogMessages,
             },
           ]}
         />
         <LogMessageFilterListItem
           title={getResource('common.captionLogMessageFilter')}
           subTitle={getResource('common.labelFilterLogMessages')}
-          isReadonly={isReadonly || logMessages.length === 0}
+          isReadonly={isReadonly || logMessageEntries.length === 0}
           logFilterState={logFilterState}
           filterTextProps={{
             placeholder: getResource('common.placeholderFilterLogMessages'),
           }}
           filterDropdownProps={{
             placeholder: getResource('common.placeholderSelectModule'),
-            items: [],
+            items: modules,
           }}
           getResource={getResource}
           onChange={handleLogFilterStateChanged}
@@ -213,8 +254,7 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
           <Table<ILogMessage> columns={columns} data={filteredLogMessages} maxHeight="600px" />
         </TableListItem>
       </List>
-
-      {/* <Notification {...notificationBadge} handleResetNotification={handleResetNotification} /> */}
+      <Notification {...notificationBadge} handleResetNotification={handleResetNotification} />
     </div>
   );
 };

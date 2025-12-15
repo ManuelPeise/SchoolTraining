@@ -8,4 +8,5 @@ export interface IFileImportComponentInitializationProps {
   fileModels: IFileImportModel[];
   isReadonly: boolean;
   getResource: (key: string) => string;
+  setIsLoading: (isLoading: boolean) => void;
 }

@@ -33,11 +33,11 @@
   "labelDeleteImportedFiles": "Delete all imported files",
   "labelDownloadFileTemplate": "Download File Template",
   "labelEnterFilterText": "Enter filter text",
-  "labelError": "Error",
+  "labelLogLevelError": "Error",
   "labelFamiliesSavedSuccessfully": "Families saved successfully.",
   "labelFileTypeFamily": "Family",
   "labelFilterLogMessages": "Filter log messages by specific properties",
-  "labelInfo": "Info",
+  "labelLogLevelInfo": "Info",
   "labelManageFamilySettings": "Manage family settings",
   "labelManageFileImports": "Manage uploaded files in system.",
   "labelManageLogMessages": "View and manage log messages in the system",
@@ -49,7 +49,7 @@
   "labelStatusSuccess": "Import success",
   "labelUnknown": "Unknown",
   "labelUploadFile": "Upload File",
-  "labelWarning": "Warning",
+  "labelLogLevelWarning": "Warning",
   "notificationFamilyImportFailed": "Family file template import failed, please try again.",
   "notificationFamilyImportSuccess": "Family file template import was successful, data will be processed shortly.",
   "notificationFileImportFailed": "File import failed, check file struckture or try again.",
@@ -59,5 +59,8 @@
   "subTitleAvailableLogMessages": "List of all available log messages in the system",
   "subTitleFamilies": "Manage families in the system",
   "subTitleFamiliesInSystem": "List of all registered families",
-  "subTitleImportedFiles": "List of all imported files"
+  "subTitleImportedFiles": "List of all imported files",
+  "labelInfo": "Info",
+  "labelWarning": "Warning",
+  "labelError": "Error"
 }

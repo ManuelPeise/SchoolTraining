@@ -29,8 +29,9 @@ const FileImportContainer: React.FC<IProps> = (props: IProps) => {
         fileModels,
         isReadonly: !accessRights.isSystemAdmin,
         getResource: props.getResource,
+        setIsLoading: props.setIsLoading,
       };
-    }, [props.getResource, accessRights]);
+    }, [props.getResource, props.setIsLoading, accessRights]);
 
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<IFileImportComponentInitializationProps>(initializeAsync);
@@ -39,7 +40,7 @@ const FileImportContainer: React.FC<IProps> = (props: IProps) => {
     return null;
   }
 
-  return <FileImport {...initializationProps} />;
+  return <FileImport {...initializationProps} setIsLoading={props.setIsLoading} />;
 };
 
 export default FileImportContainer;
