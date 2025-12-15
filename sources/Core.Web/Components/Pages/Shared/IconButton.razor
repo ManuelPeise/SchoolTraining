@@ -1,0 +1,10 @@
+﻿<button class="icon-button" @onclick="@ActionEvent" disabled="@Disabled" title="@ToolTipText">
+    <span class="@IconClass icon"></span>
+</button>
+
+@code {
+    [Parameter] public string ToolTipText { get; set; } = string.Empty;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string IconClass { get; set; } = string.Empty;
+    [Parameter] public EventCallback ActionEvent { get; set; }
+}

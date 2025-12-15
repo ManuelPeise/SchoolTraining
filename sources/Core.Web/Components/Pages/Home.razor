@@ -1,0 +1,15 @@
+﻿@page "/"
+@layout DefaultLayout
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+       
+        <SaveCancelButtons Disabled="true"/>
+    </Authorized>
+    <NotAuthorized>
+        <h1>You are not authorized to view this page.</h1>
+    </NotAuthorized>
+</AuthorizeView>
+
+

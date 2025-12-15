@@ -1,0 +1,13 @@
+﻿<table>
+    <thead>
+        @TableHeader
+    </thead>
+    <tbody>
+        @TableBody
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public RenderFragment TableHeader { get; set; }
+    [Parameter] public RenderFragment TableBody { get; set; }
+}

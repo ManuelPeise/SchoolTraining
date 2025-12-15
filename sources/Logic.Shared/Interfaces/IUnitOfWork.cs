@@ -1,0 +1,17 @@
+﻿using Data.Entities;
+using Shared.Enums;
+
+namespace Logic.Shared.Interfaces
+{
+    public interface IUnitOfWork: IDisposable
+    {
+        IDatabaseRepositoryBase<UserEntity> UserRepository { get; }
+        IDatabaseRepositoryBase<UserCredentialsEntity> UserCredentialsRepository { get; }
+        IDatabaseRepositoryBase<UserSettingsEntity> UserSettingsRepository { get; }
+        IDatabaseRepositoryBase<FamilyEntity> FamilyRepository { get; }
+        IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository { get; }
+        IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository { get; }
+        Task<int> SaveChangesAsync(string userName, CancellationToken cancellationToken = default);
+        public Task<int> LogMessage(LogMessageEntity entity, bool save = false, string userName = "System", CancellationToken cancellationToken = default);
+    }
+}

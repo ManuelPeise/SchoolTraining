@@ -1,0 +1,76 @@
+﻿using Core.Web.Components.Pages.ViewModels;
+using Core.Web.Providers;
+using Logic.Shared;
+using Logic.Shared.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using Shared.Models.Authentication;
+using System.Text;
+
+namespace Core.Web.StartUp
+{
+    public static class ServiceRegistration
+    {
+        public static void Register(WebApplicationBuilder builder)
+        {
+            builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+
+            builder.Services.AddLocalization();
+
+            builder.Services.AddControllers();
+
+
+            builder.Services.AddScoped<IApiHttpClient, ApiHttpClient>();
+
+            
+
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            builder.Services.AddCascadingAuthenticationState();
+            //  builder.Services.AddAuthorizationCore();
+            ConfigureJwt(builder);
+
+
+            // ViewModels
+            builder.Services.AddScoped<CounterViewModel>();
+            builder.Services.AddScoped<AuthenticationViewModel>();
+            builder.Services.AddScoped<FamilyAdministrationViewModel>();
+        }
+
+        private static void ConfigureJwt(WebApplicationBuilder builder)
+        {
+            builder.Services.Configure<JwtTokenModel>(builder.Configuration.GetSection("Jwt"));
+
+            var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JwtTokenModel>();
+
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    if (jwtConfig == null || string.IsNullOrEmpty(jwtConfig.SecurityKey))
+                    {
+                        throw new ArgumentNullException("SecurityKey is not set!");
+                    }
+
+                    var key = jwtConfig?.SecurityKey ?? string.Empty;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = true,
+                        ValidAudience = jwtConfig?.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(key)),
+
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+        }
+    }
+}

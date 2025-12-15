@@ -1,0 +1,116 @@
+﻿@page "/administration/family"
+@using Core.Web.Components.Pages.ViewModels
+@inherits ViewModelComponentBase<FamilyAdministrationViewModel>
+@inject IJSRuntime JS
+
+<!-- should fill the entire content -->
+<div id="family-management-container">
+    <div class="family-management-header-container">
+        <div class="title-column">
+            <h2>
+                @Resx.Core.CaptionFamilyAdministration
+            </h2>
+            <p>@Resx.Core.DescriptionFamilyManagment</p>
+        </div>
+        <div class="action-column">
+            <IconButton IconClass="bi bi-arrow-down-circle" ActionEvent="DownloadFile" ToolTipText="@Resx.Core.LabelFileDownload" />
+            <label for="family-template-file-selector"
+                   role="button">
+                <InputFile id="family-template-file-selector"
+                           OnChange="@ViewModel.HandleSelectFile" hidden />
+                <IconButton IconClass="bi bi-arrow-up-circle"
+                            ActionEvent="UpLoadFile"
+                            ToolTipText="@Resx.Core.LabelFileUpload" />
+            </label>
+        </div>
+    </div>
+
+    <div class="family-management-content">
+        <!-- First row width 100% -->
+        <div class="filter-container">
+            <div class="filter-input-container">
+                <label for="search-text">@Resx.Core.LabelFilter</label>
+                <input id="search-text"
+                       type="text"
+                       @oninput="@ViewModel.OnFilterTextChanged"
+                       placeholder="@Resx.Core.PlaceholderFilter" />
+            </div>
+        </div>
+        <!-- Second row width 100% -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <td class="table-column checkbox-col">
+                            <label>IsActive</label>
+                        </td>
+                        <td class="table-column">
+                            <label>FamilyName</label>
+                        </td>
+                        <td class="table-column">
+                            <label>Contact</label>
+                        </td>
+                        <td class="table-column">
+                            <label>CreatedBy</label>
+                        </td>
+                        <td class="table-column date-col">
+                            <label>CreatedAt</label>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var family in ViewModel.Families)
+                    {
+                        <tr>
+                            <td class="table-column checkbox-col">
+                                <input type="checkbox"
+                                       checked="@family.IsActive"
+                                       @onchange="@(() => ViewModel.HandleCheckedChanged(family.FamilyId))" />
+                            </td>
+                            <td class="table-column">
+                                <label>@family.Name</label>
+                            </td>
+                            <td class="table-column">
+                                <label>@family.ContactMailAddress</label>
+                            </td>
+                            <td class="table-column">
+                                <label>@family.LastUdateBy</label>
+                            </td>
+                            <td class="table-column date-col">
+                                <label>@family.LastUpdateAt</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- aligned on bottom as overlay-->
+    @* <div class="family-management-save-cancel">
+        <SaveCancelButtons Disabled="@ViewModel.SaveCancelButtonsDisabled"
+                           CancelAction="@ViewModel.ResetChanges"
+                           SaveAction="@ViewModel.SaveChanges" />
+    </div> *@
+</div>
+
+<script src="/js/FileImport.js"></script>
+@code {
+
+    private async Task DownloadFile()
+    {
+        var fileResult = await ViewModel.GetFileFromServer();
+
+        if (fileResult == null || fileResult?.FileName == null)
+        {
+            return;
+        }
+
+        await JS.InvokeVoidAsync("downloadFamilyTemplateFile", fileResult.FileName, fileResult.FileContent);
+    }
+
+    public async Task UpLoadFile()
+    {
+        await JS.InvokeVoidAsync("uploadFamilyTemplateFile", "family-template-file-selector");
+    }
+}

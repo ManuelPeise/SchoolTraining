@@ -1,0 +1,49 @@
+﻿@page "/authentication"
+@rendermode InteractiveServer
+@layout AuthenticationLayout
+
+@using System.ComponentModel.DataAnnotations
+@using Core.Web.Components.Pages.ViewModels
+
+@inherits ViewModelComponentBase<AuthenticationViewModel>
+
+<div class="page">
+    <LoadingOverlay IsLoading="@ViewModel.IsLoading" />
+    <div class="login-form-container">
+        <EditForm class="login-form" Model="@ViewModel.LoginModel" OnValidSubmit="@ViewModel.SignInAsync" FormName="LoginForm">
+            <DataAnnotationsValidator />
+            <div class="login-form-item">
+                <i class="bi bi-person-circle" role="img"></i>
+            </div>
+            <div class="login-form-item">
+                <h2>@Resx.Core.CaptionLogin</h2>
+            </div>
+            <div class="login-form-item">
+                <label class="form-label" for="username">@Resx.Core.LabelUsername</label>
+                <InputText id="username" type="text" class="input" @bind-Value="ViewModel.LoginModel.UserName" />
+            </div>
+            <div class="login-form-item">
+                <label class="form-label" for="password">@Resx.Core.LabelPassword</label>
+                <InputText id="password" type="password" class="input" @bind-Value="ViewModel.LoginModel.Secret" />
+            </div>
+            <div class="login-form-item">
+                <div class="error-container">
+                    @if (ViewModel.ShowError)
+                    {
+
+                        <p class="error">@ViewModel.Error</p>
+
+                    }
+                </div>
+            </div>
+            <div class="login-form-item">
+                <div class="button-container">
+                    <button type="submit" class="btn">@Resx.Core.LabelLogin</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+
+

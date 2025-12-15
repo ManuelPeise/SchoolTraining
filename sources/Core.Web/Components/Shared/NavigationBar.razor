@@ -1,0 +1,48 @@
+﻿<div class="nav-bar">
+    <div class="nav-bar-container">
+        <div class="nav-item">
+            <a href="/">
+                <i class="bi bi-house icon"></i>
+            </a>
+            <label class="branding">SchoolTraining</label>
+        </div>
+        <div class="nav-list-container">
+            <ul class="nav-list">
+                @* <li class="nav-list-item"><a class="nav-link" href="/">Home</a></li> *@
+                <li class="nav-list-item">
+                    <div class="nav-link" aria-haspopup="true" aria-expanded="false">@Resx.Core.LabelAdministration</div>
+                    <div class="dropdown" role="menu">
+                        <a class="nav-link" href="/administration/family">@Resx.Core.LabelFamilyManagement</a>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>
+
+
+        <!-- user section aligned to end by CSS (margin-left:auto) -->
+        <div class="nav-item user-nav-item">
+            <a class="user-info" href="/">
+                <i class="bi bi-person user-icon"></i>
+                <span class="user-name">@UserName</span>
+            </a>
+            <div>
+                <i class="bi bi-box-arrow-right icon" @onclick="@LogOutAction"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string UserName { get; set; } = string.Empty;
+    [Parameter] public EventCallback LogOutAction { get; set; }
+
+    private bool _isAdministrationMenueOpen = false;
+    private string _administrationMenuCssClass = "nav-menu-list";
+
+    private void ToggleAdministrationMenu()
+    {
+        _isAdministrationMenueOpen = !_isAdministrationMenueOpen;
+        _administrationMenuCssClass = _isAdministrationMenueOpen ? "nav-menu-list open" : "nav-menu-list";
+    }
+}

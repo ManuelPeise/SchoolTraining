@@ -1,0 +1,40 @@
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: rgba(0,0,0,0.15);
+}
+
+.loading-overlay-inner{
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Default orange spinner */
+.loading-spinner.orange-spinner {
+    width: 60px; /* Increased size */
+    height: 60px; /* Increased size */
+    border: 6px solid rgba(245, 158, 11, 0.3); /* orange-500, light, thicker ring */
+    border-top-color: var(--orange); /* orange-500 */
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.45);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Accessibility helper */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

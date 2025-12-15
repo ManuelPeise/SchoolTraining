@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <!-- ===================== -->
+    <!--     COLORS      -->
+    <!-- ===================== -->
+
+    <!-- Hintergrund & Oberflächen -->
+    <Color x:Key="BackgroundPrimary">#0B2545</Color>
+    <Color x:Key="BackgroundSecondary">#003d99</Color>
+
+    <!-- Textfarben -->
+    <Color x:Key="Text">#F4F6F9</Color>
+    <Color x:Key="TextDisabled">#9CA3AF</Color>
+
+    <!-- Loading -->
+    <Color x:Key="Loading">#FFB86B</Color>
+
+    <Color x:Key="Disabled">#D1D5DB</Color>
+    <Color x:Key="Error">#FF6B6B</Color>
+
+    <!-- =============================== -->
+    <!--       SHELL Colors        -->
+    <!-- =============================== -->
+
+    <!-- Flyout background -->
+    <Color x:Key="ShellFlyoutBackgroundColor">#121212</Color>
+
+    <!-- Text colors -->
+    <Color x:Key="ShellFlyoutTextColor">#FFFFFF</Color>
+    <Color x:Key="ShellFlyoutTextSecondary">#B5B5B5</Color>
+
+    <!-- Selected item highlight -->
+    <Color x:Key="ShellFlyoutSelectedColor">#1A3B70</Color>
+
+    <!-- Icon color -->
+    <Color x:Key="ShellFlyoutIconColor">#CCCCCC</Color>
+
+    <!-- Divider color -->
+    <Color x:Key="ShellFlyoutSeparatorColor">#333333</Color>
+</ResourceDictionary>

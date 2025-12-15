@@ -1,0 +1,23 @@
+﻿@page "/counter"
+@using Core.Web.Components.Pages.ViewModels
+@using Core.Web.ViewModels
+@rendermode InteractiveServer
+@layout DefaultLayout
+@attribute [Authorize]
+
+@inherits ViewModelComponentBase<CounterViewModel>
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @ViewModel.Count</p>
+
+<button class="btn btn-primary" @onclick="OnIncrementClicked">Click me</button>
+
+@code {
+    private async Task OnIncrementClicked()
+    {
+        await ViewModel.IncrementAsync();
+    }
+}
