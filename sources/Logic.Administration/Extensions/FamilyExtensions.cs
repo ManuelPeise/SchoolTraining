@@ -9,7 +9,7 @@ namespace Logic.Administration.Extensions
         internal static List<FamilyModel> ToFamilyList(this List<FamilyEntity> entities)
         {
             var families = new List<FamilyModel>();
-            
+
             entities.ForEach(entity =>
             {
                 var family = entity.ToFamily();
@@ -23,7 +23,7 @@ namespace Logic.Administration.Extensions
 
         internal static FamilyModel? ToFamily(this FamilyEntity entity)
         {
-            if(entity == null)
+            if (entity == null)
             {
                 return null;
             }
@@ -34,8 +34,12 @@ namespace Logic.Administration.Extensions
                 Name = entity.Name,
                 ContactMailAddress = entity.ContactMailAddress,
                 IsActive = entity.IsActive,
-                CreatedAt = entity.CreatedAt.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                CreatedBy = entity.CreatedBy
+                LastUpdateAt = entity.UpdatedAt == DateTime.MinValue ?
+                    entity.CreatedAt.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture) :
+                    entity.UpdatedAt.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture),
+                LastUpdateBy = !string.IsNullOrEmpty(entity.UpdatedBy) ?
+                    entity.UpdatedBy :
+                    entity.CreatedBy
             };
         }
     }

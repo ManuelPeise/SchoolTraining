@@ -1,7 +1,6 @@
 import React from 'react';
 import { ILocationProps } from 'src/lib/interfaces/ILocationProps';
 import { IFamilyModel } from './interfaces/IFamilyModel';
-import { useForm } from 'src/hooks/useForm';
 import List from 'src/components/lists/List';
 import HeaderListItem from 'src/components/lists/HeaderListItem';
 import Table, { Column } from 'src/components/table/Table';
@@ -28,9 +27,10 @@ interface IProps extends ILocationProps {
 
 const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
   const { isReadonly, fileApi, familyApi, families, getResource, setIsLoading } = props;
-
+  const originalFamilies = React.useRef<IFamilyModel[]>(families);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [familiesState, setFamiliesState] = React.useState<IFamilyModel[]>(families);
+
   const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
     show: false,
     message: '',
@@ -38,8 +38,68 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
     duration: 3000,
   });
 
-  const { isModified, isValid, values, updateArrayItemIndex, resetForm, getModifiedArrayItems } =
-    useForm<IFamilyModel[]>(familiesState);
+  const isModified = React.useMemo((): boolean => {
+    let hasModifcations = false;
+
+    originalFamilies.current.forEach((originalFamily) => {
+      const currentFamily = familiesState.find((f) => f.familyId === originalFamily.familyId);
+
+      if (currentFamily?.isActive !== originalFamily.isActive) {
+        hasModifcations = true;
+      }
+    });
+    return hasModifcations;
+  }, [originalFamilies, familiesState]);
+
+  const handleReset = React.useCallback(() => {
+    setFamiliesState(originalFamilies.current);
+  }, []);
+
+  const getModifiedModels = React.useCallback((): IFamilyModel[] => {
+    const modifiedFamilies: IFamilyModel[] = [];
+
+    originalFamilies.current.forEach((originalFamily) => {
+      const currentFamily = familiesState.find((f) => f.familyId === originalFamily.familyId);
+
+      if (currentFamily !== undefined && currentFamily?.isActive !== originalFamily.isActive) {
+        modifiedFamilies.push(currentFamily);
+      }
+    });
+
+    return modifiedFamilies;
+  }, [familiesState, originalFamilies]);
+
+  const handleSave = React.useCallback(async () => {
+    const modifiedFamilies = getModifiedModels();
+
+    setIsLoading(true);
+
+    if (modifiedFamilies.length > 0) {
+      const response = await familyApi.post(
+        '/familyadministration/updatefamilies',
+        modifiedFamilies
+      );
+
+      setFamiliesState(response);
+      originalFamilies.current = response;
+      setNotificationBadge({
+        show: true,
+        message: getResource('common.labelFamiliesSavedSuccessfully'),
+        color: 'success',
+        duration: 3000,
+      });
+      setIsLoading(false);
+    }
+  }, [familyApi, getModifiedModels, getResource, setIsLoading]);
+
+  const onIsActiveChanged = React.useCallback((familyId: number) => {
+    setFamiliesState((prevFamilies) => {
+      const updatedFamilies = prevFamilies.map((family) => {
+        return family.familyId === familyId ? { ...family, isActive: !family.isActive } : family;
+      });
+      return updatedFamilies;
+    });
+  }, []);
 
   const columns = React.useMemo((): Column<IFamilyModel>[] => {
     return [
@@ -56,7 +116,7 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
             model={row}
             disabled={isReadonly}
             checked={row.isActive}
-            onChange={updateArrayItemIndex}
+            onChange={() => onIsActiveChanged(row.familyId)}
           />
         ),
       },
@@ -72,18 +132,21 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
         header: getResource('common.captionContactMailAddress'),
         align: 'left',
         minWidth: 250,
+        render: (row: IFamilyModel) => <TableLabel value={row.contactMailAddress} />,
       },
       {
-        key: 'createdBy',
-        header: getResource('common.captionCreatedBy'),
+        key: 'lastUpdatedBy',
+        header: getResource('common.captionLastUpdateBy'),
         align: 'left',
         minWidth: 150,
+        render: (row: IFamilyModel) => <TableLabel value={row.lastUpdateBy} />,
       },
       {
-        key: 'createdAt',
-        header: getResource('common.captionCreatedAt'),
+        key: 'lastUpdatedAt',
+        header: getResource('common.captionLastUpdateAt'),
         align: 'left',
         minWidth: 150,
+        render: (row: IFamilyModel) => <TableLabel value={row.lastUpdateAt} />,
       },
       {
         key: 'delete',
@@ -100,40 +163,17 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
         ),
       },
     ];
-  }, [getResource, updateArrayItemIndex, isReadonly]);
-
-  const handleSave = React.useCallback(async () => {
-    const modifiedFamilies = getModifiedArrayItems<IFamilyModel>(['isActive']);
-
-    setIsLoading(true);
-
-    if (modifiedFamilies.length > 0) {
-      const response = await familyApi.post(
-        '/familyadministration/updatefamilies',
-        modifiedFamilies
-      );
-
-      setFamiliesState(response);
-
-      setNotificationBadge({
-        show: true,
-        message: getResource('common.labelFamiliesSavedSuccessfully'),
-        color: 'success',
-        duration: 3000,
-      });
-      setIsLoading(false);
-    }
-  }, [familyApi, getModifiedArrayItems, getResource, setIsLoading]);
+  }, [getResource, onIsActiveChanged, isReadonly]);
 
   const saveCancelButtonProps = React.useMemo((): ISaveCancelButtonsProps => {
     return {
       labelSave: getResource('common.labelSave'),
-      saveDisabled: !isModified || !isValid,
+      saveDisabled: !isModified,
       labelCancel: getResource('common.labelCancel'),
       saveAction: handleSave,
-      cancelAction: resetForm,
+      cancelAction: handleReset,
     };
-  }, [isModified, isValid, handleSave, resetForm, getResource]);
+  }, [isModified, handleReset, handleSave, getResource]);
 
   const handleFileUpload = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,7 +255,7 @@ const FamilyAdministration: React.FC<IProps> = (props: IProps) => {
           title={getResource('common.captionFamiliesInSystem')}
           subTitle={getResource('common.subTitleFamiliesInSystem')}
         >
-          <Table<IFamilyModel> columns={columns} data={values} maxHeight="400px" />
+          <Table<IFamilyModel> columns={columns} data={familiesState} maxHeight="400px" />
         </TableListItem>
       </List>
       <SaveCancelButtons {...saveCancelButtonProps} />

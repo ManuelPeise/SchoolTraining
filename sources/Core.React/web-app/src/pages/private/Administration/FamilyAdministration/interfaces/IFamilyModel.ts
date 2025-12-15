@@ -3,6 +3,6 @@ export interface IFamilyModel {
   name: string;
   contactMailAddress: string;
   isActive: boolean;
-  createdBy: string;
-  createdAt: string;
+  lastUpdateBy: string;
+  lastUpdateAt: string;
 }

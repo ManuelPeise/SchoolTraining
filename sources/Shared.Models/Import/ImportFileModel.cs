@@ -9,7 +9,7 @@ namespace Shared.Models.Import
         public DateTime FileDate { get; set; }
         public FileImportTypeEnum FileType { get; set; }
         public ImportStatusEnum Status { get; set; }
-        public DateTime LastUpdate { get; set; }
+        public string LastUpdate { get; set; } = string.Empty;
         public string LastUpdateBy { get; set; } = string.Empty;
     }
 }

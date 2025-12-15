@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Shared.Enums;
 using Shared.Models;
 using Shared.Models.Import;
+using System.Globalization;
 
 namespace Logic.Import.FileImport
 {
@@ -35,7 +36,8 @@ namespace Logic.Import.FileImport
                     FileDate = x.FileDate,
                     FileType = x.FileType,
                     Status = x.Status,
-                    LastUpdate = GetLastUpdateAt(x.UpdatedAt, x.CreatedAt),
+                    LastUpdate = GetLastUpdateAt(x.UpdatedAt, x.CreatedAt)
+                        .ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture),
                     LastUpdateBy = GetLastUpdateBy(x.UpdatedBy, x.CreatedBy),
                 }).ToList();
             }
