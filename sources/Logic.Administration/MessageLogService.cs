@@ -22,7 +22,10 @@ namespace Logic.Administration
         {
             try
             {
-                var logMessageEntities = await _unitOfWork.LogMessageRepository.GetAllAsync(true);
+                var isSystemAdmin = CurrentUser.UserRole == UserRoleEnum.SystemAdmin;
+                var logMessageEntities = isSystemAdmin
+                    ? await _unitOfWork.LogMessageRepository.GetAllAsync(true)
+                    : await _unitOfWork.LogMessageRepository.GetAllByAsync(x => x.FamilyId == CurrentUser.FamilyId);
 
                 if (logMessageEntities == null)
                 {
