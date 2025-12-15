@@ -52,7 +52,7 @@ namespace Logic.Administration
                     TimeStamp = DateTime.UtcNow,
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FamilyAdministrationService),
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
                 return new();
             }
@@ -101,7 +101,7 @@ namespace Logic.Administration
                     Module = nameof(FamilyAdministrationService),
                     LogLevel = LogLevelEnum.Error,
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
                 return false;
             }
@@ -123,7 +123,7 @@ namespace Logic.Administration
                     StackTrace = exception?.StackTrace ?? string.Empty,
                     LogLevel = LogLevelEnum.Error,
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
                 return null;
             }
@@ -167,7 +167,7 @@ namespace Logic.Administration
                     Module = nameof(FamilyAdministrationService),
                     LogLevel = LogLevelEnum.Error,
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
             }
 
             return await GetFamilies();

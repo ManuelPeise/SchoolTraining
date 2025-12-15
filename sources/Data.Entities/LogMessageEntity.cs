@@ -1,4 +1,5 @@
 ﻿using Shared.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Entities
 {
@@ -10,5 +11,8 @@ namespace Data.Entities
         public string? StackTrace { get; set; }
         public DateTime TimeStamp { get; set; }
         public LogLevelEnum LogLevel { get; set; }
+        public int? FamilyId { get; set; }
+        [ForeignKey(nameof(FamilyId))]
+        public FamilyEntity? Family { get; set; }
     }
 }

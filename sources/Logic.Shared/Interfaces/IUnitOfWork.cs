@@ -1,5 +1,4 @@
 ﻿using Data.Entities;
-using Shared.Enums;
 
 namespace Logic.Shared.Interfaces
 {
@@ -12,6 +11,6 @@ namespace Logic.Shared.Interfaces
         IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository { get; }
         IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository { get; }
         Task<int> SaveChangesAsync(string userName, CancellationToken cancellationToken = default);
-        public Task<int> LogMessage(LogMessageEntity entity, bool save = false, string userName = "System", CancellationToken cancellationToken = default);
+        public Task<int> LogMessage(LogMessageEntity entity, bool save = false, int? familyId = null, string userName = "System", CancellationToken cancellationToken = default);
     }
 }

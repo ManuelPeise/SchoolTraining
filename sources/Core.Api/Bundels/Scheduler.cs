@@ -142,6 +142,7 @@ namespace Core.Api.Bundels
             {
                 await _logService.LogMessage(new LogMessageEntity
                 {
+                    FamilyId = null,
                     Message = $"Error executing web job: {exception.Message}",
                     ExeptionMessage = exception.Message,
                     StackTrace = exception.StackTrace,

@@ -41,7 +41,7 @@ namespace Logic.Administration
                     Module = nameof(MessageLogService),
                     LogLevel = LogLevelEnum.Warning,
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
 
                 return new List<LogMessage>();
@@ -64,7 +64,7 @@ namespace Logic.Administration
                         Module = nameof(MessageLogService),
                         LogLevel = LogLevelEnum.Error,
                         TimeStamp = DateTime.UtcNow,
-                    }, true);
+                    }, true, CurrentUser.FamilyId);
 
                     return new NotificationDataResponse<List<LogMessage>>
                     {
@@ -95,7 +95,7 @@ namespace Logic.Administration
                     Module = nameof(MessageLogService),
                     LogLevel = LogLevelEnum.Warning,
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
                 return new NotificationDataResponse<List<LogMessage>>
                 {
@@ -157,7 +157,7 @@ namespace Logic.Administration
                     Module = nameof(MessageLogService),
                     LogLevel = LogLevelEnum.Warning,
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
                 return new NotificationDataResponse<List<LogMessage>>
                 {

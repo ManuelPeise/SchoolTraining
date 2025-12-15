@@ -230,7 +230,7 @@ namespace Core.Web.Components.Pages.ViewModels
                 FamilyId = f.FamilyId,
                 Name = f.Name,
                 ContactMailAddress = f.ContactMailAddress,
-                LastUdateBy = f.LastUdateBy,
+                LastUpdateBy = f.LastUpdateBy,
                 LastUpdateAt = f.LastUpdateAt,
                 IsActive = f.IsActive
             };

@@ -48,11 +48,15 @@ namespace Core.Api.Bundels
             builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
             builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+           
             builder.Services.AddScoped<IFileImporterFactory, FileImporterFactory>();
             builder.Services.AddScoped<IFileImporter, FileImporter>();
             builder.Services.AddScoped<IMessageLogService, MessageLogService>();
             AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
+
+            // Units of work
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ILearningUnitOfWork, LearningUnitOfWork>();
 
             builder.Services.AddQuartz(q =>
             {

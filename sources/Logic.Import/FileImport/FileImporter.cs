@@ -50,7 +50,7 @@ namespace Logic.Import.FileImport
                     StackTrace = exception.StackTrace,
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FileImporter),
-                }, true);
+                }, true, CurrentUser.FamilyId);
             }
 
             return new List<ImportFileModel>();
@@ -89,7 +89,7 @@ namespace Logic.Import.FileImport
                                             LogLevel = LogLevelEnum.Error,
                                             Module = nameof(FileImporter),
                                             TimeStamp = DateTime.UtcNow,
-                                        });
+                                        }, false, CurrentUser.FamilyId);
 
                                         continue;
                                     }
@@ -104,7 +104,7 @@ namespace Logic.Import.FileImport
                                         LogLevel = LogLevelEnum.Info,
                                         Module = nameof(FileImporter),
                                         TimeStamp = DateTime.UtcNow,
-                                    });
+                                    }, false, CurrentUser.FamilyId);
 
                                     databaseChanged = true;
 
@@ -127,7 +127,7 @@ namespace Logic.Import.FileImport
                                 LogLevel = LogLevelEnum.Error,
                                 Module = nameof(FileImporter),
                                 TimeStamp = DateTime.UtcNow,
-                            });
+                            }, false, CurrentUser.FamilyId);
                         }
                     }
                 }
@@ -147,7 +147,7 @@ namespace Logic.Import.FileImport
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FileImporter),
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
             }
         }
@@ -199,7 +199,7 @@ namespace Logic.Import.FileImport
                             LogLevel = LogLevelEnum.Error,
                             Module = nameof(FileImporter),
                             TimeStamp = DateTime.UtcNow,
-                        }, true);
+                        }, true, CurrentUser.FamilyId);
                     }
                 }
 
@@ -225,7 +225,7 @@ namespace Logic.Import.FileImport
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FileImporter),
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
 
                 return new NotificationDataResponse<List<ImportFileModel>>
                 {
@@ -257,7 +257,7 @@ namespace Logic.Import.FileImport
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FileImporter),
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
             }
 
             return await GetFiles();
@@ -290,7 +290,7 @@ namespace Logic.Import.FileImport
                     LogLevel = LogLevelEnum.Error,
                     Module = nameof(FileImporter),
                     TimeStamp = DateTime.UtcNow,
-                }, true);
+                }, true, CurrentUser.FamilyId);
             }
 
             return await GetFiles();

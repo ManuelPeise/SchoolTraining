@@ -110,7 +110,7 @@ namespace Logic.Import.FileImport
                 Module = nameof(FamilyFileImporter),
                 LogLevel = LogLevelEnum.Info,
                 TimeStamp = DateTime.UtcNow,
-            }, false);
+            }, false, CurrentUser.FamilyId);
         }
 
         private async Task LogError(string message, Exception? exception = null)
@@ -123,7 +123,7 @@ namespace Logic.Import.FileImport
                 Module = nameof(FamilyFileImporter),
                 LogLevel = LogLevelEnum.Error,
                 TimeStamp = DateTime.UtcNow,
-            }, true);
+            }, true, CurrentUser.FamilyId);
         }
     }
 }

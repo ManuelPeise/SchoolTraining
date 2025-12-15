@@ -1,66 +1,60 @@
-ï»¿using Data.Entities;
+using Data.Entities;
+using Data.Entities.Learning;
 using Data.Shared;
 using Logic.Shared.Interfaces;
-using Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Logic.Database
 {
-    public class UnitOfWork : IUnitOfWork
+    public class LearningUnitOfWork : ILearningUnitOfWork
     {
         private ADbContext? _context;
+        private IDbContextFactory _dbContextFactory;
 
-        private readonly IDbContextFactory _dbContextFactory;
-
-        private IDatabaseRepositoryBase<FamilyEntity>? _familyRepository;
-        public IDatabaseRepositoryBase<FamilyEntity> FamilyRepository =>
-            _familyRepository ??= CreateRepository<FamilyEntity>();
-
+        private IDatabaseRepositoryBase<ModuleEntity>? _moduleRepository;
+        private IDatabaseRepositoryBase<SubModuleEntity>? _subModuleRepository;
+        private IDatabaseRepositoryBase<UnitEntity>? _unitRepository;
+        private IDatabaseRepositoryBase<VocabularyEntity>? _vocabularyRepository;
+        private IDatabaseRepositoryBase<VocabularyUnitEntity>? _vocabularyUnitRepository;
+        private IDatabaseRepositoryBase<UnitResultEntity>? _unitResultRepository;
         private IDatabaseRepositoryBase<UserEntity>? _userRepository;
-        public IDatabaseRepositoryBase<UserEntity> UserRepository =>
-            _userRepository ??= CreateRepository<UserEntity>();
-
-
-        private IDatabaseRepositoryBase<UserCredentialsEntity>? _userCredentialsRepository;
-        public IDatabaseRepositoryBase<UserCredentialsEntity> UserCredentialsRepository =>
-            _userCredentialsRepository ??= CreateRepository<UserCredentialsEntity>();
-
-
-        private IDatabaseRepositoryBase<UserSettingsEntity>? _userSettingsRepository;
-        public IDatabaseRepositoryBase<UserSettingsEntity> UserSettingsRepository =>
-            _userSettingsRepository ??= CreateRepository<UserSettingsEntity>();
-
-
         private IDatabaseRepositoryBase<LogMessageEntity>? _logMessageRepository;
-        public IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository =>
-            _logMessageRepository ??= CreateRepository<LogMessageEntity>();
 
-        private IDatabaseRepositoryBase<ImportFileEntity>? _importFileRepository;
-        public IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository =>
-            _importFileRepository ??= CreateRepository<ImportFileEntity>();
-
-        public UnitOfWork(IDbContextFactory dbContextFactory) 
+        public LearningUnitOfWork(IDbContextFactory dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
-            Initialize(_dbContextFactory.GetContext());
-        }
-
-        public UnitOfWork(IDbContextFactory dbContextFactory, DbContextTypeEnum dbContextType)
-        {
-            _dbContextFactory = dbContextFactory;
-            Initialize(_dbContextFactory.GetContext(dbContextType));
+            Initialize(_dbContextFactory.GetContext()); ;
         }
 
         private void Initialize(ADbContext context)
         {
             _context = context;
-            _familyRepository = CreateRepository<FamilyEntity>();
-            _userRepository = CreateRepository<UserEntity>();
-            _userCredentialsRepository = CreateRepository<UserCredentialsEntity>();
-            _userSettingsRepository = CreateRepository<UserSettingsEntity>();
             _logMessageRepository = CreateRepository<LogMessageEntity>();
-            _importFileRepository = CreateRepository<ImportFileEntity>();
+            _moduleRepository = CreateRepository<ModuleEntity>();
+            _subModuleRepository = CreateRepository<SubModuleEntity>();
+            _unitRepository = CreateRepository<UnitEntity>();
+            _unitResultRepository = CreateRepository<UnitResultEntity>();
+            _userRepository = CreateRepository<UserEntity>();
+            _vocabularyRepository = CreateRepository<VocabularyEntity>();
+            _vocabularyUnitRepository = CreateRepository<VocabularyUnitEntity>();
         }
+
+        public IDatabaseRepositoryBase<ModuleEntity> ModuleRepository =>
+            _moduleRepository ??= CreateRepository<ModuleEntity>();
+        public IDatabaseRepositoryBase<SubModuleEntity> SubModuleRepository =>
+            _subModuleRepository ??= CreateRepository<SubModuleEntity>();
+        public IDatabaseRepositoryBase<UnitEntity> UnitRepository =>
+            _unitRepository ??= CreateRepository<UnitEntity>();
+        public IDatabaseRepositoryBase<VocabularyEntity> VocabularyRepository =>
+            _vocabularyRepository ??= CreateRepository<VocabularyEntity>();
+        public IDatabaseRepositoryBase<VocabularyUnitEntity> VocabularyUnitRepository =>
+            _vocabularyUnitRepository ??= CreateRepository<VocabularyUnitEntity>();
+        public IDatabaseRepositoryBase<UnitResultEntity> UnitResultRepository =>
+            _unitResultRepository ??= CreateRepository<UnitResultEntity>();
+        public IDatabaseRepositoryBase<UserEntity> UserRepository =>
+            _userRepository ??= CreateRepository<UserEntity>();
+        public IDatabaseRepositoryBase<LogMessageEntity> LogMessageRepository =>
+            _logMessageRepository ??= CreateRepository<LogMessageEntity>();
 
         private IDatabaseRepositoryBase<T> CreateRepository<T>() where T : AEntityBase
         {
@@ -68,7 +62,7 @@ namespace Logic.Database
             return new DatabaseRepositoryBase<T>(_context);
         }
 
-        public async Task<int> SaveChangesAsync(
+        public async  Task<int> SaveChangesAsync(
             string userName, 
             CancellationToken cancellationToken = default)
         {
@@ -116,6 +110,7 @@ namespace Logic.Database
 
             return 0;
         }
+
         #region dispose
         private bool disposedValue;
         protected virtual void Dispose(bool disposing)
@@ -133,7 +128,7 @@ namespace Logic.Database
 
         public void Dispose()
         {
-            // Ã„ndern Sie diesen Code nicht. FÃ¼gen Sie Bereinigungscode in der Methode "Dispose(bool disposing)" ein.
+            // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in der Methode "Dispose(bool disposing)" ein.
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
