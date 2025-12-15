@@ -70,7 +70,6 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
     await messageLogDeleteApi
       .post(`/messagelog/cleanuplogmessages?logLevel=${LogLevelEnum.Info}`, undefined)
       .then((response) => {
-        console.log('Log messages cleaned up successfully.', response.data);
         setLogMessageEntries(response.data ?? []);
         setNotificationBadge({
           show: true,
