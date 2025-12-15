@@ -37,5 +37,7 @@
   "notificationFileImportSuccess": "File import was successful.",
   "subTitleFamilies": "Manage families in the system",
   "subTitleFamiliesInSystem": "List of all registered families",
-  "subTitleImportedFiles": "List of all imported files"
+  "subTitleImportedFiles": "List of all imported files",
+  "captionMessageLog": "Message Log",
+  "labelManageMessageLogs": "Manage message logs in the system"
 }

@@ -4,6 +4,7 @@ import { AppHooks } from 'src/hooks/AppHooks';
 import { useAccessRights } from 'src/hooks/useAccessRights';
 import FamilyAdministrationContainer from './FamilyAdministration/FamilyAdministrationContainer';
 import FileImportContainer from './FileImport/FileImportContainer';
+import LogMessagePageContainer from './Logging/LogMessagePageContainer';
 
 const AdministrationPageContainer: React.FC = () => {
   const { accessRights } = useAccessRights();
@@ -25,6 +26,13 @@ const AdministrationPageContainer: React.FC = () => {
       subTitle: localizationProps.getResource('common.labelManageFileImports'),
       isReadonly: !accessRights.accessRights.userAdministration.view,
       component: FileImportContainer,
+    },
+    {
+      key: 'message-log',
+      title: localizationProps.getResource('common.captionMessageLog'),
+      subTitle: localizationProps.getResource('common.labelManageMessageLogs'),
+      isReadonly: !accessRights.accessRights.userAdministration.view,
+      component: LogMessagePageContainer,
     },
   ];
 
