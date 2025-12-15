@@ -11,6 +11,7 @@ import { FileImportStatusEnum } from 'src/lib/enums/FileImportStatusEnum';
 import TableIconGroup from 'src/components/table/components/TableIconGroup';
 import { FileImportTypeEnum } from 'src/lib/enums/FileImportTypeEnum';
 import { INotificationBadgeState } from 'src/lib/interfaces/INotificationBadgeState';
+import Notification from 'src/components/Notification';
 
 interface IFileImportProps extends IFileImportComponentInitializationProps {
   isReadonly: boolean;
@@ -84,6 +85,7 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
         undefined
       );
       setFiles(response.Data);
+
       setNotificationBadge({
         show: true,
         message: getResource(response.ResourceKey),
@@ -91,7 +93,7 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
         duration: 5000,
       });
     },
-    [fileImportApi]
+    [executeFileImportApi, getResource]
   );
 
   const handleDeleteFile = React.useCallback(
@@ -104,6 +106,13 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
     },
     [fileImportApi]
   );
+
+  const handleResetNotification = React.useCallback(() => {
+    setNotificationBadge((prev) => ({
+      ...prev,
+      show: false,
+    }));
+  }, []);
 
   const columns = React.useMemo((): Column<IFileImportModel>[] => {
     return [
@@ -236,7 +245,7 @@ const FileImport: React.FC<IFileImportProps> = (props: IFileImportProps) => {
         </TableListItem>
       </List>
 
-      {/* <Notification {...notificationBadge} handleResetNotification={handleResetNotification} /> */}
+      <Notification {...notificationBadge} handleResetNotification={handleResetNotification} />
     </div>
   );
 };
