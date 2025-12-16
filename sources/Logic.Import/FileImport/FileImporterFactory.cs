@@ -7,12 +7,17 @@ namespace Logic.Import.FileImport
 {
     public class FileImporterFactory : IFileImporterFactory
     {
-        public AFileImport GetFileImporter(FileImportTypeEnum fileImportType, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        public AFileImport GetFileImporter(
+            FileImportTypeEnum fileImportType, 
+            IHttpContextAccessor httpContextAccessor, 
+            IUnitOfWork unitOfWork)
         {
             switch (fileImportType)
             {
                 case FileImportTypeEnum.Family:
                     return new FamilyFileImporter(httpContextAccessor, unitOfWork);
+                case FileImportTypeEnum.Vocabulary:
+                    return new VocabularyFileImporter(httpContextAccessor, unitOfWork);
                 default:
                     throw new NotImplementedException($"File import type '{fileImportType}' is not implemented.");
             }

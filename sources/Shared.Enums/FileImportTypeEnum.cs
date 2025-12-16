@@ -2,6 +2,7 @@
 {
     public enum FileImportTypeEnum
     {
-        Family = 1
+        Family = 0,
+        Vocabulary = 1,
     }
 }

@@ -39,9 +39,15 @@ namespace Logic.Database
         public IDatabaseRepositoryBase<ImportFileEntity> ImportFileRepository =>
             _importFileRepository ??= CreateRepository<ImportFileEntity>();
 
-        public UnitOfWork(IDbContextFactory dbContextFactory) 
+        private ILearningUnitOfWork? _learningUnitOfWork;
+        public ILearningUnitOfWork LearningUnitOfWork =>
+            _learningUnitOfWork ??= new LearningUnitOfWork(_dbContextFactory);
+        
+        public UnitOfWork(IDbContextFactory dbContextFactory, ILearningUnitOfWork learningUnitOfWork) 
         {
             _dbContextFactory = dbContextFactory;
+            _learningUnitOfWork = learningUnitOfWork;
+
             Initialize(_dbContextFactory.GetContext());
         }
 
