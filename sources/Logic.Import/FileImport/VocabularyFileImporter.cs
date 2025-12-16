@@ -13,17 +13,80 @@ namespace Logic.Import.FileImport
         public VocabularyFileImporter(IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork) { }
 
+        /// <summary>
+        /// Imports vocabulary data from the specified file content and updates the database with new or modified
+        /// entries.
+        /// </summary>
+        /// <remarks>If the file content is invalid or fails validation, the import is aborted and no
+        /// changes are made to the database. The method logs information and errors related to the import process. No
+        /// exceptions are thrown; errors are logged and the method returns <see langword="false"/> on
+        /// failure.</remarks>
+        /// <param name="fileContent">A string containing the JSON-formatted content of the VocabularyImportModel to import. Must not be null or empty.</param>
+        /// <param name="fileName">The name of the file being imported. Used for logging and error reporting purposes. Must not be null or
+        /// empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the import
+        /// succeeds and the data is valid; otherwise, <see langword="false"/>.</returns>
         public override async Task<bool> ImportFile(string fileContent, string fileName)
         {
             try
             {
+                var (isValidFileName, fileDate) = ValidateFileName(fileName);
+
+                if (!isValidFileName || fileDate == null)
+                {
+                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
+                    {
+                        FileName = fileName,
+                        FileDate = DateTime.UtcNow,
+                        FileType = FileImportTypeEnum.Vocabulary,
+                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
+                        Status = ImportStatusEnum.Failed,
+                    });
+
+                    await LogError($"Vocabulary import from file '{fileName}' failed due to invalid file name format.");
+
+                    return false;
+                }
+
                 var isDatabaseChanged = false;
 
                 var serializerOptions = GetSerializerOptions(includeDateOptions: false);
 
-                var vocabularies = JsonSerializer.Deserialize<List<VocabularyModel>>(fileContent, serializerOptions);
+                var importModel = JsonSerializer.Deserialize<VocabularyImportModel>(fileContent, serializerOptions);
 
-                foreach (var vocabulary in vocabularies!)
+                if (importModel == null || importModel.Vocabularies == null)
+                {
+                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
+                    {
+                        FileName = fileName,
+                        FileDate = fileDate?? DateTime.UtcNow,
+                        FileType = FileImportTypeEnum.Vocabulary,
+                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
+                        Status = ImportStatusEnum.Failed,
+                    });
+
+                    await LogError($"Vocabulary import from file '{fileName}' failed due to invalid file content.");
+
+                    return false;
+                }
+
+                if (!ValidateVocabularyModel(importModel))
+                {
+                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
+                    {
+                        FileName = fileName,
+                        FileDate = fileDate ?? DateTime.UtcNow,
+                        FileType = FileImportTypeEnum.Vocabulary,
+                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
+                        Status = ImportStatusEnum.Failed,
+                    });
+
+                    await LogError($"Vocabulary import from file '{fileName}' failed due to validation errors.");
+
+                    return false;
+                }
+
+                foreach (var vocabulary in importModel.Vocabularies)
                 {
                     var existingVocabulary = await UnitOfWork.LearningUnitOfWork.VocabularyRepository
                         .GetByAsync(x => x.IdExternal == vocabulary.IdExternal, true);
@@ -61,6 +124,16 @@ namespace Logic.Import.FileImport
                 {
                     await LogInfo($"Vocabulary import from file '{fileName}' completed successfully.");
 
+                    // Save import file record
+                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
+                    {
+                        FileName = fileName,
+                        FileDate = fileDate ?? DateTime.UtcNow,
+                        FileType = FileImportTypeEnum.Vocabulary,
+                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
+                        Status = ImportStatusEnum.Success,
+                    });
+
                     await UnitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
 
@@ -72,6 +145,56 @@ namespace Logic.Import.FileImport
 
                 return false;
             }
+        }
+
+        // expecting file name format: vocabulary_YYYYMMDDHHMMSS.json
+        private (bool isValid, DateTime? fileDate) ValidateFileName(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return (false, null);
+            }
+
+            if (!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, null);
+            }
+
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+
+            var fileNameParts = fileNameWithoutExtension.Split('_');
+
+            if (fileNameParts.Length != 2 || !fileNameParts[0].Equals("vocabulary", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, null);
+            }
+
+            if (!DateTime.TryParseExact(fileNameParts[1], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out var fileDate))
+            {
+                return (false, null);
+            }
+
+            return (true, fileDate);
+        }
+
+        private bool ValidateVocabularyModel(VocabularyImportModel? importModel)
+        {
+            if (importModel == null)
+            {
+                return false;
+            }
+
+            var existingExternalIds = importModel.Vocabularies
+                .Select(v => new { Id = v.IdExternal })
+                .GroupBy(x => x.Id)
+                .ToList();
+
+            if (existingExternalIds.Any(g => g.Count() > 1))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private VocabularyEntity GetVocabularyEntity(VocabularyEntity? existing, VocabularyModel vocabulary)
