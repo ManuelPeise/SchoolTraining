@@ -41,6 +41,10 @@ namespace Data.MySqlContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("IdExternal")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -597,6 +601,10 @@ namespace Data.MySqlContext.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IdExternal")
                         .IsRequired()
                         .HasColumnType("longtext");
 

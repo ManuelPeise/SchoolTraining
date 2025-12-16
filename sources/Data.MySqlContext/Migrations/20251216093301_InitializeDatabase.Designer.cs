@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.MySqlContext.Migrations
 {
     [DbContext(typeof(MySqlDbContext))]
-    [Migration("20251216060152_ExtendSubMiduleEntityWithVocabularyDirection")]
-    partial class ExtendSubMiduleEntityWithVocabularyDirection
+    [Migration("20251216093301_InitializeDatabase")]
+    partial class InitializeDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,10 @@ namespace Data.MySqlContext.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IdExternal")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -600,6 +604,10 @@ namespace Data.MySqlContext.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IdExternal")
                         .IsRequired()
                         .HasColumnType("longtext");
 

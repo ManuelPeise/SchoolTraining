@@ -79,7 +79,7 @@ namespace Logic.Import.FileImport
                                 {
                                     var fileContent = await reader.ReadToEndAsync();
 
-                                    var result = await importer.ImportFile(fileContent, importFile.FileName);
+                                    var result = await importer.ImportFile(fileContent, importFile.FileName, importFile);
 
                                     if (!result)
                                     {
@@ -173,7 +173,7 @@ namespace Logic.Import.FileImport
                             {
                                 var fileContent = await reader.ReadToEndAsync();
 
-                                await importer.ImportFile(fileContent, importFileToProcess.FileName);
+                                await importer.ImportFile(fileContent, importFileToProcess.FileName, importFileToProcess);
 
                                 importFileToProcess.Status = ImportStatusEnum.Success;
 

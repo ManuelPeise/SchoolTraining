@@ -48,7 +48,7 @@ namespace Service.Api.Administration
         /// Called by scheduler to process pending import files.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("ImportFiles")]
+        [HttpPost(Name = "ImportFiles")]
         [SchedulerAuthorize]
         public async Task<IActionResult> ImportFiles()
         {

@@ -1,4 +1,5 @@
-﻿using Shared.Enums;
+﻿using Logic.Shared;
+using Shared.Enums;
 using System.Security.Claims;
 
 namespace Core.Api.Bundels
@@ -17,8 +18,8 @@ namespace Core.Api.Bundels
             if (context.Request.Headers.TryGetValue("X-Schedule-Job", out var value) && value == "true")
             {
                 var claims = new[] {
-                new Claim(ClaimTypes.Name, UserRoleEnum.MaintanaceUser.ToString()),
-                new Claim(ClaimTypes.Role, UserRoleEnum.MaintanaceUser.ToString())
+                new Claim(UserClaimConstants.UserNameKey, UserRoleEnum.MaintanaceUser.ToString()),
+                new Claim(UserClaimConstants.UserRoleKey, UserRoleEnum.MaintanaceUser.ToString())
             };
                 var identity = new ClaimsIdentity(claims, "ScheduleJob");
                 context.User = new ClaimsPrincipal(identity);

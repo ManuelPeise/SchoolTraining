@@ -26,7 +26,7 @@ namespace Logic.Import.FileImport
         /// empty.</param>
         /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if the import
         /// succeeds and the data is valid; otherwise, <see langword="false"/>.</returns>
-        public override async Task<bool> ImportFile(string fileContent, string fileName)
+        public override async Task<bool> ImportFile(string fileContent, string fileName, ImportFileEntity fileEntity)
         {
             try
             {
@@ -34,17 +34,11 @@ namespace Logic.Import.FileImport
 
                 if (!isValidFileName || fileDate == null)
                 {
-                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
-                    {
-                        FileName = fileName,
-                        FileDate = DateTime.UtcNow,
-                        FileType = FileImportTypeEnum.Vocabulary,
-                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
-                        Status = ImportStatusEnum.Failed,
-                    });
+                    fileEntity.Status = ImportStatusEnum.Failed;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
 
                     await LogError($"Vocabulary import from file '{fileName}' failed due to invalid file name format.");
-
+ 
                     return false;
                 }
 
@@ -56,14 +50,8 @@ namespace Logic.Import.FileImport
 
                 if (importModel == null || importModel.Vocabularies == null)
                 {
-                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
-                    {
-                        FileName = fileName,
-                        FileDate = fileDate?? DateTime.UtcNow,
-                        FileType = FileImportTypeEnum.Vocabulary,
-                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
-                        Status = ImportStatusEnum.Failed,
-                    });
+                    fileEntity.Status = ImportStatusEnum.Failed;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
 
                     await LogError($"Vocabulary import from file '{fileName}' failed due to invalid file content.");
 
@@ -72,14 +60,8 @@ namespace Logic.Import.FileImport
 
                 if (!ValidateVocabularyModel(importModel))
                 {
-                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
-                    {
-                        FileName = fileName,
-                        FileDate = fileDate ?? DateTime.UtcNow,
-                        FileType = FileImportTypeEnum.Vocabulary,
-                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
-                        Status = ImportStatusEnum.Failed,
-                    });
+                    fileEntity.Status = ImportStatusEnum.Failed;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
 
                     await LogError($"Vocabulary import from file '{fileName}' failed due to validation errors.");
 
@@ -125,14 +107,8 @@ namespace Logic.Import.FileImport
                     await LogInfo($"Vocabulary import from file '{fileName}' completed successfully.");
 
                     // Save import file record
-                    await UnitOfWork.ImportFileRepository.AddAsync(new ImportFileEntity
-                    {
-                        FileName = fileName,
-                        FileDate = fileDate ?? DateTime.UtcNow,
-                        FileType = FileImportTypeEnum.Vocabulary,
-                        FileContent = System.Text.Encoding.UTF8.GetBytes(fileContent),
-                        Status = ImportStatusEnum.Success,
-                    });
+                    fileEntity.Status = ImportStatusEnum.Success;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
 
                     await UnitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
@@ -147,7 +123,7 @@ namespace Logic.Import.FileImport
             }
         }
 
-        // expecting file name format: vocabulary_YYYYMMDDHHMMSS.json
+        // expecting file name format: Vocabulary_import_YYYYMMDDHHMMSS.json
         private (bool isValid, DateTime? fileDate) ValidateFileName(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
@@ -164,12 +140,12 @@ namespace Logic.Import.FileImport
 
             var fileNameParts = fileNameWithoutExtension.Split('_');
 
-            if (fileNameParts.Length != 2 || !fileNameParts[0].Equals("vocabulary", StringComparison.OrdinalIgnoreCase))
+            if (fileNameParts.Length != 3 || !fileNameParts[0].Equals("Vocabulary", StringComparison.OrdinalIgnoreCase))
             {
                 return (false, null);
             }
 
-            if (!DateTime.TryParseExact(fileNameParts[1], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out var fileDate))
+            if (!DateTime.TryParseExact(fileNameParts[2], "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out var fileDate))
             {
                 return (false, null);
             }

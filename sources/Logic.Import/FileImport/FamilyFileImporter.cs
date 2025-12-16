@@ -17,45 +17,82 @@ namespace Logic.Import.FileImport
             IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork) { }
 
-        public override async Task<bool> ImportFile(string fileContent, string fileName)
+        public override async Task<bool> ImportFile(string fileContent, string fileName, ImportFileEntity fileEntity)
         {
             try
             {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    AllowTrailingCommas = true,
-                    ReadCommentHandling = JsonCommentHandling.Skip
-                };
-                options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-                options.Converters.Add(new FlexibleDateTimeConverter());
+                var isDatabaseChanged = false;
+                var (isValidFileName, fileDate) = ValidateFileName(fileName);
 
-                var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent, options);
-                if (familyImportModel == null)
+                if (!isValidFileName || fileDate == null)
                 {
-                    await LogError("Deserialization of FamilyImportModel failed.");
+                    fileEntity.Status = ImportStatusEnum.Failed;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
+
+                    await LogError($"Family import from file '{fileName}' failed due to invalid file name format.");
+
                     return false;
                 }
 
-                var familyEntity = familyImportModel.ToImportEntity();
+                var options = GetSerializerOptions(includeDateOptions: true);
+
+                var familyImportModel = JsonSerializer.Deserialize<FamilyImportModel>(fileContent, options);
+
+                if (familyImportModel == null || familyImportModel.Family == null)
+                {
+                    fileEntity.Status = ImportStatusEnum.Failed;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
+
+                    await LogError($"Family import from file '{fileName}' failed due to invalid file content.");
+
+                    return false;
+                }
+
+                if (!ValidateFamilyImportModel(familyImportModel))
+                {
+                    fileEntity.Status = ImportStatusEnum.Failed;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
+
+                    await LogError($"Family import from file '{fileName}' failed due to validation errors in the import model.");
+
+                    return false;
+                }
+
+                var newEntity = familyImportModel.Family.ToImportEntity();
 
                 var existingFamilyEntity = await UnitOfWork.FamilyRepository
-                    .GetByAsync(x => x.ContactMailAddress == familyEntity.ContactMailAddress &&
-                                   x.Name == familyEntity.Name, true, IncludeExpressions.IncludeFamilyMembers);
+                    .GetByAsync(x => x.IdExternal == newEntity.IdExternal, true, IncludeExpressions.IncludeFamilyMembers);
 
-                if (existingFamilyEntity == null)
+                var isNew = existingFamilyEntity == null;
+
+                if (isNew)
                 {
-                    await UnitOfWork.FamilyRepository.AddAsync(familyEntity);
-                    await LogInfo("New family added!");
+                    await UnitOfWork.FamilyRepository.AddAsync(newEntity);
+                    await LogInfo($"Family [{newEntity.IdExternal}] added!");
+
+                    isDatabaseChanged = true;
                 }
                 else
                 {
-                    UpdateFamilyEntity(existingFamilyEntity, familyEntity);
-                    await LogInfo("Family updated!");
+                    if (existingFamilyEntity == null) { return false; }
+
+                    UpdateFamilyEntity(existingFamilyEntity, newEntity);
+
+                    await LogInfo($"Family [{existingFamilyEntity.IdExternal}] updated!");
+
+                    isDatabaseChanged = true;
                 }
 
-                await UnitOfWork.SaveChangesAsync(CurrentUser.UserName);
-                await LogInfo("Family file import success, import file saved!");
+                if (isDatabaseChanged)
+                {
+                    await LogInfo($"Family import from file '{fileName}' completed successfully.");
+
+                    // Save import file record
+                    fileEntity.Status = ImportStatusEnum.Success;
+                    UnitOfWork.ImportFileRepository.Update(fileEntity);
+
+                    await UnitOfWork.SaveChangesAsync(CurrentUser.UserName);
+                }
 
                 return true;
             }
@@ -65,6 +102,56 @@ namespace Logic.Import.FileImport
 
                 return false;
             }
+        }
+
+        // expecting file name format: Family_import_Name_YYYYMMDDHHMMSS.json
+        private (bool isValid, DateTime? fileDate) ValidateFileName(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return (false, null);
+            }
+
+            if (!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, null);
+            }
+
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+
+            var fileNameParts = fileNameWithoutExtension.Split('_');
+
+            if (fileNameParts.Length != 3 || !fileNameParts[0].Equals("Familyimport", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, null);
+            }
+
+            if (!DateTime.TryParseExact(fileNameParts[2], "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out var fileDate))
+            {
+                return (false, null);
+            }
+
+            return (true, fileDate);
+        }
+
+        private bool ValidateFamilyImportModel(FamilyImportModel? importModel)
+        {
+            if (importModel == null)
+            {
+                return false;
+            }
+
+            var existingExternalIds = importModel.ExistingExternalIds
+                .Select(f => new { Id = f })
+                .GroupBy(x => x.Id)
+                .ToList();
+
+            if (existingExternalIds.Any(g => g.Count() > 1))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void UpdateFamilyEntity(FamilyEntity existing, FamilyEntity updated)

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Logic.Shared;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Shared.Enums;
+using System.Security.Claims;
 
 namespace Service.Api
 {
@@ -12,10 +14,19 @@ namespace Service.Api
             public void OnAuthorization(AuthorizationFilterContext context)
             {
                 var user = context.HttpContext.User;
+
+                var claims = user?.Claims;
+
+                if (claims == null || 
+                    !Enum.TryParse<UserRoleEnum>(claims.FirstOrDefault(c => c.Type == UserClaimConstants.UserRoleKey)?.Value ?? "", out var userRole))
+                {
+                    context.Result = new ForbidResult();
+                    return;
+                }
+
                 // Check for the SystemJob authentication type or the special claim/role
                 if (user?.Identity?.IsAuthenticated != true ||
-                    user.Identity.AuthenticationType != "ScheduleJob" ||
-                    !user.IsInRole(UserRoleEnum.MaintanaceUser.ToString()))
+                    user.Identity.AuthenticationType != "ScheduleJob" || userRole != UserRoleEnum.MaintanaceUser)
                 {
                     context.Result = new ForbidResult();
                 }

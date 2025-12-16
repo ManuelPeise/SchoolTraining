@@ -6,9 +6,10 @@ using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Shared.Enums;
 using Shared.Models;
-using Shared.Models.Administration;
+using Shared.Models.Import;
 using System.Diagnostics;
 using System.Text;
+
 
 namespace Logic.Administration
 {
@@ -18,7 +19,7 @@ namespace Logic.Administration
         private readonly IUnitOfWork _unitIOfWork;
 
         public FamilyAdministrationService(
-         
+
             IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork) : base(httpContextAccessor)
         {
@@ -71,7 +72,7 @@ namespace Logic.Administration
                         var fileContent = await reader.ReadToEndAsync();
 
                         var bytes = Encoding.UTF8.GetBytes(fileContent);
-                        
+
                         var fileImportEntity = new ImportFileEntity
                         {
                             FileName = file.FileName,
@@ -80,7 +81,7 @@ namespace Logic.Administration
                             Status = ImportStatusEnum.Pending,
                             FileDate = fileDate,
                         };
-                        
+
                         await _unitIOfWork.ImportFileRepository.AddAsync(fileImportEntity);
 
                         await _unitIOfWork.SaveChangesAsync(CurrentUser.UserName);
@@ -112,7 +113,7 @@ namespace Logic.Administration
         {
             try
             {
-               return await GetFile(FileImportTypeEnum.Family);
+                return await GetFile(FileImportTypeEnum.Family);
             }
             catch (Exception exception)
             {
@@ -175,7 +176,7 @@ namespace Logic.Administration
 
         private async Task<FileResponse> GetFile(FileImportTypeEnum fileType)
         {
-            var result = GetFileTemplate(fileType);
+            var result = await GetFileTemplate(fileType);
 
             var bytes = !string.IsNullOrEmpty(result.base64String) ? Convert.FromBase64String(result.base64String) : new byte[0];
 
@@ -192,25 +193,93 @@ namespace Logic.Administration
             };
         }
 
-        private (string? fileName, string? base64String) GetFileTemplate(FileImportTypeEnum fileType)
+        private async Task<(string? fileName, string? base64String)> GetFileTemplate(FileImportTypeEnum fileType)
         {
-            byte[] file;
+            var familyEntities = await _unitIOfWork.FamilyRepository.GetAllAsync(true, IncludeExpressions.IncludeFamilyMembers);
+            var familyEntity = GetFamilyEntity(CurrentUser.FamilyId, familyEntities);
 
-            switch (fileType)
+            var model = new FamilyImportModel
             {
-                case FileImportTypeEnum.Family:
-                    file = Resx.Files.FamilyImportTemplate;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(fileType));
-            }
+                ExistingExternalIds = familyEntities.Select(x => x.IdExternal).ToList(),
+                Family = new FamilyModel
+                {
+                    FamilyId = familyEntity.Id,
+                    IdExternal = familyEntity.IdExternal,
+                    Name = familyEntity.Name,
+                    ContactMailAddress = familyEntity.ContactMailAddress,
+                    FamilyMembers = (from member in familyEntity.Users
+                                     select new FamilyMember
+                                     {
+                                         IdExternal = member.IdExternal,
+                                         FirstName = member.FirstName,
+                                         LastName = member.LastName,
+                                         DateOfBirth = member.DateOfBirth,
+                                         UserRole = member.UserRole,
+                                         Email = member.Email,
+                                         IsActive = member.IsActive,
+                                     }).ToList(),
+                    IsActive = familyEntity.IsActive,
+                }
+            };
+
+            var fileContent = System.Text.Json.JsonSerializer.Serialize(model, new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+
+            var file = Encoding.UTF8.GetBytes(fileContent);
 
             if (file == null || file.Length == 0)
             {
                 return (null, null);
             }
 
-            return ("FamilyImport_FamilyName_YYYYMMDD.json", Convert.ToBase64String(file));
+            var familyName = string.IsNullOrEmpty(familyEntity.Name) ? "Name" : familyEntity.Name.Replace(" ", "");
+
+            return ($"Familyimport_{familyName}_YYYYMMDD.json", Convert.ToBase64String(file));
         }
+
+        private FamilyEntity GetFamilyEntity(int? currentUserId, List<FamilyEntity> familyEntities)
+        {
+            var existingFamily = currentUserId == null ?
+                null :
+                familyEntities.SingleOrDefault(x => x.Users.Any(x => x.Id == currentUserId));
+            var currentDate = DateTime.UtcNow;
+
+            return existingFamily != null ?
+                existingFamily :
+                new FamilyEntity
+                {
+                    Id = 0,
+                    IdExternal = string.Empty,
+                    Name = string.Empty,
+                    ContactMailAddress = string.Empty,
+                    IsActive = true,
+                    Users = new List<UserEntity>
+                    {
+                        new UserEntity
+                        {
+                            Id = 0,
+                            IdExternal = string.Empty,
+                            FirstName = string.Empty,
+                            LastName = string.Empty,
+                            Username = string.Empty,
+                            DateOfBirth = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0,0,0),
+                            UserRole = UserRoleEnum.Admin,
+                            Email = string.Empty,
+                            IsActive = true,
+                            Credentials = new UserCredentialsEntity
+                            {
+                                PasswordHash = string.Empty,
+                                Salt = string.Empty,
+                                RefreshToken = string.Empty,
+                                ExpiresAt = DateTime.UtcNow
+                            }
+                        }
+                    }
+                };
+        }
+
+
     }
 }

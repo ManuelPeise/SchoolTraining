@@ -99,7 +99,7 @@ namespace Logic.Database
                     entry.Property(nameof(AEntityBase.CreatedBy)).IsModified = false;
 
                     entry.Entity.UpdatedAt = now;
-                    entry.Entity.UpdatedBy = userName ?? string.Empty;
+                    entry.Entity.UpdatedBy = userName ?? "System";
                 }
             }
 

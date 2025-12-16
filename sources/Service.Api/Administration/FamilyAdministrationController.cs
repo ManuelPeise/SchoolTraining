@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
-using Shared.Models.Administration;
+using Shared.Models.Import;
 using System.Diagnostics;
 
 namespace Service.Api.Administration

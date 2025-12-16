@@ -1,4 +1,5 @@
-﻿using Logic.Shared;
+﻿using Data.Entities;
+using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
@@ -16,7 +17,7 @@ namespace Logic.Import.FileImport
             _unitOfWork = unitOfWork;
         }
 
-        public abstract Task<bool> ImportFile(string fileContent, string fileName);
+        public abstract Task<bool> ImportFile(string fileContent, string fileName, ImportFileEntity fileEntity);
 
         public JsonSerializerOptions GetSerializerOptions(bool includeDateOptions)
         {

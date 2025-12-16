@@ -2,9 +2,7 @@
 {
     public class FamilyImportModel
     {
-        public string Name { get; set; } = string.Empty;
-        public string ContactMailAddress { get; set; } = string.Empty;
-        public bool IsActive { get; set; }
-        public List<FamilyMember> FamilyMembers { get; set; } = new List<FamilyMember>();
+        public List<string> ExistingExternalIds { get; set; } = new List<string>();
+        public FamilyModel Family { get; set; } = new();
     }
 }

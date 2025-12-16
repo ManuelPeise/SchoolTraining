@@ -18,13 +18,13 @@ namespace Core.Api.Bundels
 
             var currentDateTime = DateTime.UtcNow;
 
-            await AddJob(scheduler, "My Job", "My Job Description",
+            await AddJob(scheduler, "FamilyImport", "Import Famililies task",
                 new JobDataMap
                 {
-                    { "Url", $"{apiBaseUrl}/testschedule/test" }
+                    { "Url", $"{apiBaseUrl}/fileimport/importfiles" }
                 },
-                GetNextInterval(currentDateTime, 47),
-                "0 0/15 * * * ?");
+                GetNextInterval(currentDateTime, 2),
+                "0 0/2 * * * ?");
 
             await scheduler.Start();
         }
@@ -61,7 +61,7 @@ namespace Core.Api.Bundels
                 .WithIdentity($"{key}Trigger")
                 .StartNow()
                 .WithSimpleSchedule(builder => builder
-                    .WithIntervalInSeconds(60)
+                    .WithIntervalInHours(1)
                     .RepeatForever())
                 .ForJob(jobKey)
                 .Build();

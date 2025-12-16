@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Shared.Models;
-using Shared.Models.Administration;
+using Shared.Models.Import;
 
 namespace Logic.Administration.Interfaces
 {
