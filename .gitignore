@@ -73,5 +73,4 @@ secrets.json
 
 # Environment
 .env
-/sources/Tickets/#15-add-module-configuration-page.txt
-/sources/Tickets/ticket_template.txt
+/Tickets/**
