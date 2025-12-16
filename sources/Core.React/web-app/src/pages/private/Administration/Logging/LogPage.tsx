@@ -149,14 +149,14 @@ const LogPage: React.FC<ILogComponentInitializationProps> = (
         key: 'timeStamp',
         header: getResource('common.captionTimeStamp'),
         align: 'left',
-        minWidth: 100,
+        minWidth: 150,
         render: (row: ILogMessage) => <TableLabel value={row.timeStamp} />,
       },
       {
         key: 'logLevel',
         header: getResource('common.captionLogLevel'),
         align: 'left',
-        minWidth: 100,
+        minWidth: 150,
         render: (row: ILogMessage) => <TableLabel value={getLogLevelLabel(row.logLevel)} />,
       },
       {
