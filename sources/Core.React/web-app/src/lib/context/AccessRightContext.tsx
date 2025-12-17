@@ -21,6 +21,12 @@ const defaultAccessRights: IAccessRights = {
       create: false,
       delete: false,
     },
+    moduleConfiguration: {
+      view: false,
+      edit: false,
+      create: false,
+      delete: false,
+    },
   },
 };
 
@@ -102,6 +108,12 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
           edit: userRole === UserRoleEnum.Admin,
           create: userRole === UserRoleEnum.Admin,
           delete: userRole === UserRoleEnum.Admin,
+        },
+        moduleConfiguration: {
+          view: userRole === UserRoleEnum.Admin || userRole === UserRoleEnum.SystemAdmin,
+          edit: userRole === UserRoleEnum.Admin,
+          create: userRole === UserRoleEnum.Admin,
+          delete: userRole === UserRoleEnum.SystemAdmin,
         },
       },
     });

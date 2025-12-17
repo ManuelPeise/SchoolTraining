@@ -73,4 +73,5 @@ secrets.json
 
 # Environment
 .env
-/Tickets/**
+/Tickets/*.txt
+

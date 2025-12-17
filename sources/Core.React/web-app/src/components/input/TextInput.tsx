@@ -11,14 +11,7 @@ interface IProps {
   onChange: (value: string) => void;
 }
 
-const FormTextInput: React.FC<IProps> = ({
-  label,
-  placeholder,
-  disabled,
-  type,
-  value,
-  onChange,
-}) => {
+const TextInput: React.FC<IProps> = ({ label, placeholder, disabled, type, value, onChange }) => {
   return (
     <Box sx={{ my: 1 }}>
       <TextField
@@ -36,4 +29,4 @@ const FormTextInput: React.FC<IProps> = ({
   );
 };
 
-export default FormTextInput;
+export default TextInput;

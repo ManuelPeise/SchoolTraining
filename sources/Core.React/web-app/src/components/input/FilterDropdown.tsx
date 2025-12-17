@@ -12,12 +12,21 @@ export interface IFilterDropdownProps {
   selectedItemId: number | null;
   placeholder: string;
   isReadonly: boolean;
+  isRequired?: boolean;
   onSelectItem: (itemId: number | null) => void;
   onClearSelection: () => void;
 }
 
 const FilterDropdown: React.FC<IFilterDropdownProps> = (props: IFilterDropdownProps) => {
-  const { items, selectedItemId, placeholder, isReadonly, onSelectItem, onClearSelection } = props;
+  const {
+    items,
+    selectedItemId,
+    placeholder,
+    isReadonly,
+    isRequired,
+    onSelectItem,
+    onClearSelection,
+  } = props;
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<{ value: unknown }>) => {
@@ -30,7 +39,7 @@ const FilterDropdown: React.FC<IFilterDropdownProps> = (props: IFilterDropdownPr
   return (
     <Select
       value={selectedItemId ?? ''}
-      displayEmpty
+      required={isRequired}
       disabled={isReadonly || items.length === 0}
       renderValue={(selected) => {
         if (selectedItemId === null) {

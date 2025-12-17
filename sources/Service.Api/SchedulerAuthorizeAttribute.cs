@@ -13,7 +13,7 @@ namespace Service.Api
         {
             public void OnAuthorization(AuthorizationFilterContext context)
             {
-                var user = context.HttpContext.User;
+               var user = context.HttpContext.User;
 
                 var claims = user?.Claims;
 

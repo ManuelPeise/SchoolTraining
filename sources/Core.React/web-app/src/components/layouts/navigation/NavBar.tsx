@@ -18,6 +18,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
+import { useLocationProps } from 'src/hooks/useLocationProps';
 
 export interface ISideMenuItem {
   title: string;
@@ -34,6 +35,7 @@ interface IProps {
 const NavBar: React.FC<IProps> = (props: IProps) => {
   const { user, isLoading } = props;
   const { logout } = useAuth();
+  const { getResource } = useLocationProps(['common']);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -63,16 +65,26 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
       typeof user.userRole === 'string'
         ? UserRoleEnum[user.userRole as keyof typeof UserRoleEnum]
         : user.userRole;
+
     if (userRoleValue === UserRoleEnum.Admin || userRoleValue === UserRoleEnum.SystemAdmin) {
       items.push({
-        title: 'Administration',
+        title: getResource('common.labelAdministration'),
         iconClassName: 'bi bi-gear',
         link: '/administration',
         sortOrder: 0,
       });
     }
+
+    if (userRoleValue === UserRoleEnum.Admin || userRoleValue === UserRoleEnum.SystemAdmin) {
+      items.push({
+        title: getResource('common.labelConfiguration'),
+        iconClassName: 'bi bi-database-gear',
+        link: '/configuration',
+        sortOrder: 0,
+      });
+    }
     return items.sort((a, b) => a.sortOrder - b.sortOrder);
-  }, [user]);
+  }, [user, getResource]);
 
   if (user == null) {
     navigate('/auth');

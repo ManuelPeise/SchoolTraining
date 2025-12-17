@@ -111,10 +111,10 @@ const LogMessageFilterListItem: React.FC<IProps> = (props: IProps) => {
         justifyContent="space-between"
         mt={2}
         sx={{
-          flexDirection: { md: 'column', xl: 'row' },
+          flexDirection: { sm: 'column', md: 'column', xl: 'row' },
         }}
       >
-        <Box display="flex" gap={2} alignItems="baseline">
+        <Box display="flex" gap={3} height="100%" alignItems="center" mt={1}>
           <FilterInput
             {...filterTextProps}
             filterText={logFilterState.filterText}
@@ -132,9 +132,10 @@ const LogMessageFilterListItem: React.FC<IProps> = (props: IProps) => {
         </Box>
         <Box
           display="flex"
-          alignItems="baseline"
+          alignItems="end"
           gap={2}
-          sx={{ justifyContent: { md: 'flex-start', xl: 'flex-end' }, mt: { md: 2, xl: 2 } }}
+          height="100%"
+          sx={{ justifyContent: { md: 'flex-start', xl: 'flex-end' }, mt: { sm: 2, md: 2, xl: 0 } }}
         >
           <FormCheckbox
             disabled={isReadonly}
