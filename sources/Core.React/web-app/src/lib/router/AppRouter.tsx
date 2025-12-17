@@ -7,6 +7,7 @@ import HomePage from 'src/pages/private/HomePage';
 import NotFoundPage from 'src/pages/NotFoundPage';
 import AccessRightContextProvider from '../context/AccessRightContext';
 import AdministrationPageContainer from 'src/pages/private/Administration/AdministrationPageContainer';
+import ConfigurationContainer from 'src/pages/private/Configuration/ConfigurationContainer';
 
 const AppRouter: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const AppRouter: React.FC = () => {
             <Route element={<PrivateRoute />}>
               <Route path="/home" element={<HomePage />} />
               <Route path="/administration/*" Component={AdministrationPageContainer} />
+              <Route path="/configuration/*" Component={ConfigurationContainer} />
             </Route>
             <Route path="*" Component={NotFoundPage} />
           </Routes>

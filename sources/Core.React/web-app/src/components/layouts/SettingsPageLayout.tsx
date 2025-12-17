@@ -40,7 +40,7 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
     }
   }, []);
 
-  const Component = selectedItem.component;
+  const Component = selectedItem ? selectedItem.component : null;
 
   return (
     <Box
@@ -53,7 +53,7 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
         flex: 1,
       }}
     >
-      <Box component="header" sx={{ width: '100%', boxShadow: 1, zIndex: 1100 }}>
+      <Box component="header" sx={{ width: '100%', boxShadow: 1, minWidth: '600px', zIndex: 1100 }}>
         <NavBar user={appUser} isLoading={isLoading} />
       </Box>
       <Container
@@ -76,7 +76,6 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
           sx={{
             width: { xs: '100%', md: 300 },
             maxWidth: { xs: '100%', md: 300 },
-            minWidth: { md: 250 },
             flexShrink: 0,
             display: 'flex',
             flexDirection: 'column',
@@ -85,6 +84,7 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
             boxShadow: 2,
             mb: { xs: 2, md: 0 },
             height: { xs: 'auto', md: '100%' },
+            minWidth: { xs: '600px', md: '300px' },
           }}
         >
           <List sx={{ p: 0, m: 0, width: '100%' }}>
@@ -130,13 +130,13 @@ const SettingsPageLayout: React.FC<IProps> = (props: IProps) => {
             borderRadius: 2,
             boxShadow: 2,
             p: { xs: 2, sm: 3, md: 4 },
-            minWidth: 0,
-            minHeight: 300,
+            minWidth: '600px',
+            width: '100%',
             height: '100%',
             overflow: 'auto',
           }}
         >
-          <Component {...props} />
+          {Component && <Component {...props} />}
         </Box>
       </Container>
     </Box>

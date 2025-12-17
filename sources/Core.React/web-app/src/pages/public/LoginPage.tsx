@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import FormCard from 'src/components/wrappers/FormCard';
 import Title from 'src/components/labels/Title';
-import FormTextInput from 'src/components/input/FormTextInput';
+import TextInput from 'src/components/input/TextInput';
 import { LoginModel } from 'src/lib/types/LoginModel';
 import { useForm } from 'src/hooks/useForm';
 import FormCheckbox from 'src/components/input/FormCheckbox';
@@ -56,13 +56,13 @@ const LoginPage: React.FC = () => {
       <FormCard minwidth="320px" padding="32px 28px">
         <Stack spacing={4}>
           <Title text="Login" />
-          <FormTextInput
+          <TextInput
             label="UserName"
             type="text"
             value={loginModelState.userName}
             onChange={(val) => handleChange('userName', val)}
           />
-          <FormTextInput
+          <TextInput
             label="Password"
             type="password"
             value={loginModelState.secret}

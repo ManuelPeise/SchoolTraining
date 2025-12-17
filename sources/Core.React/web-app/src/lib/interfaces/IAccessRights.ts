@@ -8,4 +8,5 @@ export interface IAccessRights {
 interface IModuleAccessRights {
   familyAdministration: IModuleAccessRight;
   userAdministration: IModuleAccessRight;
+  moduleConfiguration: IModuleAccessRight;
 }
