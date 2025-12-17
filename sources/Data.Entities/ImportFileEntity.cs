@@ -9,10 +9,5 @@ namespace Data.Entities
         public byte[] FileContent { get; set; } = Array.Empty<byte>();
         public FileImportTypeEnum FileType { get; set; }
         public ImportStatusEnum Status { get; set; }
-
-        public bool Any()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

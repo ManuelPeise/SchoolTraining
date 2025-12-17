@@ -5,6 +5,7 @@ using Logic.AuthenticationService;
 using Logic.Database;
 using Logic.Import.FileImport;
 using Logic.Import.FileImport.Interfaces;
+using Logic.Learning.DI;
 using Logic.Shared;
 using Logic.Shared.Interfaces;
 using Logic.Shared.Interfaces.Authentication;
@@ -53,6 +54,7 @@ namespace Core.Api.Bundels
             builder.Services.AddScoped<IFileImporter, FileImporter>();
             builder.Services.AddScoped<IMessageLogService, MessageLogService>();
             AdministrationServiceRegistration.RegisterAdministrationServices(builder.Services);
+            LerningServiceRegistration.RegisterLearningServices(builder.Services);
 
             // Units of work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -21,6 +21,6 @@
         /// <summary>
         /// Gets or sets the collection of user entities associated with this instance.
         /// </summary>
-        public List<UserEntity> Users { get; set; } = new();
+        public List<UserEntity> Users { get; set; }
     }
 }

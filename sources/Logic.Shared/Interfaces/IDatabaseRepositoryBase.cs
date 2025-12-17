@@ -9,7 +9,7 @@ namespace Logic.Shared.Interfaces
         /// Return all entities.
         /// </summary>
         Task<List<TEntity>> GetAllAsync(
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default);
 
@@ -21,7 +21,7 @@ namespace Logic.Shared.Interfaces
         /// queries.</remarks>
         Task<List<TEntity>> GetAllByAsync(
             Expression<Func<TEntity, bool>> expression,
-            bool asNoTracking = true,
+            bool asNoTracking = false,
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null,
             CancellationToken cancellationToken = default);
 
@@ -30,7 +30,7 @@ namespace Logic.Shared.Interfaces
         /// </summary>
         Task<TEntity?> GetByIdAsync(
             int id, 
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default);
 
@@ -39,7 +39,7 @@ namespace Logic.Shared.Interfaces
         /// </summary>
         Task<TEntity?> GetByAsync(
             Expression<Func<TEntity, bool>> expression, 
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default);
 

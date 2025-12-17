@@ -17,7 +17,7 @@ namespace Logic.Database
         }
 
         public async Task<List<TEntity>> GetAllAsync(
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default)
         {
@@ -39,7 +39,7 @@ namespace Logic.Database
 
         public async Task<List<TEntity>> GetAllByAsync(
             Expression<Func<TEntity, bool>> expression,  
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default)
         {
@@ -65,7 +65,7 @@ namespace Logic.Database
 
         public async Task<TEntity?> GetByIdAsync(
             int id, 
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default)
         {
@@ -87,7 +87,7 @@ namespace Logic.Database
 
         public async Task<TEntity?> GetByAsync(
             Expression<Func<TEntity, bool>> expression, 
-            bool asNoTracking = true, 
+            bool asNoTracking = false, 
             IEnumerable<Expression<Func<TEntity, object>>>? includes = null, 
             CancellationToken cancellationToken = default)
         {
@@ -112,6 +112,7 @@ namespace Logic.Database
             CancellationToken cancellationToken = default)
         {
             await _context.Set<TEntity>().AddAsync(entity, cancellationToken);
+            _context.Entry(entity).State = EntityState.Added;
         }
 
         public async Task AddIfNotExistAsync(
@@ -123,6 +124,7 @@ namespace Logic.Database
             if (!exists)
             {
                 await AddAsync(entity, cancellationToken);
+                _context.Entry(entity).State = EntityState.Added;
             }
         }
 
@@ -133,6 +135,7 @@ namespace Logic.Database
             if (entity.Id == 0)
             {
                 await AddAsync(entity, cancellationToken);
+                _context.Entry(entity).State = EntityState.Added;
                 return;
             }
 
@@ -151,22 +154,26 @@ namespace Logic.Database
             List<TEntity> entities, 
             CancellationToken cancellationToken = default)
         {
+            entities.ForEach(e => _context.Entry(e).State = EntityState.Added);
             await _context.Set<TEntity>().AddRangeAsync(entities, cancellationToken);
         }
 
         public void Update(TEntity entity)
         {
             _context.Set<TEntity>().Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         public void UpdateRange(List<TEntity> entities)
         {
+            entities.ForEach(e => _context.Entry(e).State = EntityState.Modified);
             _context.Set<TEntity>().UpdateRange(entities);
         }
 
         public void Remove(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);
+            _context.Entry(entity).State = EntityState.Deleted;
         }
     }
 }

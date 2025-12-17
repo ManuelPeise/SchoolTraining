@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Data.MySqlContext.Migrations
+namespace Data.Testing.Migrations
 {
     /// <inheritdoc />
     public partial class InitializeDatabase : Migration
@@ -47,7 +48,7 @@ namespace Data.MySqlContext.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -100,7 +101,7 @@ namespace Data.MySqlContext.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Title = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -182,7 +183,7 @@ namespace Data.MySqlContext.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Title = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -216,7 +217,7 @@ namespace Data.MySqlContext.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FirstName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -380,7 +381,7 @@ namespace Data.MySqlContext.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DanishValue = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -461,9 +462,27 @@ namespace Data.MySqlContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FamilyTable_IdExternal",
+                table: "FamilyTable",
+                column: "IdExternal",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LogMessageTable_FamilyId",
                 table: "LogMessageTable",
                 column: "FamilyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleTable_IdExternal",
+                table: "ModuleTable",
+                column: "IdExternal",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubModuleTable_IdExternal",
+                table: "SubModuleTable",
+                column: "IdExternal",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubModuleTable_ModuleId",
@@ -507,9 +526,21 @@ namespace Data.MySqlContext.Migrations
                 column: "FamilyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserTable_IdExternal",
+                table: "UserTable",
+                column: "IdExternal",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserTable_SettingsId",
                 table: "UserTable",
                 column: "SettingsId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VocabularyTable_IdExternal",
+                table: "VocabularyTable",
+                column: "IdExternal",
                 unique: true);
 
             migrationBuilder.CreateIndex(

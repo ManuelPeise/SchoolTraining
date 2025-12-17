@@ -77,22 +77,26 @@ namespace Data.Shared
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure one-to-many: One Family has many Users. A User belongs to one Family.
+            modelBuilder.Entity<FamilyEntity>()
+                .HasIndex(e => e.IdExternal)
+                .IsUnique();
+
             modelBuilder.Entity<FamilyEntity>()
                 .HasMany(f => f.Users)
                 .WithOne(u => u.Family)
                 .HasForeignKey(u => u.FamilyId)
-                // when a Family is deleted, delete its Users as well
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure one-to-one: User -> Credentials (FK is on User.CredentialsId)
+            modelBuilder.Entity<UserEntity>()
+               .HasIndex(e => e.IdExternal)
+               .IsUnique();
+
             modelBuilder.Entity<UserEntity>()
                 .HasOne(u => u.Credentials)
                 .WithOne()
                 .HasForeignKey<UserEntity>(u => u.CredentialsId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure one-to-one: User -> Settings (FK is on User.SettingsId)
             modelBuilder.Entity<UserEntity>()
                 .HasOne(u => u.Settings)
                 .WithOne()
@@ -100,10 +104,18 @@ namespace Data.Shared
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ModuleEntity>()
+               .HasIndex(e => e.IdExternal)
+               .IsUnique();
+
+            modelBuilder.Entity<ModuleEntity>()
                 .HasMany(m => m.SubModules)
                 .WithOne(sm => sm.Module)
                 .HasForeignKey(sm => sm.ModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SubModuleEntity>()
+              .HasIndex(e => e.IdExternal)
+              .IsUnique();
 
             modelBuilder.Entity<SubModuleEntity>()
                 .HasMany(sm => sm.Units)
@@ -131,7 +143,6 @@ namespace Data.Shared
                 .WithMany()
                 .HasForeignKey(ur => ur.UnitId);
 
-            // Configure many-to-many: Unit <-> Vocabulary via VocabularyUnitEntity
             modelBuilder.Entity<VocabularyUnitEntity>()
                 .HasKey(vu => new { vu.UnitId, vu.VocabularyId });
 
@@ -146,6 +157,10 @@ namespace Data.Shared
                 .WithMany()
                 .HasForeignKey(vu => vu.VocabularyId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<VocabularyEntity>()
+              .HasIndex(e => e.IdExternal)
+              .IsUnique();
         }
     }
 }

@@ -50,13 +50,13 @@ namespace Data.Entities
         /// </summary>
         public int CredentialsId { get; set; }
         [ForeignKey(nameof(CredentialsId))]
-        public UserCredentialsEntity Credentials { get; set; } = new();
+        public UserCredentialsEntity Credentials { get; set; }
         /// <summary>
         /// Gets or sets the unique identifier for the settings configuration.
         /// </summary>
         public int SettingsId { get; set; }
         [ForeignKey(nameof(SettingsId))]
-        public UserSettingsEntity Settings { get; set; } = new();
+        public UserSettingsEntity? Settings { get; set; }
         /// <summary>
         /// Gets or sets the collection of modules associated with the user.
         /// </summary>

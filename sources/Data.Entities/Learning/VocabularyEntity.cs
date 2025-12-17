@@ -62,7 +62,7 @@ namespace Data.Entities.Learning
         /// </summary>
         public int UnitId { get; set; }
         [ForeignKey(nameof(UnitId))]
-        public UnitEntity Unit { get; set; } = new();
+        public UnitEntity Unit { get; set; }
 
     }
 }

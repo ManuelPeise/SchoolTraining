@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Logic.Administration\Logic.Administration.csproj" />
     <ProjectReference Include="..\Logic.Import\Logic.Import.csproj" />
+    <ProjectReference Include="..\Logic.Learning\Logic.Learning.csproj" />
     <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
   </ItemGroup>
 

@@ -17,7 +17,7 @@ namespace Data.Entities.Learning
         /// Gets or sets the user entity associated with this user module.
         /// </summary>
         [ForeignKey(nameof(UserId))]
-        public UserEntity User { get; set; } = new();
+        public UserEntity User { get; set; }
         /// <summary>
         /// Gets or sets the unique identifier for the module.
         /// </summary>
@@ -26,7 +26,7 @@ namespace Data.Entities.Learning
         /// Gets or sets the module entity associated with this user module.
         /// </summary>
         [ForeignKey(nameof(ModuleId))]
-        public ModuleEntity Module { get; set; } = new();
+        public ModuleEntity Module { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the user module is active.
         /// </summary>

@@ -30,7 +30,7 @@ namespace Data.Entities.Learning
         /// Gets or sets the parent module entity.
         /// </summary>
         [ForeignKey(nameof(ModuleId))]
-        public ModuleEntity Module { get; set; } = new();
+        public ModuleEntity Module { get; set; }
         /// <summary>
         /// Gets or sets the collection of units associated with the current submodule.
         /// </summary>

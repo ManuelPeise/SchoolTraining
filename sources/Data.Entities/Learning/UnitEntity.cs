@@ -34,6 +34,6 @@ namespace Data.Entities.Learning
         /// </summary>
         public int SubModuleId { get; set; }
         [ForeignKey("SubModuleId")]
-        public SubModuleEntity SubModule { get; set; } = new();
+        public SubModuleEntity SubModule { get; set; }
     }
 }

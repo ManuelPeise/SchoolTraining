@@ -9,14 +9,14 @@ namespace Data.Entities.Learning
         /// </summary>
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public UserEntity User { get; set; } = new();
+        public UserEntity User { get; set; }
 
         /// <summary>
         /// Gets or sets the unique identifier for the unit.
         /// </summary>
         public int UnitId { get; set; }
         [ForeignKey(nameof(UnitId))]
-        public UnitEntity Unit { get; set; } = new();
+        public UnitEntity Unit { get; set; }
 
         /// <summary>
         /// Gets or sets the score or result for the unit.
