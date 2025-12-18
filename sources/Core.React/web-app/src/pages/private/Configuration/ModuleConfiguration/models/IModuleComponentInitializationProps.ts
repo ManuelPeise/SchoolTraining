@@ -1,17 +1,16 @@
-import { DropdownItem } from 'src/components/input/Dropdown';
-import { ModuleServerModel, SubModuleServermodel } from './Module';
+import { IStatelessApi } from 'src/lib/interfaces/IStatelessApi';
+import { INotificationDataResponse } from 'src/lib/interfaces/INotificationDataResponse';
+import { Module } from './Module';
 
 export interface IModuleComponentInitializationProps {
+  api: IStatelessApi<INotificationDataResponse<ModuleInitializationModel>, Module>;
   isReadonly: boolean;
-  modulesDropdownItems: DropdownItem[];
-  subModulesDropdownItems: DropdownItem[];
-  modules: ModuleServerModel[];
-  subModules: SubModuleServermodel[];
+  moduleInitializationModel: ModuleInitializationModel;
   getResource: (key: string) => string;
   setIsLoading: (isLoading: boolean) => void;
 }
 
 export type ModuleInitializationModel = {
-  modules: ModuleServerModel[];
-  subModules: SubModuleServermodel[];
+  modules: Module[];
+  subModules: Module[];
 };

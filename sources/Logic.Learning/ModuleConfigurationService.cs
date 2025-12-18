@@ -77,7 +77,7 @@ namespace Logic.Learning
                 }
                 else
                 {
-                    var existingEntity = await _unitOfWork.ModuleRepository.GetByAsync(e => e.IdExternal == module.IdExternal, true);
+                    var existingEntity = await _unitOfWork.ModuleRepository.GetByAsync(e => e.IdExternal == module.IdExternal);
 
                     if (existingEntity != null)
                     {
@@ -85,8 +85,6 @@ namespace Logic.Learning
                         existingEntity.Description = module.Description;
                         existingEntity.UpdatedAt = DateTime.UtcNow;
                         existingEntity.UpdatedBy = CurrentUser.UserName;
-
-                        _unitOfWork.ModuleRepository.Update(existingEntity);
 
                         await LogInfo($"Module '{module.Title}' is updated by user '{CurrentUser.UserName}'.");
 
@@ -181,11 +179,11 @@ namespace Logic.Learning
             }
         }
 
-        public async Task<NotificationDataResponse<List<Module>>> DeleteModule(string idExternal)
+        public async Task<NotificationDataResponse<List<Module>>> DeleteModule(int id)
         {
             try
             {
-                var existingEntity = await _unitOfWork.ModuleRepository.GetByAsync(e => e.IdExternal == idExternal);
+                var existingEntity = await _unitOfWork.ModuleRepository.GetByAsync(e => e.Id == id);
 
                 if (existingEntity != null)
                 {

@@ -31,7 +31,7 @@ export const vocabularyDirectionTypeDropdownItems: DropdownItem[] = [
 ].sort((a, b) => a.id - b.id);
 
 export const mapDropdownItems = (items: Module[]): DropdownItem[] => {
-  return items.map((item) => ({
+  return items?.map((item) => ({
     id: item.moduleId,
     label: item.title,
   }));

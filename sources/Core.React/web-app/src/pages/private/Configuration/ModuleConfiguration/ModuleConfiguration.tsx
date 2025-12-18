@@ -11,14 +11,7 @@ interface IModuleConfigurationProps extends IModuleComponentInitializationProps 
 const ModuleConfiguration: React.FC<IModuleConfigurationProps> = (
   props: IModuleConfigurationProps
 ) => {
-  const {
-    isReadonly,
-    modules,
-    modulesDropdownItems,
-    subModules,
-    subModulesDropdownItems,
-    getResource,
-  } = props;
+  const { api, isReadonly, moduleInitializationModel, getResource, setIsLoading } = props;
 
   return (
     <Box
@@ -50,12 +43,11 @@ const ModuleConfiguration: React.FC<IModuleConfigurationProps> = (
           subTitle={getResource('common.subTitleModuleConfiguration')}
         >
           <ModuleConfigurationForm
+            api={api}
             isReadOnly={isReadonly}
-            modules={modules}
-            modulesDropdownItems={modulesDropdownItems}
-            subModules={subModules}
-            subModulesDropdownItems={subModulesDropdownItems}
+            moduleInitializationModel={moduleInitializationModel}
             getResource={getResource}
+            setIsLoading={setIsLoading}
           />
         </FormListItem>
       </List>

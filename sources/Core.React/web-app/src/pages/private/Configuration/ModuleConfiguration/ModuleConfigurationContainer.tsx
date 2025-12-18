@@ -2,9 +2,14 @@ import React from 'react';
 import ModuleConfiguration from './ModuleConfiguration';
 import { ISettingsPageLayoutProps } from 'src/components/layouts/SettingsPageLayout';
 import { ILocationProps } from 'src/lib/interfaces/ILocationProps';
-import { IModuleComponentInitializationProps } from './models/IModuleComponentInitializationProps';
+import {
+  IModuleComponentInitializationProps,
+  ModuleInitializationModel,
+} from './models/IModuleComponentInitializationProps';
 import { AppHooks } from 'src/hooks/AppHooks';
 import { useAccessRights } from 'src/hooks/useAccessRights';
+import { INotificationDataResponse } from 'src/lib/interfaces/INotificationDataResponse';
+import { Module } from './models/Module';
 
 interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
@@ -14,18 +19,23 @@ const ModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
 
   const initializeAsync =
     React.useCallback(async (): Promise<IModuleComponentInitializationProps> => {
+      const initializationApi = AppHooks.statelessApi.create<
+        INotificationDataResponse<ModuleInitializationModel>,
+        void
+      >();
+
+      const api = AppHooks.statelessApi.create<
+        INotificationDataResponse<ModuleInitializationModel>,
+        Module
+      >();
+      const [moduleInitializationModel] = await Promise.all([
+        initializationApi.get('/moduleconfiguration/getmoduleconfiguration'),
+      ]);
+
       return {
+        api,
         isReadonly: !accessRights.accessRights.moduleConfiguration.edit,
-        modules: [],
-        modulesDropdownItems: [
-          { id: 1, label: 'Module 1' },
-          { id: 2, label: 'Module 2' },
-        ],
-        subModules: [],
-        subModulesDropdownItems: [
-          { id: 1, label: 'SubModule 1' },
-          { id: 2, label: 'SubModule 2' },
-        ],
+        moduleInitializationModel: moduleInitializationModel.data,
         getResource: getResource,
         setIsLoading: setIsLoading,
       };

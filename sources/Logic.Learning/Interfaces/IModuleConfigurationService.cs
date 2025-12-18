@@ -8,6 +8,6 @@ namespace Logic.Learning.Interfaces
         Task<NotificationDataResponse<ModuleInitializationModel>> GetModuleConfigurationAsync();
         Task<NotificationDataResponse<List<Module>>> SaveOrUpdateModule(Module module);
         Task<NotificationDataResponse<List<SubModule>>> SaveOrUpdateSubModule(SubModule subModule);
-        Task<NotificationDataResponse<List<Module>>> DeleteModule(string idExternal);
+        Task<NotificationDataResponse<List<Module>>> DeleteModule(int id);
     }
 }

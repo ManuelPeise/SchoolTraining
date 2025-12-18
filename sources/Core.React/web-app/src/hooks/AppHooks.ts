@@ -13,6 +13,7 @@ type FormResult<TModel extends {}> = {
   updatedModel: TModel;
   isModified: boolean;
   readonlyFields?: (keyof TModel)[];
+  updateFormModelExternal: (newModel: TModel) => void;
   disabledFields: DisabledProp<TModel, keyof TModel>;
   onFieldChanged: (key: keyof TModel, value: any) => void;
   revertChanges: () => void;
@@ -54,6 +55,18 @@ const useForm = <TModel extends {}>(
     readonlyFields,
   });
 
+  const updateFormModelExternal = React.useCallback(
+    (newModel: TModel) => {
+      originalModel.current = newModel;
+      setFormState({
+        ...formState,
+        model: newModel,
+        isModified: !deepEqualObj(newModel, originalModel.current),
+      });
+    },
+    [originalModel, formState]
+  );
+
   const checkForModifications = React.useCallback(
     (newState: FormState<TModel>) => {
       return !deepEqualObj(originalModel.current, newState.model);
@@ -89,6 +102,7 @@ const useForm = <TModel extends {}>(
     updatedModel: formState.model,
     isModified: formState.isModified,
     readonlyFields: formState.readonlyFields,
+    updateFormModelExternal,
     revertChanges,
     onFieldChanged,
   };

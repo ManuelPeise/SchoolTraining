@@ -1,6 +1,12 @@
 import { Box, Button } from '@mui/material';
 import React, { PropsWithChildren } from 'react';
 
+export type DeleteButtonProps = {
+  isModified: boolean;
+  isDisabled?: boolean;
+  deleteLabel: string;
+  onDelete: () => void;
+};
 export type SaveCancelButtonProps = {
   isModified: boolean;
   saveLabel: string;
@@ -13,10 +19,11 @@ export type SaveCancelButtonProps = {
 
 interface IProps extends PropsWithChildren {
   saveCancelButtonProps: SaveCancelButtonProps;
+  deleteButtonProps?: DeleteButtonProps;
 }
 
 const FormContainer: React.FC<IProps> = (props: IProps) => {
-  const { children, saveCancelButtonProps } = props;
+  const { children, saveCancelButtonProps, deleteButtonProps } = props;
 
   return (
     <Box width="100%" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -24,6 +31,33 @@ const FormContainer: React.FC<IProps> = (props: IProps) => {
         {children}
       </Box>
       <Box width="100%" display="flex" alignContent="center" minHeight="50px" maxHeight="50px">
+        {deleteButtonProps && (
+          <Box
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="flex-start"
+            sx={{ flexGrow: 1 }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                ml: 2,
+                borderRadius: '16px',
+                backgroundColor: '#262626',
+                boxShadow: 'none',
+                color: '#000000',
+                minWidth: '100px',
+                '&:hover': { backgroundColor: '#bfbfbf' },
+              }}
+              onClick={deleteButtonProps.onDelete}
+              disabled={deleteButtonProps.isDisabled}
+            >
+              {deleteButtonProps.deleteLabel}
+            </Button>
+          </Box>
+        )}
         {saveCancelButtonProps.isModified && (
           <Box
             width="100%"

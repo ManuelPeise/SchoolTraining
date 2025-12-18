@@ -37,9 +37,9 @@ namespace Service.Api.Learning
 
         [HttpPost(Name = "DeleteModule")]
         [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
-        public async Task<NotificationDataResponse<List<Module>>> DeleteModule([FromBody] string idExternal)
+        public async Task<NotificationDataResponse<List<Module>>> DeleteModule([FromQuery] int moduleId)
         {
-            return await _moduleConfigurationService.DeleteModule(idExternal);
+            return await _moduleConfigurationService.DeleteModule(moduleId);
         }
     }
 }

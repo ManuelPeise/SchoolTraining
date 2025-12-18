@@ -91,5 +91,7 @@
   "subTitleFamilies": "Manage families in the system",
   "subTitleFamiliesInSystem": "List of all registered families",
   "subTitleImportedFiles": "List of all imported files",
-  "subTitleModuleConfiguration": "Define module and sub module configuration settings"
+  "subTitleModuleConfiguration": "Define module and sub module configuration settings",
+  "labelDelete": "Delete",
+  "labelLastUpdateAtBy": "Last updated on {AT} by {BY}"
 }

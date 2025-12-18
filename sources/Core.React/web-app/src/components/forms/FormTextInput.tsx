@@ -14,6 +14,7 @@ interface IProps<TModel> {
 
 function FormTextInput<TModel>(props: IProps<TModel>) {
   const { label, placeholder, disabled, type, value, isRequired, onChange } = props;
+
   return (
     <Box sx={{ my: 1 }}>
       <InputLabel shrink>{label}</InputLabel>

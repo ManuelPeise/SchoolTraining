@@ -67,6 +67,8 @@ namespace Core.Api.Bundels
 
                     var defaultAdminUser = new UserEntity
                     {
+                        Id = 1,
+                        IdExternal = "045a9bd4-06f9-4a55-8ab3-2dc1d692706e",
                         FirstName = "System",
                         LastName = "Admin",
                         Username = "System.Admin",
@@ -74,13 +76,18 @@ namespace Core.Api.Bundels
                         UserRole = UserRoleEnum.SystemAdmin,
                         Credentials = new UserCredentialsEntity
                         {
+                            Id = 1,
                             Salt = salt,
                             PasswordHash = SecretHelper.GetPasswordHash("Pass@word", salt),
                             CreatedAt = timeStamp,
                             CreatedBy = "System",
                         },
                         CreatedAt = timeStamp,
-                        CreatedBy = "System"
+                        CreatedBy = "System",
+                        Settings = new UserSettingsEntity
+                        {
+                            Id = 1,
+                        }
                     };
 
                     db.UserTable.Add(defaultAdminUser);

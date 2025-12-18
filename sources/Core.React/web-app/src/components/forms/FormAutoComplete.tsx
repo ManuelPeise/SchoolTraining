@@ -10,27 +10,31 @@ interface IProps<TModel> {
   placeholder: string;
   isReadOnly?: boolean;
   onChange: (key: keyof TModel, value: string) => void;
+  onSelectionChange?: (key: keyof TModel, id: number | null) => void;
 }
 
 function FormAutoComplete<TModel>(props: IProps<TModel>) {
-  const { options, value, placeholder, isReadOnly, isRequired, onChange } = props;
+  const {
+    propertyKey,
+    options,
+    value,
+    placeholder,
+    isReadOnly,
+    isRequired,
+    onChange,
+    onSelectionChange,
+  } = props;
 
   const handleSelect = React.useCallback(
-    (_: React.SyntheticEvent<Element, Event>, value: string | DropdownItem | null) => {
-      if (value == null) {
-        onChange(props.propertyKey, '');
-
-        return;
+    (_: React.SyntheticEvent<Element, Event>, value: DropdownItem) => {
+      if (value != null && typeof value === 'object') {
+        const item = value as DropdownItem;
+        onSelectionChange && onSelectionChange(propertyKey, item.id);
+      } else {
+        onSelectionChange && onSelectionChange(propertyKey, null);
       }
-
-      if (typeof value === 'object') {
-        onChange(props.propertyKey, value.label);
-        return;
-      }
-
-      onChange(props.propertyKey, value);
     },
-    [onChange, props.propertyKey]
+    [onSelectionChange, propertyKey]
   );
 
   const handleChange = React.useCallback(
@@ -48,7 +52,7 @@ function FormAutoComplete<TModel>(props: IProps<TModel>) {
         disabled={isReadOnly}
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
         inputValue={value}
-        onChange={(_, value) => handleSelect(_, value)}
+        onChange={(_, value) => handleSelect(_, value as DropdownItem)}
         onInputChange={handleChange}
         size="small"
         renderInput={(params) => (

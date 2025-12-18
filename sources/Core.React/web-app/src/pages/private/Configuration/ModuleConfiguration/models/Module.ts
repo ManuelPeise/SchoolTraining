@@ -6,8 +6,6 @@ export type Module = {
   title: string;
   description: string;
   direction: VocabularyDirectionEnum | null;
+  lastUpdateBy?: string | null;
+  lastUpdateAt?: string | null;
 };
-
-export type ModuleServerModel = Omit<Module, 'direction'>;
-
-export type SubModuleServermodel = Module;
