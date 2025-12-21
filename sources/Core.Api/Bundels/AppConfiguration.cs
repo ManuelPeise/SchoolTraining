@@ -29,7 +29,7 @@ namespace Core.Api.Bundels
            
 
             Database.Migrate(app);
-            Database.SeedDefaultSystemAdminUser(app);
+            
             await Scheduler.StartScheduler(app.Services);
         }
     }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.MySqlContext.Migrations
 {
     [DbContext(typeof(MySqlDbContext))]
-    [Migration("20251221184236_InitializeDatabase")]
+    [Migration("20251221221652_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -24,6 +24,234 @@ namespace Data.MySqlContext.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("Data.Entities.Administation.RightEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DescriptionResourceKey")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("LastSync")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NameResourceKey")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("RightGuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RightTable");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            DescriptionResourceKey = "common.FamilyAdministrationDescription",
+                            Name = "FamilyAdministration",
+                            NameResourceKey = "common.FamilyAdministration",
+                            RightGuid = new Guid("551a0d01-dea8-42d8-9268-89584dd43d27"),
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            DescriptionResourceKey = "common.ModuleAdministrationDescription",
+                            Name = "ModuleAdministration",
+                            NameResourceKey = "common.ModuleAdministration",
+                            RightGuid = new Guid("a8711cdd-3991-4169-afd1-414fb49956a9"),
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            DescriptionResourceKey = "common.SubModuleAdministrationDescription",
+                            Name = "SubModuleAdministration",
+                            NameResourceKey = "common.SubModuleAdministration",
+                            RightGuid = new Guid("2b24d50e-aa2d-4201-970e-45594138e111"),
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        });
+                });
+
+            modelBuilder.Entity("Data.Entities.Administation.UserRightEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CanCreate")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("CanDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("CanEdit")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("CanView")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Deny")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastSync")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("RightId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RightId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRightTable");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanEdit = true,
+                            CanView = true,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            Deny = false,
+                            RightId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanEdit = false,
+                            CanView = true,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            Deny = false,
+                            RightId = 2,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanEdit = false,
+                            CanView = true,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            Deny = false,
+                            RightId = 3,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CanCreate = false,
+                            CanDelete = false,
+                            CanEdit = false,
+                            CanView = false,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            Deny = true,
+                            RightId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanEdit = true,
+                            CanView = true,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            Deny = false,
+                            RightId = 2,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CanCreate = true,
+                            CanDelete = true,
+                            CanEdit = true,
+                            CanView = true,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            Deny = false,
+                            RightId = 3,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserId = 2
+                        });
+                });
 
             modelBuilder.Entity("Data.Entities.FamilyEntity", b =>
                 {
@@ -71,6 +299,20 @@ namespace Data.MySqlContext.Migrations
                         .IsUnique();
 
                     b.ToTable("FamilyTable");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ContactMailAddress = "",
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            IdExternal = "",
+                            IsActive = true,
+                            Name = "Default Admin Family",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        });
                 });
 
             modelBuilder.Entity("Data.Entities.ImportFileEntity", b =>
@@ -596,6 +838,32 @@ namespace Data.MySqlContext.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CredentialsTable");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            ExpiresAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PasswordHash = "UGFzc0B3b3JkMjY5NGQ0MjMtMTdiYS00ZWQ3LTg4YzctODE3ZjMzNGExMGJh",
+                            RefreshToken = "",
+                            Salt = "2694d423-17ba-4ed7-88c7-817f334a10ba",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            ExpiresAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PasswordHash = "UGFzc0B3b3JkNjhhMzBmZTUtOGQ3MC00OTFlLTkwNjQtZmFjYzQ2MDUyMjc2",
+                            RefreshToken = "",
+                            Salt = "68a30fe5-8d70-491e-9064-facc46052276",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        });
                 });
 
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
@@ -674,6 +942,45 @@ namespace Data.MySqlContext.Migrations
                         .IsUnique();
 
                     b.ToTable("UserTable");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            CredentialsId = 1,
+                            DateOfBirth = new DateTime(1980, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "",
+                            FirstName = "System",
+                            IdExternal = "045a9bd4-06f9-4a55-8ab3-2dc1d692706e",
+                            IsActive = true,
+                            LastName = "Admin",
+                            SettingsId = 1,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserRole = 2,
+                            Username = "System.Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            CredentialsId = 2,
+                            DateOfBirth = new DateTime(1980, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "",
+                            FamilyId = 1,
+                            FirstName = "Family",
+                            IdExternal = "18338480-8150-4f53-9358-d11b0f1fd9ee",
+                            IsActive = true,
+                            LastName = "Admin",
+                            SettingsId = 2,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "",
+                            UserRole = 1,
+                            Username = "Family.Admin"
+                        });
                 });
 
             modelBuilder.Entity("Data.Entities.UserSettingsEntity", b =>
@@ -704,6 +1011,43 @@ namespace Data.MySqlContext.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SettingsTable");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = "System",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = ""
+                        });
+                });
+
+            modelBuilder.Entity("Data.Entities.Administation.UserRightEntity", b =>
+                {
+                    b.HasOne("Data.Entities.Administation.RightEntity", "Right")
+                        .WithMany()
+                        .HasForeignKey("RightId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.UserEntity", "User")
+                        .WithMany("UserRights")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Right");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Data.Entities.Learning.ModuleEntity", b =>
@@ -864,6 +1208,8 @@ namespace Data.MySqlContext.Migrations
             modelBuilder.Entity("Data.Entities.UserEntity", b =>
                 {
                     b.Navigation("UserModules");
+
+                    b.Navigation("UserRights");
                 });
 #pragma warning restore 612, 618
         }

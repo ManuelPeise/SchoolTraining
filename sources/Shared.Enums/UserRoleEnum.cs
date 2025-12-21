@@ -4,7 +4,7 @@
     {
         None = -1,
         User = 0,
-        Admin = 1,
+        LocalAdmin = 1,
         SystemAdmin = 2,
         MaintanaceUser = 3,
     }

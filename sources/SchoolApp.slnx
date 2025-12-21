@@ -26,6 +26,7 @@
     <Project Path="Data.Testing/Data.Testing.csproj" Id="e415a091-9806-480a-aa2c-87fa841dbfa0" />
   </Folder>
   <Folder Name="/05 Shared/">
+    <Project Path="Shared.Administration/Shared.Administration.csproj" Id="dbcc7e5e-a7ad-48c0-b60e-7ee34bef1ae2" />
     <Project Path="Shared.Enums/Shared.Enums.csproj" Id="0d30ad72-93a9-4536-b229-cda61bedda34" />
     <Project Path="Shared.Models/Shared.Models.csproj" Id="18a7a325-c39e-4e52-a9f9-618063ebc665" />
     <Project Path="Shared.Resources/Shared.Resources.csproj" Id="fe520bb5-24af-4170-8b52-7bebc5442229" />

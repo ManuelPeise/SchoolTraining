@@ -1,5 +1,7 @@
 ﻿using Data.Entities;
+using Data.Entities.Administation;
 using Data.Entities.Learning;
+using Data.Shared.Seeds;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Shared
@@ -71,6 +73,15 @@ namespace Data.Shared
         /// Gets or sets the database table for vocabulary unit entities.
         /// </summary>
         public DbSet<VocabularyUnitEntity> VocabularyUnitTable { get; set; }
+        /// <summary>
+        /// Gets or sets the database table for role entities.
+        /// </summary>
+        public DbSet<RightEntity> RightTable { get; set; }
+     
+        /// <summary>
+        /// Gets or sets the collection of permissions in the database.
+        /// </summary>
+        public DbSet<UserRightEntity> UserRightTable { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -161,6 +172,13 @@ namespace Data.Shared
             modelBuilder.Entity<VocabularyEntity>()
               .HasIndex(e => e.IdExternal)
               .IsUnique();
+
+            modelBuilder.ApplyConfiguration(new FamilySeed());
+            modelBuilder.ApplyConfiguration(new CredentialsSeed());
+            modelBuilder.ApplyConfiguration(new SettingsSeed());
+            modelBuilder.ApplyConfiguration(new UserSeed());
+            modelBuilder.ApplyConfiguration(new RightSeed());
+            modelBuilder.ApplyConfiguration(new UserRightSeed());
         }
     }
 }

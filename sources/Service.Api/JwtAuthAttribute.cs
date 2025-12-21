@@ -49,7 +49,7 @@ namespace Service.Api
             {
                 var role = (UserRoleEnum)Enum.Parse(typeof(UserRoleEnum), roleClaimValue);
 
-                if(AllowSystemAdmin && role == UserRoleEnum.SystemAdmin || AllowAdmin && role == UserRoleEnum.Admin || userRoles.Contains(role))
+                if(AllowSystemAdmin && role == UserRoleEnum.SystemAdmin || AllowAdmin && role == UserRoleEnum.LocalAdmin || userRoles.Contains(role))
                 {
                     isAuthenticated = true;
                     context.HttpContext.User = new ClaimsPrincipal(user);

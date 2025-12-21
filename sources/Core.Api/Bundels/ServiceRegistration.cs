@@ -59,6 +59,7 @@ namespace Core.Api.Bundels
             // Units of work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ILearningUnitOfWork, LearningUnitOfWork>();
+            builder.Services.AddScoped<IAdministrationUnitOfWork, AdministrationUnitOfWork>();
 
             builder.Services.AddQuartz(q =>
             {

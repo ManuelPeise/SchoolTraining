@@ -23,7 +23,7 @@ namespace Logic.Database
         public LearningUnitOfWork(IDbContextFactory dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
-            Initialize(_dbContextFactory.GetContext()); ;
+            Initialize(_dbContextFactory.GetContext());
         }
 
         private void Initialize(ADbContext context)

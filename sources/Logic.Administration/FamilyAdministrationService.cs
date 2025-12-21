@@ -265,7 +265,7 @@ namespace Logic.Administration
                             LastName = string.Empty,
                             Username = string.Empty,
                             DateOfBirth = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0,0,0),
-                            UserRole = UserRoleEnum.Admin,
+                            UserRole = UserRoleEnum.LocalAdmin,
                             Email = string.Empty,
                             IsActive = true,
                             Credentials = new UserCredentialsEntity

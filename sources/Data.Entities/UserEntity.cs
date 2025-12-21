@@ -1,4 +1,5 @@
-﻿using Data.Entities.Learning;
+﻿using Data.Entities.Administation;
+using Data.Entities.Learning;
 using Shared.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -61,5 +62,6 @@ namespace Data.Entities
         /// Gets or sets the collection of modules associated with the user.
         /// </summary>
         public ICollection<UserModuleEntity> UserModules { get; set; } = new List<UserModuleEntity>();
+        public ICollection<UserRightEntity> UserRights { get; set; } = new List<UserRightEntity>();
     }
 }

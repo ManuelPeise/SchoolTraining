@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Data.MySqlContext.Migrations
 {
     /// <inheritdoc />
@@ -92,6 +94,33 @@ namespace Data.MySqlContext.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ImportFileTable", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "RightTable",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RightGuid = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NameResourceKey = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DescriptionResourceKey = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RightTable", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -314,6 +343,45 @@ namespace Data.MySqlContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "UserRightTable",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RightId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Deny = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanView = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanCreate = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanEdit = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CanDelete = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRightTable", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRightTable_RightTable_RightId",
+                        column: x => x.RightId,
+                        principalTable: "RightTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRightTable_UserTable_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "UnitTable",
                 columns: table => new
                 {
@@ -473,6 +541,61 @@ namespace Data.MySqlContext.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "CredentialsTable",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "ExpiresAt", "LastSync", "PasswordHash", "RefreshToken", "Salt", "UpdatedAt", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "UGFzc0B3b3JkMjY5NGQ0MjMtMTdiYS00ZWQ3LTg4YzctODE3ZjMzNGExMGJh", "", "2694d423-17ba-4ed7-88c7-817f334a10ba", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
+                    { 2, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "UGFzc0B3b3JkNjhhMzBmZTUtOGQ3MC00OTFlLTkwNjQtZmFjYzQ2MDUyMjc2", "", "68a30fe5-8d70-491e-9064-facc46052276", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "FamilyTable",
+                columns: new[] { "Id", "ContactMailAddress", "CreatedAt", "CreatedBy", "IdExternal", "IsActive", "LastSync", "Name", "UpdatedAt", "UpdatedBy" },
+                values: new object[] { 1, "", new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "", true, null, "Default Admin Family", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" });
+
+            migrationBuilder.InsertData(
+                table: "RightTable",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DescriptionResourceKey", "LastSync", "Name", "NameResourceKey", "RightGuid", "UpdatedAt", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.FamilyAdministrationDescription", null, "FamilyAdministration", "common.FamilyAdministration", new Guid("551a0d01-dea8-42d8-9268-89584dd43d27"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
+                    { 2, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.ModuleAdministrationDescription", null, "ModuleAdministration", "common.ModuleAdministration", new Guid("a8711cdd-3991-4169-afd1-414fb49956a9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
+                    { 3, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.SubModuleAdministrationDescription", null, "SubModuleAdministration", "common.SubModuleAdministration", new Guid("2b24d50e-aa2d-4201-970e-45594138e111"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SettingsTable",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "LastSync", "UpdatedAt", "UpdatedBy" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
+                    { 2, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserTable",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "CredentialsId", "DateOfBirth", "Email", "FamilyId", "FirstName", "IdExternal", "IsActive", "LastName", "LastSync", "SettingsId", "UpdatedAt", "UpdatedBy", "UserRole", "Username" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", 1, new DateTime(1980, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "", null, "System", "045a9bd4-06f9-4a55-8ab3-2dc1d692706e", true, "Admin", null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2, "System.Admin" },
+                    { 2, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", 2, new DateTime(1980, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1, "Family", "18338480-8150-4f53-9358-d11b0f1fd9ee", true, "Admin", null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1, "Family.Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserRightTable",
+                columns: new[] { "Id", "CanCreate", "CanDelete", "CanEdit", "CanView", "CreatedAt", "CreatedBy", "Deny", "LastSync", "RightId", "UpdatedAt", "UpdatedBy", "UserId" },
+                values: new object[,]
+                {
+                    { 1, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
+                    { 2, false, false, false, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
+                    { 3, false, false, false, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
+                    { 4, false, false, false, false, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", true, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 },
+                    { 5, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 },
+                    { 6, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_FamilyTable_IdExternal",
                 table: "FamilyTable",
@@ -537,6 +660,16 @@ namespace Data.MySqlContext.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserRightTable_RightId",
+                table: "UserRightTable",
+                column: "RightId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRightTable_UserId",
+                table: "UserRightTable",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserTable_CredentialsId",
                 table: "UserTable",
                 column: "CredentialsId",
@@ -592,7 +725,13 @@ namespace Data.MySqlContext.Migrations
                 name: "UserModuleTable");
 
             migrationBuilder.DropTable(
+                name: "UserRightTable");
+
+            migrationBuilder.DropTable(
                 name: "VocabularyUnitTable");
+
+            migrationBuilder.DropTable(
+                name: "RightTable");
 
             migrationBuilder.DropTable(
                 name: "UserTable");
