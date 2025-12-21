@@ -22,7 +22,7 @@ import React from 'react';
 import { DropdownItem } from 'src/components/input/Dropdown';
 
 function FormTextField<TModel>({ fieldKey, fieldPropsCallback }: TextFieldProps<TModel>) {
-  const { key, value, label, onChange, isPassword, isReadonly, isRequired } = fieldPropsCallback(
+  const { key, value, label, type, isReadonly, isRequired, onChange } = fieldPropsCallback(
     fieldKey
   ) as FormTextFieldProps<TModel>;
 
@@ -31,7 +31,7 @@ function FormTextField<TModel>({ fieldKey, fieldPropsCallback }: TextFieldProps<
       <InputLabel shrink>{label}</InputLabel>
       <TextField
         key={String(key)}
-        type={isPassword ? 'password' : 'text'}
+        type={type}
         disabled={isReadonly}
         fullWidth
         required={isRequired}

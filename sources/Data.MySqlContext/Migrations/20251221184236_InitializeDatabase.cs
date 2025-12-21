@@ -96,32 +96,6 @@ namespace Data.MySqlContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ModuleTable",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Title = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ModuleTable", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "SettingsTable",
                 columns: table => new
                 {
@@ -178,7 +152,7 @@ namespace Data.MySqlContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "SubModuleTable",
+                name: "ModuleTable",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -189,8 +163,7 @@ namespace Data.MySqlContext.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    VocabularyDirection = table.Column<int>(type: "int", nullable: true),
-                    ModuleId = table.Column<int>(type: "int", nullable: false),
+                    FamilyId = table.Column<int>(type: "int", nullable: true),
                     LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -201,13 +174,12 @@ namespace Data.MySqlContext.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubModuleTable", x => x.Id);
+                    table.PrimaryKey("PK_ModuleTable", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubModuleTable_ModuleTable_ModuleId",
-                        column: x => x.ModuleId,
-                        principalTable: "ModuleTable",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_ModuleTable_FamilyTable_FamilyId",
+                        column: x => x.FamilyId,
+                        principalTable: "FamilyTable",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -266,22 +238,20 @@ namespace Data.MySqlContext.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "UnitTable",
+                name: "SubModuleTable",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                    IdExternal = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UnitName = table.Column<string>(type: "longtext", nullable: false)
+                    Title = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UnitDescription = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SortOrder = table.Column<int>(type: "int", nullable: false),
-                    UnitType = table.Column<int>(type: "int", nullable: false),
-                    UnitContentJson = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SubModuleId = table.Column<int>(type: "int", nullable: false),
+                    VocabularyDirection = table.Column<int>(type: "int", nullable: true),
+                    ModuleId = table.Column<int>(type: "int", nullable: false),
+                    FamilyId = table.Column<int>(type: "int", nullable: true),
                     LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -292,11 +262,16 @@ namespace Data.MySqlContext.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UnitTable", x => x.Id);
+                    table.PrimaryKey("PK_SubModuleTable", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UnitTable_SubModuleTable_SubModuleId",
-                        column: x => x.SubModuleId,
-                        principalTable: "SubModuleTable",
+                        name: "FK_SubModuleTable_FamilyTable_FamilyId",
+                        column: x => x.FamilyId,
+                        principalTable: "FamilyTable",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SubModuleTable_ModuleTable_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "ModuleTable",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -333,6 +308,43 @@ namespace Data.MySqlContext.Migrations
                         name: "FK_UserModuleTable_UserTable_UserId",
                         column: x => x.UserId,
                         principalTable: "UserTable",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UnitTable",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IdExternal = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UnitName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UnitDescription = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    UnitType = table.Column<int>(type: "int", nullable: false),
+                    UnitContentJson = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SubModuleId = table.Column<int>(type: "int", nullable: false),
+                    LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitTable", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UnitTable_SubModuleTable_SubModuleId",
+                        column: x => x.SubModuleId,
+                        principalTable: "SubModuleTable",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -473,10 +485,20 @@ namespace Data.MySqlContext.Migrations
                 column: "FamilyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ModuleTable_FamilyId",
+                table: "ModuleTable",
+                column: "FamilyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ModuleTable_IdExternal",
                 table: "ModuleTable",
                 column: "IdExternal",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubModuleTable_FamilyId",
+                table: "SubModuleTable",
+                column: "FamilyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubModuleTable_IdExternal",
@@ -582,9 +604,6 @@ namespace Data.MySqlContext.Migrations
                 name: "CredentialsTable");
 
             migrationBuilder.DropTable(
-                name: "FamilyTable");
-
-            migrationBuilder.DropTable(
                 name: "SettingsTable");
 
             migrationBuilder.DropTable(
@@ -595,6 +614,9 @@ namespace Data.MySqlContext.Migrations
 
             migrationBuilder.DropTable(
                 name: "ModuleTable");
+
+            migrationBuilder.DropTable(
+                name: "FamilyTable");
         }
     }
 }

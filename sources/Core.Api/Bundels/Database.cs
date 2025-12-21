@@ -59,13 +59,14 @@ namespace Core.Api.Bundels
             {
                 var db = scope.ServiceProvider.GetRequiredService<MySqlDbContext>();
 
+                var databaseIsChanged = false;
+                var timeStamp = DateTime.UtcNow;
+
                 if (!db.UserTable.Any(x => x.UserRole == UserRoleEnum.SystemAdmin))
                 {
-                    var timeStamp = DateTime.UtcNow;
-
                     var salt = Guid.NewGuid().ToString();
 
-                    var defaultAdminUser = new UserEntity
+                    var defaultSystemAdminUser = new UserEntity
                     {
                         Id = 1,
                         IdExternal = "045a9bd4-06f9-4a55-8ab3-2dc1d692706e",
@@ -90,7 +91,53 @@ namespace Core.Api.Bundels
                         }
                     };
 
+                    db.UserTable.Add(defaultSystemAdminUser);
+
+                    databaseIsChanged = true;
+                }
+
+                if (!db.UserTable.Any(x => x.UserRole == UserRoleEnum.Admin))
+                {
+                    var salt = Guid.NewGuid().ToString();
+
+                    var defaultAdminUser = new UserEntity
+                    {
+                        Id = 2,
+                        IdExternal = "18338480-8150-4f53-9358-d11b0f1fd9ee",
+                        FirstName = "Family",
+                        LastName = "Admin",
+                        Username = "Family.Admin",
+                        DateOfBirth = DateTime.Parse("1980-04-20"),
+                        UserRole = UserRoleEnum.Admin,
+                        Credentials = new UserCredentialsEntity
+                        {
+                            Id = 2,
+                            Salt = salt,
+                            PasswordHash = SecretHelper.GetPasswordHash("Pass@word", salt),
+                            CreatedAt = timeStamp,
+                            CreatedBy = "System",
+                        },
+                        CreatedAt = timeStamp,
+                        CreatedBy = "System",
+                        Family = new FamilyEntity
+                        {
+                            Id = 1,
+                            Name = "Default Admin Family",
+                            IsActive = true,
+                            CreatedAt = timeStamp,
+                            CreatedBy = "System",
+                        },
+                        Settings = new UserSettingsEntity
+                        {
+                            Id = 2,
+                        }
+                    };
+
                     db.UserTable.Add(defaultAdminUser);
+                }
+
+                if (databaseIsChanged)
+                {
                     db.SaveChanges();
                 }
             }

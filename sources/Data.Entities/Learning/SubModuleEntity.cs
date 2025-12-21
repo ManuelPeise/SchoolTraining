@@ -32,8 +32,15 @@ namespace Data.Entities.Learning
         [ForeignKey(nameof(ModuleId))]
         public ModuleEntity Module { get; set; }
         /// <summary>
+        /// Gets or sets the unique identifier for the family.
+        /// </summary>
+        public int? FamilyId { get; set; }
+        [ForeignKey(nameof(FamilyId))]
+        public FamilyEntity? Family { get; set; }
+        /// <summary>
         /// Gets or sets the collection of units associated with the current submodule.
         /// </summary>
         public ICollection<UnitEntity> Units { get; set; } = new List<UnitEntity>();
+
     }
 }

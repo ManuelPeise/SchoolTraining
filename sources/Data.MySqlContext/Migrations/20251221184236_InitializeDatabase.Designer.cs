@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.MySqlContext.Migrations
 {
     [DbContext(typeof(MySqlDbContext))]
-    [Migration("20251217192455_InitializeDatabase")]
+    [Migration("20251221184236_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -139,6 +139,9 @@ namespace Data.MySqlContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("FamilyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("IdExternal")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -158,6 +161,8 @@ namespace Data.MySqlContext.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FamilyId");
 
                     b.HasIndex("IdExternal")
                         .IsUnique();
@@ -184,6 +189,9 @@ namespace Data.MySqlContext.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("FamilyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("IdExternal")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -209,6 +217,8 @@ namespace Data.MySqlContext.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FamilyId");
 
                     b.HasIndex("IdExternal")
                         .IsUnique();
@@ -696,13 +706,28 @@ namespace Data.MySqlContext.Migrations
                     b.ToTable("SettingsTable");
                 });
 
+            modelBuilder.Entity("Data.Entities.Learning.ModuleEntity", b =>
+                {
+                    b.HasOne("Data.Entities.FamilyEntity", "Family")
+                        .WithMany()
+                        .HasForeignKey("FamilyId");
+
+                    b.Navigation("Family");
+                });
+
             modelBuilder.Entity("Data.Entities.Learning.SubModuleEntity", b =>
                 {
+                    b.HasOne("Data.Entities.FamilyEntity", "Family")
+                        .WithMany()
+                        .HasForeignKey("FamilyId");
+
                     b.HasOne("Data.Entities.Learning.ModuleEntity", "Module")
                         .WithMany("SubModules")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Family");
 
                     b.Navigation("Module");
                 });

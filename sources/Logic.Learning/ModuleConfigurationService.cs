@@ -68,6 +68,7 @@ namespace Logic.Learning
                     await _unitOfWork.ModuleRepository.AddAsync(new ModuleEntity
                     {
                         IdExternal = Guid.NewGuid().ToString(),
+                        FamilyId = CurrentUser.FamilyId,
                         Title = module.Title,
                         Description = module.Description,
                     });
@@ -129,6 +130,7 @@ namespace Logic.Learning
                     await _unitOfWork.SubModuleRepository.AddAsync(new SubModuleEntity
                     {
                         IdExternal = Guid.NewGuid().ToString(),
+                        FamilyId = CurrentUser.FamilyId,
                         ModuleId = subModule.ModuleId,
                         Title = subModule.Title,
                         Description = subModule.Description,
@@ -272,7 +274,8 @@ namespace Logic.Learning
 
         private async Task<List<Module>> GetModulesAsync()
         {
-            var entities = await _unitOfWork.ModuleRepository.GetAllAsync(true, IncludeExpressions.IncludeSubModules);
+            var entities = await _unitOfWork.ModuleRepository
+                .GetAllByAsync(e => e.FamilyId == CurrentUser.FamilyId, true, IncludeExpressions.IncludeSubModules);
 
             return entities?.Select(e => new Module
             {
@@ -299,12 +302,13 @@ namespace Logic.Learning
 
         private async Task<List<SubModuleEntity>> GetSubModulesAsync()
         {
-            var entities = await _unitOfWork.SubModuleRepository.GetAllAsync(false, IncludeExpressions.IncludeModule);
+            var entities = await _unitOfWork.SubModuleRepository
+                .GetAllByAsync(e => e.FamilyId == CurrentUser.FamilyId, false, IncludeExpressions.IncludeModule);
 
             return entities?.ToList() ?? new List<SubModuleEntity>();
         }
 
-        private async Task<SubModuleConfigurationInitializationModel> GetSubModuleConfigurationResponseModel() 
+        private async Task<SubModuleConfigurationInitializationModel> GetSubModuleConfigurationResponseModel()
         {
             var modules = await GetModulesAsync();
 
@@ -351,7 +355,7 @@ namespace Logic.Learning
 
             return response;
         }
-        
+
         private bool IsNewModel(string idExternal)
         {
             return string.IsNullOrEmpty(idExternal);

@@ -1,4 +1,6 @@
-﻿namespace Data.Entities.Learning
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Data.Entities.Learning
 {
     public class ModuleEntity : AEntityBase
     {
@@ -15,8 +17,15 @@
         /// </summary>
         public string Description { get; set; } = string.Empty;
         /// <summary>
+        /// Gets or sets the unique identifier for the family.
+        /// </summary>
+        public int? FamilyId { get; set; }
+        [ForeignKey(nameof(FamilyId))]
+        public FamilyEntity? Family { get; set; }
+        /// <summary>
         /// Gets or sets the collection of submodules associated with the module.
         /// </summary>
         public ICollection<SubModuleEntity> SubModules { get; set; } = new List<SubModuleEntity>();
+       
     }
 }

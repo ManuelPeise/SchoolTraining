@@ -23,7 +23,6 @@ export type FormFieldPropsBase<TModel> = {
 };
 
 export type FormTextFieldProps<TModel> = FormFieldPropsBase<TModel> & {
-  isPassword?: boolean;
   value: string;
   label: string;
   onChange: (key: keyof TModel, newValue: string) => void;
