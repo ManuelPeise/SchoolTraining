@@ -1,4 +1,12 @@
-import { Autocomplete, Box, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Checkbox,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import {
   FormNumberFieldProps,
   FormAutoCompleteProps,
@@ -7,6 +15,8 @@ import {
   FormAutocompleteFieldProps,
   FormDropdownFieldProps,
   DropdownFieldProps,
+  FormCheckboxFieldProps,
+  BooleanFieldProps,
 } from './FormTypes';
 import React from 'react';
 import { DropdownItem } from 'src/components/input/Dropdown';
@@ -17,12 +27,13 @@ function FormTextField<TModel>({ fieldKey, fieldPropsCallback }: TextFieldProps<
   ) as FormTextFieldProps<TModel>;
 
   return (
-    <Box sx={{ my: 1 }}>
+    <Box width="100%" sx={{ my: 1 }}>
       <InputLabel shrink>{label}</InputLabel>
       <TextField
         key={String(key)}
         type={isPassword ? 'password' : 'text'}
         disabled={isReadonly}
+        fullWidth
         required={isRequired}
         value={value}
         onChange={(e) => onChange(key, e.currentTarget.value)}
@@ -61,12 +72,13 @@ function FormNumberField<TModel>({ fieldKey, fieldPropsCallback }: TextFieldProp
   );
 
   return (
-    <Box sx={{ my: 1 }}>
+    <Box width="100%" sx={{ my: 1 }}>
       <InputLabel shrink>{label}</InputLabel>
       <TextField
         key={String(key)}
         type="number"
         disabled={isReadonly}
+        fullWidth
         required={isRequired}
         label={label}
         value={value}
@@ -127,7 +139,6 @@ function FormAutoCompleteField<TModel>({
     (_: React.SyntheticEvent<Element, Event>, value: DropdownItem) => {
       if (value != null && typeof value === 'object') {
         const item = value as DropdownItem;
-        console.log('selected item', item);
         onSelectionChange && onSelectionChange(key, item.id);
       } else {
         onSelectionChange && onSelectionChange(key, 0);
@@ -144,7 +155,7 @@ function FormAutoCompleteField<TModel>({
   );
 
   return (
-    <Box key={key as string} sx={{ my: 1 }}>
+    <Box width="100%" key={key as string} sx={{ my: 1 }}>
       <InputLabel shrink>{label}</InputLabel>
       <Autocomplete
         options={options?.length > 0 ? options : []}
@@ -169,9 +180,30 @@ function FormAutoCompleteField<TModel>({
   );
 }
 
+function FormCheckbox<TModel>({ fieldKey, fieldPropsCallback }: BooleanFieldProps<TModel>) {
+  const { key, value, isReadonly, isRequired, label, onChange } = fieldPropsCallback(
+    fieldKey
+  ) as FormCheckboxFieldProps<TModel>;
+
+  return (
+    <Box width="100%" sx={{ my: 0.5 }}>
+      <Box display="flex" alignItems="baseline">
+        <Checkbox
+          required={isRequired}
+          checked={value || false}
+          disabled={isReadonly}
+          onChange={(e) => onChange(key, e.currentTarget.checked)}
+        />
+        <InputLabel shrink>{label}</InputLabel>
+      </Box>
+    </Box>
+  );
+}
+
 export const FormComponents = {
   FormTextField,
   FormNumberField,
   FormAutoCompleteField,
   FormDropdownField,
+  FormCheckbox,
 };

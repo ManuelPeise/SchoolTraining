@@ -49,7 +49,7 @@ function useForm<TModel>(
       }
       return true;
     });
-  }, [state.model, fieldsRef.current]);
+  }, [state.model]);
 
   const isModified = React.useMemo((): boolean => {
     if (!originalRef.current?.originalModel) {
@@ -57,7 +57,7 @@ function useForm<TModel>(
     }
 
     return !isEqual(state.model, originalRef.current.originalModel);
-  }, [originalRef.current, state.model]);
+  }, [state.model]);
 
   const useModel = React.useCallback(
     (formModel: TModel) => {
@@ -94,22 +94,24 @@ function useForm<TModel>(
     ): Partial<FormValidationStatus> => {
       return callback({ isDirty: isModified, canSave: isValidModel });
     },
-    [state]
+    [isValidModel, isModified]
   );
 
-  const onFieldChanged = React.useCallback((key: keyof TModel, value: any) => {
-    console.log('onFieldChanged called', key, value);
-    dispatch((state) => {
-      const updatedModel = { ...state.model, [key]: value } as TModel;
-      const isDirty = !originalRef.current?.originalModel
-        ? false
-        : JSON.stringify(updatedModel) !== JSON.stringify(originalRef.current.originalModel);
-      return {
-        model: updatedModel,
-        isDirty,
-      };
-    });
-  }, []);
+  const onFieldChanged = React.useCallback(
+    (key: keyof TModel, value: any) => {
+      dispatch((state) => {
+        const updatedModel = { ...state.model, [key]: value } as TModel;
+        const isDirty = !originalRef.current?.originalModel
+          ? false
+          : JSON.stringify(updatedModel) !== JSON.stringify(originalRef.current.originalModel);
+        return {
+          model: updatedModel,
+          isDirty,
+        };
+      });
+    },
+    [dispatch]
+  );
 
   const onDropdownChanged = React.useCallback(
     (item: DropdownItem) => {
@@ -129,7 +131,6 @@ function useForm<TModel>(
 
   const onSelectionChanged = React.useCallback(
     (key: keyof TModel, id: number) => {
-      console.log('onSelectionChanged called', key, id);
       onFieldChanged(key, id);
     },
     [onFieldChanged]
@@ -172,7 +173,7 @@ function useForm<TModel>(
         | FormNumberFieldProps<TModel>
         | FormAutoCompleteProps<TModel>;
     },
-    [fieldsRef.current, state.model, onFieldChanged, onSelectionChanged]
+    [state.model, onFieldChanged, onSelectionChanged]
   );
 
   const usePartialForm = <TModel, TModel2 extends Partial<TModel>>(
@@ -186,7 +187,6 @@ function useForm<TModel>(
     return useForm<TModel2>(() => formFieldSetup(fieldFactory));
   };
 
-  console.log('Form state', state);
   return {
     useModel,
     revertChanges,
@@ -202,6 +202,7 @@ function useForm<TModel>(
     NumberField: FormComponents.FormNumberField<TModel>,
     AutoComplete: FormComponents.FormAutoCompleteField<TModel>,
     Dropdown: FormComponents.FormDropdownField<TModel>,
+    Checkbox: FormComponents.FormCheckbox<TModel>,
   };
 }
 

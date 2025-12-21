@@ -80,6 +80,11 @@ export type DropdownFieldProps<TModel> = {
   fieldPropsCallback: FieldPropsCallback<TModel>;
 };
 
+export type BooleanFieldProps<TModel> = {
+  fieldKey: keyof TModel;
+  fieldPropsCallback: FieldPropsCallback<TModel>;
+};
+
 export type ValidationFormMemberCallback = (value: any) => boolean;
 
 export type FieldPropsCallback<TModel> = (
@@ -121,4 +126,5 @@ export type UseFormResult<TModel> = {
     fieldPropsCallback,
   }: FormAutocompleteFieldProps<TModel>) => JSX.Element;
   Dropdown: ({ fieldKey, fieldPropsCallback }: DropdownFieldProps<TModel>) => JSX.Element;
+  Checkbox: ({ fieldKey, fieldPropsCallback }: BooleanFieldProps<TModel>) => JSX.Element;
 };

@@ -110,5 +110,8 @@
   "deleteSubModuleSuccess": "Sub Module deleted successfully.",
   "errorWhileDeletingSubModule": "An error occurred while deleting the sub module, please try again.",
   "deleteModuleSuccess": "Module deleted successfully.",
-  "errorWhileDeletingModule": "An error occurred while deleting the module, please try again."
+  "errorWhileDeletingModule": "An error occurred while deleting the module, please try again.",
+  "labelUserName": "User Name",
+  "labelPassword": "Password",
+  "labelRememberMe": "Remember Me"
 }
