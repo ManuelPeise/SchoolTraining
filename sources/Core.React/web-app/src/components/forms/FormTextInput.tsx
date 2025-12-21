@@ -6,14 +6,14 @@ interface IProps<TModel> {
   label?: string;
   type?: 'text' | 'password';
   placeholder?: string;
-  disabled?: boolean;
+  isReadOnly?: boolean;
   value: string;
   isRequired?: boolean;
   onChange: (key: keyof TModel, value: string) => void;
 }
 
 function FormTextInput<TModel>(props: IProps<TModel>) {
-  const { label, placeholder, disabled, type, value, isRequired, onChange } = props;
+  const { label, placeholder, isReadOnly, type, value, isRequired, onChange } = props;
 
   return (
     <Box sx={{ my: 1 }}>
@@ -22,7 +22,7 @@ function FormTextInput<TModel>(props: IProps<TModel>) {
         required={isRequired}
         fullWidth
         placeholder={placeholder}
-        disabled={disabled}
+        disabled={isReadOnly}
         type={type ?? 'text'}
         value={value}
         onChange={(e) => onChange(props.propertyKey, e.target.value)}

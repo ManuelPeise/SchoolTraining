@@ -19,6 +19,7 @@
     "ajv-keywords": "^3.5.2",
     "axios": "^1.13.2",
     "i18next": "^25.7.2",
+    "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.21",
     "@types/moment": "^2.11.29",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

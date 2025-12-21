@@ -6,7 +6,8 @@
         public string IdExternal { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string LastUpdateBy { get; set; } = string.Empty;
-        public DateTime LastUpdateAt { get; set; }
+        public string? LastUpdateBy { get; set; }
+        public string? LastUpdateAt { get; set; }
+        public List<SubModule> SubModules { get; set; } = new();
     }
 }

@@ -3,14 +3,14 @@ import { Autocomplete, Box, InputLabel, TextField } from '@mui/material';
 import { DropdownItem } from '../input/Dropdown';
 
 interface IProps<TModel> {
-  propertyKey: keyof TModel;
+  propertyKey: keyof TModel | string;
   isRequired?: boolean;
   options: DropdownItem[];
   value: string;
   placeholder: string;
   isReadOnly?: boolean;
-  onChange: (key: keyof TModel, value: string) => void;
-  onSelectionChange?: (key: keyof TModel, id: number | null) => void;
+  onChange?: (key: keyof TModel | string, value: string) => void;
+  onSelectionChange?: (key: keyof TModel | string, id: number | null) => void;
 }
 
 function FormAutoComplete<TModel>(props: IProps<TModel>) {
@@ -39,7 +39,7 @@ function FormAutoComplete<TModel>(props: IProps<TModel>) {
 
   const handleChange = React.useCallback(
     (_: React.SyntheticEvent<Element, Event>, value: string) => {
-      onChange(props.propertyKey, value);
+      onChange && onChange(props.propertyKey, value);
     },
     [onChange, props.propertyKey]
   );
@@ -47,7 +47,7 @@ function FormAutoComplete<TModel>(props: IProps<TModel>) {
     <Box sx={{ my: 1 }}>
       <InputLabel shrink>{placeholder}</InputLabel>
       <Autocomplete
-        options={options}
+        options={options?.length > 0 ? options : []}
         freeSolo
         disabled={isReadOnly}
         getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}

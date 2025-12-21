@@ -1,16 +1,12 @@
 import { IStatelessApi } from 'src/lib/interfaces/IStatelessApi';
 import { INotificationDataResponse } from 'src/lib/interfaces/INotificationDataResponse';
-import { Module } from './Module';
+import { IModule } from '../../models/module';
 
 export interface IModuleComponentInitializationProps {
-  api: IStatelessApi<INotificationDataResponse<ModuleInitializationModel>, Module>;
+  saveApi: IStatelessApi<INotificationDataResponse<IModule[]>, IModule>;
+  deleteApi: IStatelessApi<INotificationDataResponse<IModule[]>, void>;
   isReadonly: boolean;
-  moduleInitializationModel: ModuleInitializationModel;
+  modules: IModule[];
   getResource: (key: string) => string;
   setIsLoading: (isLoading: boolean) => void;
 }
-
-export type ModuleInitializationModel = {
-  modules: Module[];
-  subModules: Module[];
-};

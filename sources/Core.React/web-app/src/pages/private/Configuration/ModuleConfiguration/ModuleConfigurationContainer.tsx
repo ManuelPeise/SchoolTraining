@@ -1,15 +1,12 @@
 import React from 'react';
-import ModuleConfiguration from './ModuleConfiguration';
+import ModuleConfigurationForm from './ModuleConfigurationForm';
 import { ISettingsPageLayoutProps } from 'src/components/layouts/SettingsPageLayout';
 import { ILocationProps } from 'src/lib/interfaces/ILocationProps';
-import {
-  IModuleComponentInitializationProps,
-  ModuleInitializationModel,
-} from './models/IModuleComponentInitializationProps';
+import { IModuleComponentInitializationProps } from './models/IModuleComponentInitializationProps';
 import { AppHooks } from 'src/hooks/AppHooks';
 import { useAccessRights } from 'src/hooks/useAccessRights';
 import { INotificationDataResponse } from 'src/lib/interfaces/INotificationDataResponse';
-import { Module } from './models/Module';
+import { IModule } from '../models/module';
 
 interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
@@ -19,23 +16,20 @@ const ModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
 
   const initializeAsync =
     React.useCallback(async (): Promise<IModuleComponentInitializationProps> => {
-      const initializationApi = AppHooks.statelessApi.create<
-        INotificationDataResponse<ModuleInitializationModel>,
-        void
-      >();
+      const initializationApi = AppHooks.statelessApi.create<IModule[], void>();
 
-      const api = AppHooks.statelessApi.create<
-        INotificationDataResponse<ModuleInitializationModel>,
-        Module
-      >();
-      const [moduleInitializationModel] = await Promise.all([
-        initializationApi.get('/moduleconfiguration/getmoduleconfiguration'),
+      const saveApi = AppHooks.statelessApi.create<INotificationDataResponse<IModule[]>, IModule>();
+
+      const deleteApi = AppHooks.statelessApi.create<INotificationDataResponse<IModule[]>, void>();
+      const [modules] = await Promise.all([
+        initializationApi.get('/moduleconfiguration/getmoduleconfigurations'),
       ]);
 
       return {
-        api,
-        isReadonly: !accessRights.accessRights.moduleConfiguration.edit,
-        moduleInitializationModel: moduleInitializationModel.data,
+        saveApi,
+        deleteApi,
+        isReadonly: !accessRights.accessRights.moduleConfiguration.view,
+        modules,
         getResource: getResource,
         setIsLoading: setIsLoading,
       };
@@ -47,7 +41,7 @@ const ModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
   if (!isInitialized) {
     return null;
   }
-  return <ModuleConfiguration {...initializationProps} getResource={getResource} />;
+  return <ModuleConfigurationForm {...initializationProps} getResource={getResource} />;
 };
 
 export default ModuleConfigurationContainer;

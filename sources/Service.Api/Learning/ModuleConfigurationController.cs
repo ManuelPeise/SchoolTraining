@@ -14,11 +14,18 @@ namespace Service.Api.Learning
             _moduleConfigurationService = moduleConfigurationService;
         }
 
-        [HttpGet(Name = "GetModuleConfiguration")]
+        [HttpGet(Name = "GetModuleConfigurations")]
         [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
-        public async Task<NotificationDataResponse<ModuleInitializationModel>> GetModuleConfigurationAsync()
+        public async Task<List<Module>> GetModuleConfigurations()
         {
-            return await _moduleConfigurationService.GetModuleConfigurationAsync();
+            return await _moduleConfigurationService.GetModuleConfiguration();
+        }
+
+        [HttpGet(Name = "GetSubModuleConfigurations")]
+        [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
+        public async Task<SubModuleConfigurationInitializationModel> GetSubModuleConfigurations()
+        {
+            return await _moduleConfigurationService.GetSubModuleConfigurations();
         }
 
         [HttpPost(Name = "SaveOrUpdateModule")]
@@ -30,7 +37,7 @@ namespace Service.Api.Learning
 
         [HttpPost(Name = "SaveOrUpdateSubModule")]
         [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
-        public async Task<NotificationDataResponse<List<SubModule>>> SaveOrUpdateSubModule([FromBody] SubModule subModule)
+        public async Task<NotificationDataResponse<SubModuleConfigurationInitializationModel>> SaveOrUpdateSubModule([FromBody] SubModule subModule)
         {
             return await _moduleConfigurationService.SaveOrUpdateSubModule(subModule);
         }
@@ -40,6 +47,13 @@ namespace Service.Api.Learning
         public async Task<NotificationDataResponse<List<Module>>> DeleteModule([FromQuery] int moduleId)
         {
             return await _moduleConfigurationService.DeleteModule(moduleId);
+        }
+
+        [HttpPost(Name = "DeleteSubModule")]
+        [JwtAuth(AllowAdmin = true, AllowSystemAdmin = true)]
+        public async Task<NotificationDataResponse<SubModuleConfigurationInitializationModel>> DeleteSubModule([FromQuery] int subModuleId)
+        {
+            return await _moduleConfigurationService.DeleteSubModule(subModuleId);
         }
     }
 }

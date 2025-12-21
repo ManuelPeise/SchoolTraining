@@ -207,9 +207,9 @@ namespace AutomatedTesting.Learning
             }
         }
 
-        private DateTime GetLastUpdateAt(DateTime? updetedAt, DateTime createdAt)
+        private string GetLastUpdateAt(DateTime? updetedAt, DateTime createdAt)
         {
-            return updetedAt == null || updetedAt == DateTime.MinValue ? createdAt : updetedAt.Value;
+            return updetedAt == null || updetedAt == DateTime.MinValue ? createdAt.ToString("dd.MM.yyyy HH:mm") : updetedAt.Value.ToString("dd.MM.yyyy HH:mm");
         }
 
         private string GetLastUpdateBy(string? updetedAt, string createdAt)

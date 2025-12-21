@@ -21,37 +21,38 @@ namespace Logic.Learning
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<NotificationDataResponse<ModuleInitializationModel>> GetModuleConfigurationAsync()
+        public async Task<List<Module>> GetModuleConfiguration()
         {
             try
             {
                 var modules = await GetModulesAsync();
-                var subModules = await GetSubModulesAsync();
 
-                return new NotificationDataResponse<ModuleInitializationModel>
-                {
-                    Success = true,
-                    Data = new ModuleInitializationModel
-                    {
-                        Modules = modules,
-                        SubModules = subModules
-                    }
-                };
+                return modules;
+
             }
             catch (Exception exception)
             {
 
                 await LogError("A error occurred while loading module configuration initialization data from database.", exception);
 
-                return new NotificationDataResponse<ModuleInitializationModel>
+                return new List<Module>();
+            }
+        }
+
+        public async Task<SubModuleConfigurationInitializationModel> GetSubModuleConfigurations()
+        {
+            try
+            {
+                return await GetSubModuleConfigurationResponseModel();
+            }
+            catch (Exception exception)
+            {
+                await LogError("A error occurred while loading sub module initialization data from database.", exception);
+
+                return new SubModuleConfigurationInitializationModel
                 {
-                    Success = true,
-                    ResourceKey = "common.errorWhileLoadingModuleInitializationModel",
-                    Data = new ModuleInitializationModel
-                    {
-                        Modules = new List<Module>(),
-                        SubModules = new List<SubModule>()
-                    }
+                    ParentModuleDropdownItems = new List<DropdownItem>(),
+                    SubModuleDataCollection = new List<SubModuleDataCollection>()
                 };
             }
         }
@@ -100,6 +101,7 @@ namespace Logic.Learning
                 return new NotificationDataResponse<List<Module>>
                 {
                     Success = true,
+                    ResourceKey = "common.savingOrUpdatingModuleSuccess",
                     Data = await GetModulesAsync()
                 };
             }
@@ -116,7 +118,7 @@ namespace Logic.Learning
             }
         }
 
-        public async Task<NotificationDataResponse<List<SubModule>>> SaveOrUpdateSubModule(SubModule subModule)
+        public async Task<NotificationDataResponse<SubModuleConfigurationInitializationModel>> SaveOrUpdateSubModule(SubModule subModule)
         {
             try
             {
@@ -160,21 +162,22 @@ namespace Logic.Learning
                     await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
                 }
 
-                return new NotificationDataResponse<List<SubModule>>
+                return new NotificationDataResponse<SubModuleConfigurationInitializationModel>
                 {
                     Success = true,
-                    Data = await GetSubModulesAsync()
+                    ResourceKey = "common.savingOrUpdatingSubModuleSuccess",
+                    Data = await GetSubModuleConfigurationResponseModel()
                 };
             }
             catch (Exception exception)
             {
                 await LogError("A error occurred while saving or updating a sub module.", exception);
 
-                return new NotificationDataResponse<List<SubModule>>
+                return new NotificationDataResponse<SubModuleConfigurationInitializationModel>
                 {
                     Success = false,
                     ResourceKey = "common.errorWhileSavingOrUpdatingSubModule",
-                    Data = await GetSubModulesAsync()
+                    Data = await GetSubModuleConfigurationResponseModel()
                 };
             }
         }
@@ -196,6 +199,7 @@ namespace Logic.Learning
                     return new NotificationDataResponse<List<Module>>
                     {
                         Success = true,
+                        ResourceKey = "common.deleteModuleSuccess",
                         Data = await GetModulesAsync()
                     };
                 }
@@ -222,14 +226,70 @@ namespace Logic.Learning
             }
         }
 
+        public async Task<NotificationDataResponse<SubModuleConfigurationInitializationModel>> DeleteSubModule(int id)
+        {
+            try
+            {
+                var existingEntity = await _unitOfWork.SubModuleRepository.GetByAsync(e => e.Id == id);
+
+                if (existingEntity != null)
+                {
+                    _unitOfWork.SubModuleRepository.Remove(existingEntity);
+
+                    await _unitOfWork.SaveChangesAsync(CurrentUser.UserName);
+
+                    await LogInfo($"Sub module '{existingEntity.Title}' is deleted by user '{CurrentUser.UserName}'.", true);
+
+                    return new NotificationDataResponse<SubModuleConfigurationInitializationModel>
+                    {
+                        Success = true,
+                        ResourceKey = "common.deleteSubModuleSuccess",
+                        Data = await GetSubModuleConfigurationResponseModel()
+                    };
+                }
+
+                await LogError("A error occurred while deleting a sub module.", null);
+
+                return new NotificationDataResponse<SubModuleConfigurationInitializationModel>
+                {
+                    Success = false,
+                    ResourceKey = "common.errorWhileDeletingSubModule",
+                    Data = await GetSubModuleConfigurationResponseModel()
+                };
+            }
+            catch (Exception exception)
+            {
+                await LogError("A error occurred while deleting a sub module.", exception);
+
+                return new NotificationDataResponse<SubModuleConfigurationInitializationModel>
+                {
+                    Success = false,
+                    ResourceKey = "common.errorWhileDeletingSubModule",
+                    Data = await GetSubModuleConfigurationResponseModel()
+                };
+            }
+        }
+
         private async Task<List<Module>> GetModulesAsync()
         {
-            var entities = await _unitOfWork.ModuleRepository.GetAllAsync(true);
+            var entities = await _unitOfWork.ModuleRepository.GetAllAsync(true, IncludeExpressions.IncludeSubModules);
 
             return entities?.Select(e => new Module
             {
                 ModuleId = e.Id,
                 IdExternal = e.IdExternal,
+                SubModules = e.SubModules?.Select(sm => new SubModule
+                {
+                    SubModuleId = sm.Id,
+                    IdExternal = sm.IdExternal,
+                    ModuleId = sm.ModuleId,
+                    Module = new(),
+                    Title = sm.Title,
+                    Description = sm.Description,
+                    Direction = sm.VocabularyDirection,
+                    LastUpdateBy = GetLastUpdateBy(sm.UpdatedBy, sm.CreatedBy),
+                    LastUpdateAt = GetLastUpdateAt(sm.UpdatedAt, sm.CreatedAt)
+                }).ToList() ?? new List<SubModule>(),
                 Title = e.Title,
                 Description = e.Description,
                 LastUpdateBy = GetLastUpdateBy(e.UpdatedBy, e.CreatedBy),
@@ -237,30 +297,69 @@ namespace Logic.Learning
             }).ToList() ?? new List<Module>();
         }
 
-        private async Task<List<SubModule>> GetSubModulesAsync()
+        private async Task<List<SubModuleEntity>> GetSubModulesAsync()
         {
-            var entities = await _unitOfWork.SubModuleRepository.GetAllAsync(true);
+            var entities = await _unitOfWork.SubModuleRepository.GetAllAsync(false, IncludeExpressions.IncludeModule);
 
-            return entities?.Select(e => new SubModule
-            {
-                SubModuleId = e.Id,
-                IdExternal = e.IdExternal,
-                Title = e.Title,
-                Description = e.Description,
-                Direction = e.VocabularyDirection,
-                LastUpdateBy = GetLastUpdateBy(e.UpdatedBy, e.CreatedBy),
-                LastUpdateAt = GetLastUpdateAt(e.UpdatedAt, e.CreatedAt)
-            }).ToList() ?? new List<SubModule>();
+            return entities?.ToList() ?? new List<SubModuleEntity>();
         }
 
+        private async Task<SubModuleConfigurationInitializationModel> GetSubModuleConfigurationResponseModel() 
+        {
+            var modules = await GetModulesAsync();
+
+            var parentModuleDropdownItems = modules.Select(m => new DropdownItem
+            {
+                Id = m.ModuleId,
+                Label = m.Title
+            }).ToList();
+
+            var subModuleEntities = await GetSubModulesAsync();
+
+            var response = new SubModuleConfigurationInitializationModel
+            {
+                ParentModuleDropdownItems = parentModuleDropdownItems,
+                Modules = modules,
+                SubModuleDataCollection = subModuleEntities != null ?
+                (from entity in subModuleEntities
+                 select new SubModuleDataCollection
+                 {
+                     ModuleId = entity.ModuleId,
+                     SubModules = entity.Module != null ?
+                         (from m in entity.Module.SubModules
+                          select new SubModuleBase
+                          {
+                              ModuleId = m.ModuleId,
+                              IdExternal = m.IdExternal,
+                              SubModuleId = m.Id,
+                              Title = m.Title,
+                              Description = m.Description,
+                              Direction = m.VocabularyDirection,
+                              LastUpdateAt = GetLastUpdateAt(m.UpdatedAt, m.CreatedAt),
+                              LastUpdateBy = GetLastUpdateBy(m.UpdatedBy, m.CreatedBy)
+                          }).ToList() : new List<SubModuleBase>(),
+                     SubModuleDropdownItems = entity.Module != null ?
+                     (from m in entity.Module.SubModules
+                      select new DropdownItem
+                      {
+                          Id = m.Id,
+                          Label = m.Title
+                      }).ToList()
+                     : new List<DropdownItem>()
+                 }).ToList() : new List<SubModuleDataCollection>()
+            };
+
+            return response;
+        }
+        
         private bool IsNewModel(string idExternal)
         {
             return string.IsNullOrEmpty(idExternal);
         }
 
-        private DateTime GetLastUpdateAt(DateTime? updetedAt, DateTime createdAt)
+        private string GetLastUpdateAt(DateTime? updetedAt, DateTime createdAt)
         {
-            return updetedAt == null || updetedAt == DateTime.MinValue ? createdAt : updetedAt.Value;
+            return updetedAt == null || updetedAt == DateTime.MinValue ? createdAt.ToString("dd.MM.yyyy HH:mm") : updetedAt.Value.ToString("dd.MM.yyyy HH:mm");
         }
 
         private string GetLastUpdateBy(string? updetedAt, string createdAt)

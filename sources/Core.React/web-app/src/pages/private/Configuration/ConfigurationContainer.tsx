@@ -2,6 +2,7 @@ import React from 'react';
 import SettingsPageLayout, { INavigationListItem } from 'src/components/layouts/SettingsPageLayout';
 import { AppHooks } from 'src/hooks/AppHooks';
 import { useAccessRights } from 'src/hooks/useAccessRights';
+import SubModuleConfigurationContainer from './SubModuleConfiguration/SubModuleConfigurationContainer';
 import ModuleConfigurationContainer from './ModuleConfiguration/ModuleConfigurationContainer';
 
 const ConfigurationContainer: React.FC = () => {
@@ -14,12 +15,21 @@ const ConfigurationContainer: React.FC = () => {
   if (accessRights.accessRights.moduleConfiguration.view) {
     listItems.push({
       key: 'module-configuration',
-      title: localizationProps.getResource('common.captionModuleConfiguration'),
-      subTitle: localizationProps.getResource('common.labelManageModuleConfiguration'),
-      isReadonly: !accessRights.accessRights.familyAdministration.view,
+      title: localizationProps.getResource('common.captionModules'),
+      subTitle: localizationProps.getResource('common.labelManageModules'),
+      isReadonly: !accessRights.accessRights.moduleConfiguration.view,
       component: ModuleConfigurationContainer,
     });
+
+    listItems.push({
+      key: 'submodule-configuration',
+      title: localizationProps.getResource('common.captionSubModules'),
+      subTitle: localizationProps.getResource('common.labelManageSubModules'),
+      isReadonly: !accessRights.accessRights.moduleConfiguration.view,
+      component: SubModuleConfigurationContainer,
+    });
   }
+
   return (
     <SettingsPageLayout
       isLoading={isLoading}

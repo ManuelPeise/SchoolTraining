@@ -5,9 +5,11 @@ namespace Logic.Learning.Interfaces
 {
     public interface IModuleConfigurationService
     {
-        Task<NotificationDataResponse<ModuleInitializationModel>> GetModuleConfigurationAsync();
+        Task<List<Module>> GetModuleConfiguration();
+        Task<SubModuleConfigurationInitializationModel> GetSubModuleConfigurations();
         Task<NotificationDataResponse<List<Module>>> SaveOrUpdateModule(Module module);
-        Task<NotificationDataResponse<List<SubModule>>> SaveOrUpdateSubModule(SubModule subModule);
+        Task<NotificationDataResponse<SubModuleConfigurationInitializationModel>> SaveOrUpdateSubModule(SubModule subModule);
         Task<NotificationDataResponse<List<Module>>> DeleteModule(int id);
+        Task<NotificationDataResponse<SubModuleConfigurationInitializationModel>> DeleteSubModule(int id);
     }
 }

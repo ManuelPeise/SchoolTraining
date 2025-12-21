@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 interface IProps extends PropsWithChildren {
-  title: string;
+  title?: string;
   subTitle?: string;
 }
 
@@ -25,16 +25,18 @@ const FormListItem: React.FC<IProps> = (props: IProps) => {
       }}
       disableGutters
     >
-      <Box width="100%" sx={{ flex: 0 }}>
-        <Typography variant="subtitle1" component="div" noWrap sx={{ maxWidth: '100%' }}>
-          {title}
-        </Typography>
-        {subTitle && (
-          <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: '100%' }}>
-            {subTitle}
+      {title && (
+        <Box width="100%" sx={{ flex: 0 }}>
+          <Typography variant="subtitle1" component="div" noWrap sx={{ maxWidth: '100%' }}>
+            {title}
           </Typography>
-        )}
-      </Box>
+          {subTitle && (
+            <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: '100%' }}>
+              {subTitle}
+            </Typography>
+          )}
+        </Box>
+      )}
       <Box width="100%">{children}</Box>
     </ListItem>
   );
