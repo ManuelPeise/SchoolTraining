@@ -1,5 +1,6 @@
 ﻿namespace Shared.Models.Administration
 {
+    // please keep in sync with src\lib\interfaces\IUserRight.ts
     public class UserRight
     {
         public Guid RightGuid { get; set; }

@@ -59,7 +59,7 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
         : userFromToken.userRole;
 
     setAccessRights({
-      isAdmin: userRole === UserRoleEnum.Admin,
+      isAdmin: userRole === UserRoleEnum.LocalAdmin,
       isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
       accessRights: defaultAccessRights.accessRights,
     });
@@ -94,7 +94,7 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
     });
 
     setAccessRights({
-      isAdmin: userRole === UserRoleEnum.Admin,
+      isAdmin: userRole === UserRoleEnum.LocalAdmin,
       isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
       accessRights: {
         familyAdministration: {
@@ -104,15 +104,15 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
           delete: false,
         },
         userAdministration: {
-          view: userRole === UserRoleEnum.Admin || userRole === UserRoleEnum.SystemAdmin,
-          edit: userRole === UserRoleEnum.Admin,
-          create: userRole === UserRoleEnum.Admin,
-          delete: userRole === UserRoleEnum.Admin,
+          view: userRole === UserRoleEnum.LocalAdmin || userRole === UserRoleEnum.SystemAdmin,
+          edit: userRole === UserRoleEnum.LocalAdmin,
+          create: userRole === UserRoleEnum.LocalAdmin,
+          delete: userRole === UserRoleEnum.LocalAdmin,
         },
         moduleConfiguration: {
-          view: userRole === UserRoleEnum.Admin || userRole === UserRoleEnum.SystemAdmin,
-          edit: userRole === UserRoleEnum.Admin,
-          create: userRole === UserRoleEnum.Admin,
+          view: userRole === UserRoleEnum.LocalAdmin || userRole === UserRoleEnum.SystemAdmin,
+          edit: userRole === UserRoleEnum.LocalAdmin,
+          create: userRole === UserRoleEnum.LocalAdmin,
           delete: userRole === UserRoleEnum.SystemAdmin,
         },
       },

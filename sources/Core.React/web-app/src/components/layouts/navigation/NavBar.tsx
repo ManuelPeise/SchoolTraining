@@ -66,7 +66,7 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
         ? UserRoleEnum[user.userRole as keyof typeof UserRoleEnum]
         : user.userRole;
 
-    if (userRoleValue === UserRoleEnum.Admin || userRoleValue === UserRoleEnum.SystemAdmin) {
+    if (userRoleValue === UserRoleEnum.LocalAdmin || userRoleValue === UserRoleEnum.SystemAdmin) {
       items.push({
         title: getResource('common.labelAdministration'),
         iconClassName: 'bi bi-gear',
@@ -75,7 +75,7 @@ const NavBar: React.FC<IProps> = (props: IProps) => {
       });
     }
 
-    if (userRoleValue === UserRoleEnum.Admin || userRoleValue === UserRoleEnum.SystemAdmin) {
+    if (userRoleValue === UserRoleEnum.LocalAdmin || userRoleValue === UserRoleEnum.SystemAdmin) {
       items.push({
         title: getResource('common.labelConfiguration'),
         iconClassName: 'bi bi-database-gear',
