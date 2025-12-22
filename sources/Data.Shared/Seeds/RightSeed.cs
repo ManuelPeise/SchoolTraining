@@ -20,16 +20,18 @@ namespace Data.Shared.Seeds
                     Name = Rights.FamilyAdministrationRight,
                     NameResourceKey = $"common.{Rights.FamilyAdministrationRight}",
                     DescriptionResourceKey = $"common.{Rights.FamilyAdministrationRight}Description",
+                    IsActive = true,
                     CreatedAt = timeStamp,
                     CreatedBy = "System"
                 },
                 new RightEntity
                 {
                     Id = 2,
-                    RightGuid = Rights.UserRights[Rights.ModuleAdministartionRight],
-                    Name = Rights.ModuleAdministartionRight,
-                    NameResourceKey = $"common.{Rights.ModuleAdministartionRight}",
-                    DescriptionResourceKey = $"common.{Rights.ModuleAdministartionRight}Description",
+                    RightGuid = Rights.UserRights[Rights.ModuleAdministrationRight],
+                    Name = Rights.ModuleAdministrationRight,
+                    NameResourceKey = $"common.{Rights.ModuleAdministrationRight}",
+                    DescriptionResourceKey = $"common.{Rights.ModuleAdministrationRight}Description",
+                    IsActive = true,
                     CreatedAt = timeStamp,
                     CreatedBy = "System"
                 },
@@ -40,6 +42,7 @@ namespace Data.Shared.Seeds
                     Name = Rights.SubModuleAdministrationRight,
                     NameResourceKey = $"common.{Rights.SubModuleAdministrationRight}",
                     DescriptionResourceKey = $"common.{Rights.SubModuleAdministrationRight}Description",
+                    IsActive = true,
                     CreatedAt = timeStamp,
                     CreatedBy = "System"
                 }

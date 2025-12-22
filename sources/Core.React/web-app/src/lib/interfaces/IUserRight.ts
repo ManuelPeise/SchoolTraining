@@ -4,6 +4,7 @@ export interface IUserRight {
   name: string;
   nameResourceKey: string;
   descriptionResourceKey: string;
+  isActive: boolean;
   deny: boolean;
   view: boolean;
   edit: boolean;

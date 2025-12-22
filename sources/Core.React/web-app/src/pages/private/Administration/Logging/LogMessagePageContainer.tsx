@@ -12,7 +12,7 @@ interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
 const LogMessagePageContainer: React.FC<IProps> = (props: IProps) => {
   const { isLoading, setIsLoading, getResource } = props;
-  const { accessRights } = useAccessRights();
+  const { userRights } = useAccessRights();
 
   const initializeAsync = React.useCallback(async (): Promise<ILogComponentInitializationProps> => {
     const messageLogApi = AppHooks.statelessApi.create<ILogMessage[], void>();
@@ -26,12 +26,12 @@ const LogMessagePageContainer: React.FC<IProps> = (props: IProps) => {
     return {
       messageLogDeleteApi,
       logMessages,
-      isReadonly: !accessRights.isSystemAdmin,
+      isReadonly: !userRights.isSystemAdmin,
       isLoading,
       setIsLoading,
       getResource,
     };
-  }, [accessRights, getResource, isLoading, setIsLoading]);
+  }, [userRights, getResource, isLoading, setIsLoading]);
 
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<ILogComponentInitializationProps>(initializeAsync);

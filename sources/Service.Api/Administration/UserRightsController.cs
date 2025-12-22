@@ -4,11 +4,11 @@ using Shared.Models.Administration;
 
 namespace Service.Api.Administration
 {
-    public class UserRightController : ApiControllerBase
+    public class UserRightsController : ApiControllerBase
     {
         private readonly IUserRightService _userRightService;
 
-        public UserRightController(IUserRightService userRightService)
+        public UserRightsController(IUserRightService userRightService)
         {
             _userRightService = userRightService;
         }

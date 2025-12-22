@@ -43,6 +43,7 @@ namespace Logic.Administration
                     Name = ur.Right.Name,
                     NameResourceKey = ur.Right.NameResourceKey,
                     DescriptionResourceKey = ur.Right.DescriptionResourceKey,
+                    IsActive = ur.Right.IsActive,
                     Deny = ur.Deny,
                     CanView = ur.CanView,
                     CanCreate = ur.CanCreate,

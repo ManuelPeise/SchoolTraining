@@ -11,7 +11,7 @@ import { INotificationDataResponse } from 'src/lib/interfaces/INotificationDataR
 interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
 const FileImportContainer: React.FC<IProps> = (props: IProps) => {
-  const { accessRights } = useAccessRights();
+  const { userRights } = useAccessRights();
 
   const initializeAsync =
     React.useCallback(async (): Promise<IFileImportComponentInitializationProps> => {
@@ -27,12 +27,11 @@ const FileImportContainer: React.FC<IProps> = (props: IProps) => {
         fileImportApi,
         executeFileImportApi,
         fileModels,
-        isReadonly: !accessRights.isSystemAdmin,
+        isReadonly: !userRights.isSystemAdmin,
         getResource: props.getResource,
         setIsLoading: props.setIsLoading,
       };
-    }, [props.getResource, props.setIsLoading, accessRights]);
-
+    }, [props.getResource, props.setIsLoading, userRights]);
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<IFileImportComponentInitializationProps>(initializeAsync);
 

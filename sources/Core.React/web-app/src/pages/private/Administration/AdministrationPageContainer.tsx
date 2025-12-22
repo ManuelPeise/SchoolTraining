@@ -7,7 +7,7 @@ import FileImportContainer from './FileImport/FileImportContainer';
 import LogMessagePageContainer from './Logging/LogMessagePageContainer';
 
 const AdministrationPageContainer: React.FC = () => {
-  const { accessRights } = useAccessRights();
+  const { userRights } = useAccessRights();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const localizationProps = AppHooks.useLocalisationProps(['common']);
@@ -17,21 +17,21 @@ const AdministrationPageContainer: React.FC = () => {
       key: 'family-administration',
       title: localizationProps.getResource('common.captionFamilyAdministration'),
       subTitle: localizationProps.getResource('common.labelManageFamilySettings'),
-      isReadonly: !accessRights.accessRights.familyAdministration.view,
+      isReadonly: !userRights.familyAdministrationRight.view,
       component: FamilyAdministrationContainer,
     },
     {
       key: 'file-import',
       title: localizationProps.getResource('common.captionFileImport'),
       subTitle: localizationProps.getResource('common.labelManageFileImports'),
-      isReadonly: !accessRights.accessRights.userAdministration.view,
+      isReadonly: !userRights.familyAdministrationRight.view,
       component: FileImportContainer,
     },
     {
       key: 'message-log',
       title: localizationProps.getResource('common.captionMessageLog'),
       subTitle: localizationProps.getResource('common.labelManageMessageLogs'),
-      isReadonly: !accessRights.accessRights.userAdministration.view,
+      isReadonly: !userRights.familyAdministrationRight.view,
       component: LogMessagePageContainer,
     },
   ];

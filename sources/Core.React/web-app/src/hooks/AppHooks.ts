@@ -3,9 +3,15 @@ import { StatelessApi } from './StatelessApi';
 import { useAsyncComponentInitialization } from './useComponentMounting';
 import { useLocationProps } from './useLocationProps';
 import isEqual from 'lodash/isEqual';
+import { LocalStorageKeyEnum } from 'src/lib/enums/LocalStorageKeyEnum';
 
 type SubScription<TModel> = (state: TModel) => void;
 type ReducerAction<TModel> = Partial<TModel> | ((s: TModel) => Partial<TModel>);
+type LocalStorageResult<TModel> = {
+  model: TModel | null;
+  setItem: (value: TModel) => void;
+  removeItem: () => void;
+};
 
 // Store hook with subscription capability
 function reducer<TState>(state: TState, update: ReducerAction<TState>): TState {
@@ -43,9 +49,39 @@ export const useStore = <TModel>(initialModel: TModel) => {
   return { state, dispatch, subscribe };
 };
 
+export const useLocalStorage = <TModel>(key: LocalStorageKeyEnum): LocalStorageResult<TModel> => {
+  const [localStorageModel, setLocalStorageModel] = React.useState<TModel | null>(null);
+
+  const setItem = React.useCallback(
+    (value: TModel) => {
+      localStorage.setItem(key, JSON.stringify(value));
+      setLocalStorageModel(value);
+    },
+    [key]
+  );
+
+  const getItem = React.useCallback((): TModel | null => {
+    const item = localStorage.getItem(key);
+    return item ? (JSON.parse(item) as TModel) : null;
+  }, [key]);
+
+  const removeItem = React.useCallback((): void => {
+    localStorage.removeItem(key);
+    setLocalStorageModel(null);
+  }, [key]);
+
+  React.useEffect(() => {
+    const item = getItem();
+    setLocalStorageModel(item);
+  }, [getItem]);
+
+  return { model: localStorageModel, setItem, removeItem };
+};
+
 export const AppHooks = {
   statelessApi: StatelessApi,
   useLocalisationProps: useLocationProps,
   useComponentMounting: useAsyncComponentInitialization,
   useStore: useStore,
+  useLocalStorage: useLocalStorage,
 };

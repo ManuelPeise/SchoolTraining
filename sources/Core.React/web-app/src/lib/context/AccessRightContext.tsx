@@ -1,55 +1,96 @@
 import React from 'react';
-import { IAccessRightsContext } from '../interfaces/IAccessRightsContext';
-import { IAccessRights } from '../interfaces/IAccessRights';
+import { IAccessRightsContext, UserRights } from '../interfaces/IAccessRightsContext';
 import { UserRoleEnum } from '../enums/UserRoleEnum';
 import { IAppUser } from '../interfaces/IAppUser';
 import { parseJwtToken } from '../utils/jwtHelper';
-
-const defaultAccessRights: IAccessRights = {
-  isAdmin: false,
-  isSystemAdmin: false,
-  accessRights: {
-    familyAdministration: {
-      view: false,
-      edit: false,
-      create: false,
-      delete: false,
-    },
-    userAdministration: {
-      view: false,
-      edit: false,
-      create: false,
-      delete: false,
-    },
-    moduleConfiguration: {
-      view: false,
-      edit: false,
-      create: false,
-      delete: false,
-    },
-  },
-};
+import { useLocalStorage } from 'src/hooks/AppHooks';
+import { IUserRight } from '../interfaces/IUserRight';
+import { LocalStorageKeyEnum } from '../enums/LocalStorageKeyEnum';
+import { ITokenStore } from '../interfaces/ITokenStore';
 
 export const AccessRightsContext = React.createContext<IAccessRightsContext | null>(null);
+
+const FamilyAdministration = 'FamilyAdministration';
+const ModuleAdministration = 'ModuleAdministration';
+const SubModuleAdministration = 'SubModuleAdministration';
+
+const defaultAccessRights: UserRights = {
+  isLocalAdmin: false,
+  isSystemAdmin: false,
+  familyAdministrationRight: {
+    isActive: false,
+    deny: false,
+    delete: false,
+    edit: false,
+    view: false,
+    create: false,
+    rightGuid: '',
+    name: '',
+    nameResourceKey: '',
+    descriptionResourceKey: '',
+  },
+  moduleAdministrationRight: {
+    isActive: false,
+    deny: false,
+    delete: false,
+    edit: false,
+    view: false,
+    create: false,
+    rightGuid: '',
+    name: '',
+    nameResourceKey: '',
+    descriptionResourceKey: '',
+  },
+  subModuleAdministrationRight: {
+    isActive: false,
+    deny: false,
+    delete: false,
+    edit: false,
+    view: false,
+    create: false,
+    rightGuid: '',
+    name: '',
+    nameResourceKey: '',
+    descriptionResourceKey: '',
+  },
+};
 
 interface IProps extends React.PropsWithChildren {}
 
 const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
   const [user, setUser] = React.useState<IAppUser | null>(null);
+  const tokenStore = useLocalStorage<ITokenStore>(LocalStorageKeyEnum.Jwt);
+  const accessRightsStore = useLocalStorage<IUserRight[]>(LocalStorageKeyEnum.UserRights);
 
-  const [accessRights, setAccessRights] = React.useState<IAccessRights>({
-    isAdmin: false,
-    isSystemAdmin: false,
-    accessRights: defaultAccessRights.accessRights,
-  });
+  const [userRights, setUserRights] = React.useState<UserRights>({} as UserRights);
 
-  const tryInitializeAccessRights = React.useCallback(() => {
-    const jwt = localStorage.getItem('jwt');
+  const initializeUserRights = React.useCallback(
+    (rights?: IUserRight[], userRole?: UserRoleEnum): UserRights => {
+      if (!rights || !userRole) {
+        return defaultAccessRights;
+      }
+      return {
+        isLocalAdmin: userRole === UserRoleEnum.LocalAdmin,
+        isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
+        familyAdministrationRight:
+          rights.find((r) => r.name === FamilyAdministration) ||
+          defaultAccessRights.familyAdministrationRight,
+        moduleAdministrationRight:
+          rights.find((r) => r.name === ModuleAdministration) ||
+          defaultAccessRights.moduleAdministrationRight,
+        subModuleAdministrationRight:
+          rights.find((r) => r.name === SubModuleAdministration) ||
+          defaultAccessRights.subModuleAdministrationRight,
+      };
+    },
+    []
+  );
 
-    const userFromToken = parseJwtToken(jwt);
+  const tryInitializeUserRights = React.useCallback(() => {
+    const userFromToken = parseJwtToken(tokenStore.model?.jwt || '');
 
     if (userFromToken == null) {
-      setAccessRights(defaultAccessRights);
+      setUserRights(initializeUserRights());
       return;
     }
 
@@ -58,29 +99,24 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
         ? UserRoleEnum[userFromToken.userRole as keyof typeof UserRoleEnum]
         : userFromToken.userRole;
 
-    setAccessRights({
-      isAdmin: userRole === UserRoleEnum.LocalAdmin,
-      isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
-      accessRights: defaultAccessRights.accessRights,
-    });
-
     setUser({
       id: userFromToken.id,
       familyId: userFromToken.familyId,
       userName: userFromToken.name,
       userRole: userRole,
     });
-  }, []);
 
-  const initialize = React.useCallback((jwt: string) => {
-    const user = parseJwtToken(jwt);
+    setUserRights(initializeUserRights(accessRightsStore.model || [], userRole));
+  }, [accessRightsStore.model, initializeUserRights, tokenStore.model]);
+
+  const initialize = React.useCallback(() => {
+    const user = parseJwtToken(tokenStore.model?.jwt || '');
 
     if (user == null) {
-      setAccessRights(defaultAccessRights);
+      setUserRights(initializeUserRights());
       return;
     }
 
-    // Convert userRole from string to number if needed
     const userRole =
       typeof user.userRole === 'string'
         ? UserRoleEnum[user.userRole as keyof typeof UserRoleEnum]
@@ -93,38 +129,21 @@ const AccessRightContextProvider: React.FC<IProps> = (props: IProps) => {
       userRole: userRole,
     });
 
-    setAccessRights({
-      isAdmin: userRole === UserRoleEnum.LocalAdmin,
-      isSystemAdmin: userRole === UserRoleEnum.SystemAdmin,
-      accessRights: {
-        familyAdministration: {
-          view: userRole === UserRoleEnum.SystemAdmin,
-          edit: userRole === UserRoleEnum.SystemAdmin,
-          create: false,
-          delete: false,
-        },
-        userAdministration: {
-          view: userRole === UserRoleEnum.LocalAdmin || userRole === UserRoleEnum.SystemAdmin,
-          edit: userRole === UserRoleEnum.LocalAdmin,
-          create: userRole === UserRoleEnum.LocalAdmin,
-          delete: userRole === UserRoleEnum.LocalAdmin,
-        },
-        moduleConfiguration: {
-          view: userRole === UserRoleEnum.LocalAdmin || userRole === UserRoleEnum.SystemAdmin,
-          edit: userRole === UserRoleEnum.LocalAdmin,
-          create: userRole === UserRoleEnum.LocalAdmin,
-          delete: userRole === UserRoleEnum.SystemAdmin,
-        },
-      },
-    });
-  }, []);
+    setUserRights(initializeUserRights(accessRightsStore.model || [], userRole));
+  }, [accessRightsStore.model, initializeUserRights, tokenStore.model]);
 
   React.useEffect(() => {
-    tryInitializeAccessRights();
-  }, [tryInitializeAccessRights]);
+    tryInitializeUserRights();
+  }, [tryInitializeUserRights]);
 
   return (
-    <AccessRightsContext.Provider value={{ accessRights, appUser: user, initialize }}>
+    <AccessRightsContext.Provider
+      value={{
+        userRights,
+        appUser: user,
+        initialize,
+      }}
+    >
       {props.children}
     </AccessRightsContext.Provider>
   );

@@ -1,8 +1,16 @@
-import { IAccessRights } from './IAccessRights';
 import { IAppUser } from './IAppUser';
+import { IUserRight } from './IUserRight';
+
+export type UserRights = {
+  isLocalAdmin: boolean;
+  isSystemAdmin: boolean;
+  familyAdministrationRight: IUserRight;
+  moduleAdministrationRight: IUserRight;
+  subModuleAdministrationRight: IUserRight;
+};
 
 export interface IAccessRightsContext {
-  accessRights: IAccessRights;
+  userRights: UserRights;
   appUser: IAppUser | null;
-  initialize: (jwt: string) => void;
+  initialize: () => void;
 }

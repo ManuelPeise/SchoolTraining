@@ -1,17 +1,20 @@
-import React, { createContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useCallback, ReactNode } from 'react';
 import { IAuthContext } from 'src/lib/interfaces/IAuthContext';
 import { ITokenStore } from '../interfaces/ITokenStore';
 import { AppHooks } from 'src/hooks/AppHooks';
 import { LoginRequestModel } from '../types/LoginModel';
 import moment from 'moment';
 import { useAccessRights } from 'src/hooks/useAccessRights';
+import { LocalStorageKeyEnum } from '../enums/LocalStorageKeyEnum';
+import { IUserRight } from '../interfaces/IUserRight';
 
 const AuthContext = createContext<IAuthContext | null>(null);
 
 type JwtTokenResponse = {
+  userId: number;
   jwt: string;
   refreshToken: string;
-  expireSeconds: number;
+  expiresAt: string;
 };
 
 type AuthProviderProps = {
@@ -20,37 +23,60 @@ type AuthProviderProps = {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { appUser, initialize } = useAccessRights();
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const [tokenStore, setTokenStore] = useState<ITokenStore | null>(null);
+  const tokenStore = AppHooks.useLocalStorage<ITokenStore>(LocalStorageKeyEnum.Jwt);
+  const userRightStore = AppHooks.useLocalStorage<IUserRight[]>(LocalStorageKeyEnum.UserRights);
 
   const authenticationApi = AppHooks.statelessApi.create<JwtTokenResponse, LoginRequestModel>();
+  const accessRightsApi = AppHooks.statelessApi.create<IUserRight[], void>();
 
   const login = useCallback(
     async (model: LoginRequestModel) => {
       const response = await authenticationApi.post('/login/authenticate', model);
 
       if (response) {
-        setTokenStore({
+        tokenStore.setItem({
+          userId: response.userId,
           jwt: response.jwt,
           refreshToken: response.refreshToken,
-          expiresAt: moment().add(response.expireSeconds, 'seconds'),
+          expiresAt: moment(response.expiresAt).local(),
         });
-        initialize(response.jwt);
-        localStorage.setItem('jwt', response.jwt);
+
+        const userRightsResponse = await accessRightsApi.get(
+          `/userrights/getuserrights?userId=${response.userId}`
+        );
+
+        if (userRightsResponse) {
+          userRightStore.setItem(userRightsResponse);
+        }
+
+        initialize();
       }
     },
-    [authenticationApi, initialize]
+    [authenticationApi, accessRightsApi, tokenStore, userRightStore, initialize]
   );
 
   const logout = useCallback(() => {
-    localStorage.removeItem('jwt');
-    setTokenStore(null);
-  }, []);
+    tokenStore.removeItem();
+    userRightStore.removeItem();
+
+    initialize();
+  }, [initialize, tokenStore, userRightStore]);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    const initializeSync = () => {
+      initialize();
+      setIsLoading(false);
+    };
+    initializeSync();
+  }, [initialize]);
 
   const value: IAuthContext = {
     isAuthenticated: appUser != null,
-    tokenStore,
     currentUser: appUser,
+    isLoading,
     login,
     logout,
   };

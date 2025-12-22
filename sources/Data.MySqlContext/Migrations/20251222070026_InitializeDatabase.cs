@@ -110,6 +110,7 @@ namespace Data.MySqlContext.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DescriptionResourceKey = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     LastSync = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -350,6 +351,7 @@ namespace Data.MySqlContext.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RightId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Deny = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CanView = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CanCreate = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -557,12 +559,12 @@ namespace Data.MySqlContext.Migrations
 
             migrationBuilder.InsertData(
                 table: "RightTable",
-                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DescriptionResourceKey", "LastSync", "Name", "NameResourceKey", "RightGuid", "UpdatedAt", "UpdatedBy" },
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DescriptionResourceKey", "IsActive", "LastSync", "Name", "NameResourceKey", "RightGuid", "UpdatedAt", "UpdatedBy" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.FamilyAdministrationDescription", null, "FamilyAdministration", "common.FamilyAdministration", new Guid("551a0d01-dea8-42d8-9268-89584dd43d27"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
-                    { 2, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.ModuleAdministrationDescription", null, "ModuleAdministration", "common.ModuleAdministration", new Guid("a8711cdd-3991-4169-afd1-414fb49956a9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
-                    { 3, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.SubModuleAdministrationDescription", null, "SubModuleAdministration", "common.SubModuleAdministration", new Guid("2b24d50e-aa2d-4201-970e-45594138e111"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" }
+                    { 1, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.FamilyAdministrationDescription", true, null, "FamilyAdministration", "common.FamilyAdministration", new Guid("551a0d01-dea8-42d8-9268-89584dd43d27"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
+                    { 2, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.ModuleAdministrationDescription", true, null, "ModuleAdministration", "common.ModuleAdministration", new Guid("a8711cdd-3991-4169-afd1-414fb49956a9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" },
+                    { 3, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", "common.SubModuleAdministrationDescription", true, null, "SubModuleAdministration", "common.SubModuleAdministration", new Guid("2b24d50e-aa2d-4201-970e-45594138e111"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "" }
                 });
 
             migrationBuilder.InsertData(
@@ -585,15 +587,15 @@ namespace Data.MySqlContext.Migrations
 
             migrationBuilder.InsertData(
                 table: "UserRightTable",
-                columns: new[] { "Id", "CanCreate", "CanDelete", "CanEdit", "CanView", "CreatedAt", "CreatedBy", "Deny", "LastSync", "RightId", "UpdatedAt", "UpdatedBy", "UserId" },
+                columns: new[] { "Id", "CanCreate", "CanDelete", "CanEdit", "CanView", "CreatedAt", "CreatedBy", "Deny", "IsActive", "LastSync", "RightId", "UpdatedAt", "UpdatedBy", "UserId" },
                 values: new object[,]
                 {
-                    { 1, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
-                    { 2, false, false, false, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
-                    { 3, false, false, false, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
-                    { 4, false, false, false, false, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", true, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 },
-                    { 5, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 },
-                    { 6, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 }
+                    { 1, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, true, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
+                    { 2, false, false, false, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, true, null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
+                    { 3, false, false, false, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, true, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 1 },
+                    { 4, false, false, false, false, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", true, true, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 },
+                    { 5, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, true, null, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 },
+                    { 6, true, true, true, true, new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc), "System", false, true, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "", 2 }
                 });
 
             migrationBuilder.CreateIndex(

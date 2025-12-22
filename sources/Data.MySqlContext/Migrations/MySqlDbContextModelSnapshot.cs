@@ -40,6 +40,9 @@ namespace Data.MySqlContext.Migrations
                     b.Property<string>("DescriptionResourceKey")
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("LastSync")
                         .HasColumnType("datetime(6)");
 
@@ -71,6 +74,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             DescriptionResourceKey = "common.FamilyAdministrationDescription",
+                            IsActive = true,
                             Name = "FamilyAdministration",
                             NameResourceKey = "common.FamilyAdministration",
                             RightGuid = new Guid("551a0d01-dea8-42d8-9268-89584dd43d27"),
@@ -83,6 +87,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             DescriptionResourceKey = "common.ModuleAdministrationDescription",
+                            IsActive = true,
                             Name = "ModuleAdministration",
                             NameResourceKey = "common.ModuleAdministration",
                             RightGuid = new Guid("a8711cdd-3991-4169-afd1-414fb49956a9"),
@@ -95,6 +100,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             DescriptionResourceKey = "common.SubModuleAdministrationDescription",
+                            IsActive = true,
                             Name = "SubModuleAdministration",
                             NameResourceKey = "common.SubModuleAdministration",
                             RightGuid = new Guid("2b24d50e-aa2d-4201-970e-45594138e111"),
@@ -133,6 +139,9 @@ namespace Data.MySqlContext.Migrations
                     b.Property<bool>("Deny")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("LastSync")
                         .HasColumnType("datetime(6)");
 
@@ -168,6 +177,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             Deny = false,
+                            IsActive = true,
                             RightId = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "",
@@ -183,6 +193,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             Deny = false,
+                            IsActive = true,
                             RightId = 2,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "",
@@ -198,6 +209,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             Deny = false,
+                            IsActive = true,
                             RightId = 3,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "",
@@ -213,6 +225,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             Deny = true,
+                            IsActive = true,
                             RightId = 1,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "",
@@ -228,6 +241,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             Deny = false,
+                            IsActive = true,
                             RightId = 2,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "",
@@ -243,6 +257,7 @@ namespace Data.MySqlContext.Migrations
                             CreatedAt = new DateTime(2024, 6, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             CreatedBy = "System",
                             Deny = false,
+                            IsActive = true,
                             RightId = 3,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedBy = "",

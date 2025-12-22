@@ -13,7 +13,7 @@ interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
 const SubModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
   const { getResource, setIsLoading } = props;
-  const { accessRights } = useAccessRights();
+  const { userRights } = useAccessRights();
 
   const initializeAsync =
     React.useCallback(async (): Promise<ISubModuleComoponentInitializationProps> => {
@@ -38,12 +38,12 @@ const SubModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
       return {
         saveApi,
         deleteApi,
-        isReadonly: !accessRights.isAdmin && !accessRights.isSystemAdmin,
+        isReadonly: !userRights.isLocalAdmin && !userRights.isSystemAdmin,
         model,
         getResource,
         setIsLoading,
       };
-    }, [getResource, setIsLoading, accessRights]);
+    }, [getResource, setIsLoading, userRights]);
 
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<ISubModuleComoponentInitializationProps>(initializeAsync);

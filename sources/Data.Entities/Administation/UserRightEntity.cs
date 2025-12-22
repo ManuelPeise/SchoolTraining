@@ -10,6 +10,7 @@ namespace Data.Entities.Administation
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
+        public bool IsActive { get; set; }
         public bool Deny { get; set; }
         public bool CanView { get; set; }
         public bool CanCreate { get; set; }

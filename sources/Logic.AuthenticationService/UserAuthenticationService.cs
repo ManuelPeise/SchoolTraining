@@ -56,12 +56,13 @@ namespace Logic.AuthenticationService
                     credentialsEntity.ExpiresAt = DateTime.UtcNow.AddSeconds(3600);
 
                     return new JwtTokenResponse
-                        {
-                            Jwt = tokenData.Jwt,
-                            RefreshToken = tokenData.RefreshToken,
-                            ExpireSeconds = 3600
+                    {
+                        UserId = userEntity.Id,
+                        Jwt = tokenData.Jwt,
+                        RefreshToken = tokenData.RefreshToken,
+                        ExpiresAt = DateTime.UtcNow.AddSeconds(3600).ToLocalTime().ToString("o"),
                     };
-                    
+
                 }
                 catch (Exception exception)
                 {

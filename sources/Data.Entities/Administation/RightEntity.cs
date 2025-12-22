@@ -8,5 +8,6 @@ namespace Data.Entities.Administation
         public string Name { get; set; } = string.Empty;
         public string? NameResourceKey { get; set; }
         public string? DescriptionResourceKey { get; set; }
+        public bool IsActive { get; set; }
     }
 }

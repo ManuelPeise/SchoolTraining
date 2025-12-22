@@ -11,7 +11,7 @@ import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse'
 interface IProps extends ISettingsPageLayoutProps, ILocationProps {}
 
 const FamilyAdministrationContainer: React.FC<IProps> = (props: IProps) => {
-  const { accessRights } = useAccessRights();
+  const { userRights } = useAccessRights();
   const initializeAsync =
     React.useCallback(async (): Promise<IFamilyAdministrationComponentInitializationProps> => {
       const familyApi = AppHooks.statelessApi.create<IFamilyModel[], IFamilyModel[]>();
@@ -40,7 +40,7 @@ const FamilyAdministrationContainer: React.FC<IProps> = (props: IProps) => {
     return null;
   }
 
-  return <FamilyAdministration {...initializationProps} isReadonly={accessRights.isAdmin} />;
+  return <FamilyAdministration {...initializationProps} isReadonly={!userRights.isLocalAdmin} />;
 };
 
 export default FamilyAdministrationContainer;

@@ -6,18 +6,18 @@ import SubModuleConfigurationContainer from './SubModuleConfiguration/SubModuleC
 import ModuleConfigurationContainer from './ModuleConfiguration/ModuleConfigurationContainer';
 
 const ConfigurationContainer: React.FC = () => {
-  const { accessRights } = useAccessRights();
+  const { userRights } = useAccessRights();
   const [isLoading, setIsLoading] = React.useState(false);
   const localizationProps = AppHooks.useLocalisationProps(['common']);
 
   const listItems: INavigationListItem[] = [];
 
-  if (accessRights.accessRights.moduleConfiguration.view) {
+  if (userRights.moduleAdministrationRight.view) {
     listItems.push({
       key: 'module-configuration',
       title: localizationProps.getResource('common.captionModules'),
       subTitle: localizationProps.getResource('common.labelManageModules'),
-      isReadonly: !accessRights.accessRights.moduleConfiguration.view,
+      isReadonly: !userRights.moduleAdministrationRight.view,
       component: ModuleConfigurationContainer,
     });
 
@@ -25,7 +25,7 @@ const ConfigurationContainer: React.FC = () => {
       key: 'submodule-configuration',
       title: localizationProps.getResource('common.captionSubModules'),
       subTitle: localizationProps.getResource('common.labelManageSubModules'),
-      isReadonly: !accessRights.accessRights.moduleConfiguration.view,
+      isReadonly: !userRights.subModuleAdministrationRight.view,
       component: SubModuleConfigurationContainer,
     });
   }
