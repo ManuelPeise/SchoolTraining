@@ -38,7 +38,7 @@ const SubModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
       return {
         saveApi,
         deleteApi,
-        isReadonly: !userRights.isLocalAdmin && !userRights.isSystemAdmin,
+        isReadonly: userRights.subModuleAdministrationRight.deny,
         model,
         getResource,
         setIsLoading,

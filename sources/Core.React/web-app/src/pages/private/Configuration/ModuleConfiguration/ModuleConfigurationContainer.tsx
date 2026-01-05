@@ -28,7 +28,7 @@ const ModuleConfigurationContainer: React.FC<IProps> = (props: IProps) => {
       return {
         saveApi,
         deleteApi,
-        isReadonly: !userRights.moduleAdministrationRight.view,
+        isReadonly: userRights.moduleAdministrationRight.deny,
         modules,
         getResource: getResource,
         setIsLoading: setIsLoading,

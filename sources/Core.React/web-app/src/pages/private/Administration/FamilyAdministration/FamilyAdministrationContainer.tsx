@@ -25,11 +25,17 @@ const FamilyAdministrationContainer: React.FC<IProps> = (props: IProps) => {
         familyApi,
         fileApi,
         isLoading: props.isLoading,
+        isReadonly: !userRights.familyAdministrationRight.edit,
         setIsLoading: props.setIsLoading,
         getResource: props.getResource,
         families,
       };
-    }, [props.isLoading, props.setIsLoading, props.getResource]);
+    }, [
+      props.isLoading,
+      props.setIsLoading,
+      props.getResource,
+      userRights.familyAdministrationRight.edit,
+    ]);
 
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<IFamilyAdministrationComponentInitializationProps>(
@@ -40,7 +46,7 @@ const FamilyAdministrationContainer: React.FC<IProps> = (props: IProps) => {
     return null;
   }
 
-  return <FamilyAdministration {...initializationProps} isReadonly={!userRights.isLocalAdmin} />;
+  return <FamilyAdministration {...initializationProps} />;
 };
 
 export default FamilyAdministrationContainer;

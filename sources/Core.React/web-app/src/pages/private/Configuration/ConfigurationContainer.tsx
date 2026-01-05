@@ -12,23 +12,21 @@ const ConfigurationContainer: React.FC = () => {
 
   const listItems: INavigationListItem[] = [];
 
-  if (userRights.moduleAdministrationRight.view) {
-    listItems.push({
-      key: 'module-configuration',
-      title: localizationProps.getResource('common.captionModules'),
-      subTitle: localizationProps.getResource('common.labelManageModules'),
-      isReadonly: !userRights.moduleAdministrationRight.view,
-      component: ModuleConfigurationContainer,
-    });
+  listItems.push({
+    key: 'module-configuration',
+    title: localizationProps.getResource('common.captionModules'),
+    subTitle: localizationProps.getResource('common.labelManageModules'),
+    isReadonly: userRights.moduleAdministrationRight.deny,
+    component: ModuleConfigurationContainer,
+  });
 
-    listItems.push({
-      key: 'submodule-configuration',
-      title: localizationProps.getResource('common.captionSubModules'),
-      subTitle: localizationProps.getResource('common.labelManageSubModules'),
-      isReadonly: !userRights.subModuleAdministrationRight.view,
-      component: SubModuleConfigurationContainer,
-    });
-  }
+  listItems.push({
+    key: 'submodule-configuration',
+    title: localizationProps.getResource('common.captionSubModules'),
+    subTitle: localizationProps.getResource('common.labelManageSubModules'),
+    isReadonly: userRights.subModuleAdministrationRight.deny,
+    component: SubModuleConfigurationContainer,
+  });
 
   return (
     <SettingsPageLayout

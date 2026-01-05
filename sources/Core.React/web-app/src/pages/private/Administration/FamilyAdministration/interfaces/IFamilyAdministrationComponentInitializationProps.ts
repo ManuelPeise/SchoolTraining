@@ -7,6 +7,7 @@ import { INotificationResponse } from 'src/lib/interfaces/INotificationResponse'
 export interface IFamilyAdministrationComponentInitializationProps
   extends ISettingsPageLayoutProps, ILocationProps {
   getResource: (key: string) => string;
+  isReadonly: boolean;
   familyApi: IStatelessApi<any, any>;
   fileApi: IStatelessApi<INotificationResponse, any>;
   families: IFamilyModel[];

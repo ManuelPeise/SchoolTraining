@@ -38,10 +38,11 @@ const ModuleConfigurationForm: React.FC<IModuleConfigurationProps> = (
   const { saveApi, deleteApi, isReadonly, modules, getResource, setIsLoading } = props;
 
   const originalModuleRef = React.useRef<IModule | null>(null);
+
   const [initialState, setIntialState] = React.useState<IModule[]>(
     Array.isArray(modules) ? modules : []
   );
-  const [selectedModule, setSelectedModule] = React.useState<IModule | null>(defaultModule);
+  const [selectedModule, setSelectedModule] = React.useState<IModule | null>(null);
   const [notificationBadge, setNotificationBadge] = React.useState<INotificationBadgeState>({
     show: false,
     message: '',

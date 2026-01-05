@@ -32,6 +32,7 @@ const FileImportContainer: React.FC<IProps> = (props: IProps) => {
         setIsLoading: props.setIsLoading,
       };
     }, [props.getResource, props.setIsLoading, userRights]);
+
   const { isInitialized, initializationProps } =
     AppHooks.useComponentMounting<IFileImportComponentInitializationProps>(initializeAsync);
 
